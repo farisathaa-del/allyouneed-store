@@ -618,7 +618,7 @@
       font-display: swap; src: url('public/fonts/bebas-neue.woff2') format('woff2');
     }
     /* Wordmark resmi (kalau nanti tersedia): public/logos/wm_<key>.png */
-    .brand-word { display: block; max-width: 92%; height: 24px; object-fit: contain; object-position: left center; filter: drop-shadow(0 1px 8px rgba(0,0,0,.55)); }
+    .brand-word { display: block; max-width: 92%; height: 26px; object-fit: contain; object-position: left center; filter: drop-shadow(0 1px 8px rgba(0,0,0,.55)); }
 
     .brand-name {
       font-family: var(--font-display);
@@ -673,6 +673,83 @@
       color: var(--on-brand);
       border-color: var(--brand);
     }
+
+    /* ─── Kartu brand: dua sisi (depan artwork + wordmark, belakang logo + paket + harga) ─── */
+    .brand-card {
+      perspective: 1000px;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+      display: block;
+      aspect-ratio: 3 / 4;
+      position: relative;
+    }
+    .brand-card:hover { border-color: transparent; box-shadow: none; }
+    .bc-flip {
+      position: absolute; inset: 0;
+      transform-style: preserve-3d;
+      transition: transform .62s cubic-bezier(.22,.68,.32,1);
+    }
+    .brand-card:hover .bc-flip,
+    .brand-card.flipped .bc-flip,
+    .brand-card:focus-visible .bc-flip { transform: rotateY(180deg); }
+    .bc-face {
+      position: absolute; inset: 0;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      box-shadow: 0 8px 20px -12px rgba(8,8,16,.42);
+    }
+    /* depan: artwork */
+    .bc-front {
+      background-color: var(--brand-canvas, #0B1220);
+      background-size: cover;
+      background-position: center 20%;
+      background-repeat: no-repeat;
+    }
+    .bc-shade {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(6,10,16,.90) 0%, rgba(6,10,16,.48) 24%, rgba(6,10,16,.08) 52%, transparent 70%);
+    }
+    .bc-wm {
+      position: absolute; left: 12px; right: 12px; bottom: 11px;
+      height: 28px; display: flex; align-items: center;
+    }
+    .bc-wm .brand-name { transform: none; }
+    .brand-word {
+      display: block; max-width: 100%; height: 26px; width: auto;
+      object-fit: contain; object-position: left center;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.72));
+    }
+    .brand-word.inv { filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,.72)); }
+    /* belakang: logo + paket + harga */
+    .bc-back {
+      transform: rotateY(180deg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px;
+      padding: 12px; text-align: center;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(0,224,248,.16), transparent 62%),
+        linear-gradient(160deg, #0C1520, #101A24 55%, #0A1219);
+    }
+    .bc-ico {
+      width: 54px; height: 54px; border-radius: 13px; object-fit: cover;
+      box-shadow: 0 10px 22px -12px rgba(0,0,0,.9);
+    }
+    .bc-name {
+      font-family: var(--font-display); font-size: 12px; font-weight: 800; line-height: 1.2;
+      color: #F8F8F8; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .bc-pk { font-size: 11.5px; font-weight: 700; color: #C7D0DC; }
+    .bc-pk b { color: #F8F8F8; }
+    .bc-pr { font-size: 12px; font-weight: 800; color: var(--on-brand); background: var(--brand); padding: 5px 11px; border-radius: 7px; }
+    .bc-pr span { font-weight: 600; opacity: .75; }
+    /* Di layar sentuh: berbalik saat disentuh, bukan saat hover */
+    @media (hover: none) { .brand-card:hover .bc-flip { transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .bc-flip { transition: none; } }
 
     /* ─── VIEW 2: ORDER STATION — 2 KOLOM (form kiri, ringkasan sticky kanan) ─── */
     .order-cols {
@@ -2571,7 +2648,15 @@
 
     // Brand Definitions Master Table
     // Wordmark resmi per brand (kosong dulu). Isi begitu ada file wordmark publisher.
-    const WM = {};
+    // Wordmark resmi (logotype produk). pubg perlu dibalik jadi putih (aslinya hitam).
+    const WM = {
+      mlbb: 'public/logos/wm_mlbb.png',
+      ff: 'public/logos/wm_ff.png',
+      pubg: 'public/logos/wm_pubg.svg',
+      netflix: 'public/logos/wm_netflix.svg',
+      streaming_asia: 'public/logos/wm_streaming_asia.svg'
+    };
+    const WM_INV = { pubg: 1 };
     // Karakter tipografi tiap produk: esport, film/streaming, utilitas, aplikasi.
     const TONE = {
       mlbb: 'fmt-esport', ff: 'fmt-esport', pubg: 'fmt-esport',
@@ -2582,12 +2667,23 @@
     };
     // Artwork poster: gambar promosi resmi dari halaman toko aplikasi masing-masing.
     const ART = {
-      mlbb: 'public/art/mlbb.jpg',
-      ff: 'public/art/ff.jpg',
-      pubg: 'public/art/pubg.jpg',
-      netflix: 'public/art/netflix.jpg',
-      streaming_barat: 'public/art/streaming_barat.jpg',
-      editing_apps: 'public/art/editing_apps.jpg'
+      mlbb: 'public/art6/mlbb.jpg', ff: 'public/art6/ff.jpg', pubg: 'public/art6/pubg.jpg',
+      netflix: 'public/art6/netflix.jpg', canva: 'public/art6/canva.jpg', capcut: 'public/art6/capcut.jpg',
+      chatgpt_gemini: 'public/art6/chatgpt_gemini.jpg', spotify: 'public/art6/spotify.jpg',
+      streaming_asia: 'public/art6/streaming_asia.jpg', streaming_barat: 'public/art6/streaming_barat.jpg',
+      microsoft_office: 'public/art6/microsoft_office.jpg', vpn_utility: 'public/art6/vpn_utility.jpg',
+      editing_apps: 'public/art6/editing_apps.jpg', pln: 'public/art6/pln.jpg',
+      masa_aktif: 'public/art6/masa_aktif.jpg', pulsa_reguler: 'public/art6/pulsa_reguler.jpg'
+    };
+    // Ikon resmi (tanpa tulisan) untuk sisi belakang kartu
+    const ICON = {
+      mlbb: 'public/logos/mlbb.png', ff: 'public/logos/ff.png', pubg: 'public/logos/pubg_r.png',
+      netflix: 'public/logos/netflix.png', canva: 'public/logos/canva.png', capcut: 'public/logos/capcut.png',
+      chatgpt_gemini: 'public/logos/chatgpt.png', spotify: 'public/logos/spotify.png',
+      streaming_asia: 'public/logos/viu.png', streaming_barat: 'public/logos/prime.png',
+      microsoft_office: 'public/logos/office365.png', vpn_utility: 'public/logos/expressvpn.png',
+      editing_apps: 'public/logos/remini.png', pln: 'public/logos/pln.png',
+      masa_aktif: 'public/logos/telkomsel_r.png', pulsa_reguler: 'public/logos/xlmark_r.png'
     };
 
     const BRANDS_DEF = {
@@ -3324,15 +3420,21 @@
       html += '<div class="brand-grid">';
       filtered.forEach(b => {
         html += `
-          <div class="brand-card${ART[b.key] ? ' has-art' : ''}" onclick="openBrandOrder('${b.key}')"${ART[b.key] ? ` style="--brand-canvas:${b.bg}"` : ` style="--brand-canvas:${b.bg}"`}>
-            ${b.popular ? '<span class="brand-badge-popular">POPULER</span>' : ''}
-            <div class="brand-logo-box"${ART[b.key] ? ` style="background-image:url('${ART[b.key]}')"` : ''}>
-              <img src="${b.logo}" alt="${b.short}" class="brand-logo-img" loading="lazy">
-            </div>
-            <div class="brand-body">
-            ${WM[b.key] ? `<img class="brand-word" src="${WM[b.key]}" alt="${b.short}" loading="lazy">` : `<div class="brand-name ${TONE[b.key] || 'fmt-app'}">${b.short}</div>`}
-            <div class="brand-meta">${b.count} Pilihan Paket</div>
-            <div class="brand-price-tag">Mulai Rp ${b.minPrice.toLocaleString('id-ID')}</div>
+          <div class="brand-card" onclick="brandTap(event,'${b.key}')" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.count} pilihan paket">
+            <div class="bc-flip">
+              <div class="bc-face bc-front" style="--brand-canvas:${b.bg};background-image:url('${ART[b.key] || ''}')">
+                <div class="bc-shade"></div>
+                ${b.popular ? '<span class="brand-badge-popular">POPULER</span>' : ''}
+                <div class="bc-wm">
+                  ${WM[b.key] ? `<img class="brand-word${WM_INV[b.key] ? ' inv' : ''}" src="${WM[b.key]}" alt="${b.short}" loading="lazy">` : `<div class="brand-name ${TONE[b.key] || 'fmt-app'}">${b.short}</div>`}
+                </div>
+              </div>
+              <div class="bc-face bc-back">
+                <img class="bc-ico" src="${ICON[b.key] || b.logo}" alt="" loading="lazy">
+                <div class="bc-name">${b.short}</div>
+                <div class="bc-pk"><b>${b.count}</b> pilihan paket</div>
+                <div class="bc-pr"><span>dari</span> Rp ${b.minPrice.toLocaleString('id-ID')}</div>
+              </div>
             </div>
           </div>
         `;
@@ -3497,6 +3599,20 @@
     }
 
     // ─── VIEW 2: ORDER STATION LOGIC ───
+    // Kartu brand: di layar sentuh sentuhan pertama membalik kartu, kedua membuka paket.
+    function brandTap(e, key) {
+      const card = e && e.currentTarget && e.currentTarget.closest
+        ? e.currentTarget.closest('.brand-card')
+        : null;
+      const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (!fine && card && !card.classList.contains('flipped')) {
+        document.querySelectorAll('.brand-card.flipped').forEach(c => { if (c !== card) c.classList.remove('flipped'); });
+        card.classList.add('flipped');
+        return;
+      }
+      openBrandOrder(key);
+    }
+
     function openBrandOrder(brandKey) {
       activeBrandKey = brandKey;
       const brand = BRANDS_DEF[brandKey];

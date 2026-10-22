@@ -20,7 +20,7 @@
   <meta name="description" content="Toko digital otomatis 24 jam: top up Mobile Legends, Free Fire, PUBG, pulsa & masa aktif, token PLN, serta akun premium (Netflix, Canva, ChatGPT). Bayar QRIS semua bank & e-wallet, tanpa biaya admin.">
   <meta name="theme-color" content="#00E0F8">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://allyouneeed.store/">
+  <link rel="canonical" href="https://farisathaa-del.github.io/allyouneed-store/">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -28,24 +28,28 @@
   <meta property="og:locale" content="id_ID">
   <meta property="og:title" content="ALL YOU NEED — Top Up Game, Pulsa & Akun Premium 24 Jam">
   <meta property="og:description" content="Top up game, pulsa, token PLN, dan akun premium. Otomatis 24 jam, bayar QRIS tanpa biaya admin.">
-  <meta property="og:image" content="public/og-image.png">
+  <meta property="og:image" content="https://farisathaa-del.github.io/allyouneed-store/public/og-image.png">
+<meta property="og:image:alt" content="ALL YOU NEED — toko digital 24 jam">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:url" content="https://allyouneeed.store/">
+  <meta property="og:url" content="https://farisathaa-del.github.io/allyouneed-store/">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ALL YOU NEED — Top Up Game, Pulsa & Akun Premium 24 Jam">
   <meta name="twitter:description" content="Otomatis 24 jam, bayar QRIS semua bank & e-wallet, tanpa biaya admin.">
-  <meta name="twitter:image" content="public/og-image.png">
+  <meta name="twitter:image" content="https://farisathaa-del.github.io/allyouneed-store/public/og-image.png">
+<meta name="twitter:image:alt" content="ALL YOU NEED — toko digital 24 jam">
 
   <!-- Icon -->
   <link rel="icon" type="image/png" sizes="64x64" href="public/favicon-64.png">
   <link rel="apple-touch-icon" href="public/icon-192.png">
   <link rel="manifest" href="public/site.webmanifest">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
+    <link rel="preload" href="public/fonts/bebas-neue.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="public/fonts/chakra-petch-700i.woff2" as="font" type="font/woff2" crossorigin>
+<style>
     /* ═══════════════ FASE 0: DESIGN TOKENS (satu skala, nilai identik) ═══════════════ */
     :root {
       /* Palet diambil dari public/logo.png: #00E0F8 cyan, #405068 abu baja,
@@ -430,6 +434,7 @@
       outline: none;
       width: 100%;
       font-size: 14px;
+      padding: 6px 0;
       color: #111;
       background: transparent;
       font-family: inherit;
@@ -1413,7 +1418,7 @@
     .search-chips-label { font-size: 11px; font-weight: 800; color: var(--ink-a11y); text-transform: uppercase; letter-spacing: 0.6px; align-self: center; }
     .search-chip {
       background: var(--surface); border: 1px solid var(--line); border-radius: 99px;
-      padding: 6px 14px; font-size: 12px; font-weight: 700; color: #334155;
+      padding: 8px 14px; min-height: 32px; font-size: 12px; font-weight: 700; color: #334155;
       cursor: pointer; transition: all 0.15s ease;
     }
     .search-chip:hover { border-color: var(--brand-ink); color: var(--brand-ink); background: var(--brand-soft); transform: translateY(-1px); }
@@ -1647,10 +1652,11 @@
     .footer-brand-title { font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #F8F8F8; margin: 0 0 9px; line-height: 1.4; }
     .footer-brand-desc { font-size: 12.2px; color: #B4C0CE; line-height: 1.6; max-width: 330px; }
     .footer-h { font-size: 12px; font-weight: 800; color: #F8F8F8; text-transform: uppercase; letter-spacing: 0.6px; margin: 0 0 9px; line-height: 1.4; }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 2px; }
     .footer-links a, .footer-links button {
       font-size: 12.5px; color: #D3DAE4; text-decoration: none; background: none; border: none;
-      padding: 0; cursor: pointer; font-family: inherit; text-align: left; font-weight: 600;
+      padding: 9px 0; cursor: pointer; font-family: inherit; text-align: left; font-weight: 600;
+      line-height: 1.25; min-height: 32px; display: inline-flex; align-items: center;
     }
     .footer-links a:hover, .footer-links button:hover { color: var(--brand); }
     .pay-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
@@ -1780,6 +1786,18 @@
     /* QRIS harus tetap terang agar bisa dipindai */
     html[data-theme="dark"] #qrisImage { background: #FFFFFF; }
 
+
+    /* Layar sangat kecil (≤400px): rapatkan header agar tidak ada geser horizontal.
+       Tautan Admin disembunyikan — /admin hanya bisa dibuka dari mesin lokal. */
+    @media (max-width: 400px) {
+      .navbar { padding-left: 14px; padding-right: 14px; }
+      .nav-right { gap: 9px; }
+      .nav-right .divider-v, .nav-right .link-login { display: none; }
+      .theme-btn { width: 30px; height: 30px; border-radius: 9px; }
+      .btn-channel { padding: 7px 9px; font-size: 11px; }
+      .brand-title { font-size: 15px; }
+    }
+
     /* ═══ ANIMASI MASUK (IntersectionObserver + WAAPI, tanpa dependensi) ═══ */
     /* Kondisi awal hanya berlaku selama kelas .anim aktif di <html>. */
     .anim [data-reveal], .anim [data-stagger-item] { opacity: 0; }
@@ -1808,7 +1826,7 @@
     .rot-grid.is-js .strip-card.is-shown:not(.is-out) { opacity: 1; transform: none; }
 
     .rot-dots { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 14px; }
-    .rot-dot-btn { padding: 10px 3px; line-height: 0; background: none; border: 0; cursor: pointer; }
+    .rot-dot-btn { padding: 14px 6px; line-height: 0; background: none; border: 0; cursor: pointer; }
     .rot-dot-pill {
       display: block; position: relative; width: 18px; height: 4px; border-radius: 99px;
       background: rgba(15, 23, 42, 0.16); overflow: hidden; transition: width .3s cubic-bezier(0.16, 1, 0.3, 1), background-color .3s;
@@ -2260,7 +2278,7 @@
           <div class="step-number">4</div>
           <div class="step-box-title">WhatsApp / Kontak Notifikasi (Opsional)</div>
         </div>
-        <input type="text" id="orderBuyerWa" class="order-input" placeholder="contoh: 081234567890 (Untuk kirim bukti invoice otomatis)">
+        <input type="text" id="orderBuyerWa" class="order-input" aria-label="Nomor WhatsApp untuk bukti invoice (opsional)" inputmode="tel" placeholder="contoh: 081234567890 (Untuk kirim bukti invoice otomatis)">
         <div style="font-size: 11px; color: #5B6470; margin-top: 5px;">*Bukti transaksi dan kode invoice akan tercatat otomatis di sistem.</div>
       </div>
 
@@ -2455,6 +2473,17 @@
     // isi lewat script kecil window.API_BASE = 'https://...' sebelum file ini.
     document.documentElement.classList.add('no-lenis'); // fallback bila Lenis gagal dimuat
     const API_BASE = window.API_BASE || '';
+
+    /* Build statis (mis. GitHub Pages) tidak menyajikan /admin: sembunyikan tautannya
+       supaya pengunjung tidak menabrak 404. Di server lokal tautan tetap ada. */
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.API_BASE) return;
+      var l = document.querySelector('.link-login');
+      if (!l) return;
+      var d = l.previousElementSibling;
+      if (d && d.classList.contains('divider-v')) d.style.display = 'none';
+      l.style.display = 'none';
+    });
     // ─── SMOOTH SCROLL (Lenis) — fondasi semua gerak ───
     // Satu loop rAF; prefers-reduced-motion tidak memakai Lenis sama sekali.
     var pageLenis = null;
@@ -2808,13 +2837,13 @@
     };
     // Artwork poster: gambar promosi resmi dari halaman toko aplikasi masing-masing.
     const ART = {
-      mlbb: 'public/art6/mlbb.jpg', ff: 'public/art6/ff.jpg', pubg: 'public/art6/pubg.jpg',
-      netflix: 'public/art6/netflix.jpg', canva: 'public/art6/canva.jpg', capcut: 'public/art6/capcut.jpg',
-      chatgpt_gemini: 'public/art6/chatgpt_gemini.jpg', spotify: 'public/art6/spotify.jpg',
-      streaming_asia: 'public/art6/streaming_asia.jpg', streaming_barat: 'public/art6/streaming_barat.jpg',
-      microsoft_office: 'public/art6/microsoft_office.jpg', vpn_utility: 'public/art6/vpn_utility.jpg',
-      editing_apps: 'public/art6/editing_apps.jpg', pln: 'public/art6/pln.jpg',
-      masa_aktif: 'public/art6/masa_aktif.jpg', pulsa_reguler: 'public/art6/pulsa_reguler.jpg'
+      mlbb: 'public/art6w/mlbb.webp', ff: 'public/art6w/ff.webp', pubg: 'public/art6w/pubg.webp',
+      netflix: 'public/art6w/netflix.webp', canva: 'public/art6w/canva.webp', capcut: 'public/art6w/capcut.webp',
+      chatgpt_gemini: 'public/art6w/chatgpt_gemini.webp', spotify: 'public/art6w/spotify.webp',
+      streaming_asia: 'public/art6w/streaming_asia.webp', streaming_barat: 'public/art6w/streaming_barat.webp',
+      microsoft_office: 'public/art6w/microsoft_office.webp', vpn_utility: 'public/art6w/vpn_utility.webp',
+      editing_apps: 'public/art6w/editing_apps.webp', pln: 'public/art6w/pln.webp',
+      masa_aktif: 'public/art6w/masa_aktif.webp', pulsa_reguler: 'public/art6w/pulsa_reguler.webp'
     };
     // Ikon resmi (tanpa tulisan) untuk sisi belakang kartu
     const ICON = {

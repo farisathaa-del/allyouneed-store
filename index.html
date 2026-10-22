@@ -607,14 +607,47 @@
       letter-spacing: 0.3px;
       box-shadow: 0 2px 4px rgba(245, 158, 11, 0.08);
     }
+    /* Dua font lokal untuk meniru karakter logotype tiap produk
+       (aslinya wordmark resmi publisher — kita dekati lewat tipografi). */
+    @font-face {
+      font-family: 'Chakra Petch Local'; font-style: italic; font-weight: 700;
+      font-display: swap; src: url('public/fonts/chakra-petch-700i.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Bebas Neue Local'; font-style: normal; font-weight: 400;
+      font-display: swap; src: url('public/fonts/bebas-neue.woff2') format('woff2');
+    }
+    /* Wordmark resmi (kalau nanti tersedia): public/logos/wm_<key>.png */
+    .brand-word { display: block; max-width: 92%; height: 24px; object-fit: contain; object-position: left center; filter: drop-shadow(0 1px 8px rgba(0,0,0,.55)); }
+
     .brand-name {
       font-family: var(--font-display);
       font-size: 14px;
       font-weight: 800;
       color: #FFFFFF;
       margin-bottom: 2px;
-      line-height: 1.2;
+      line-height: 1.15;
       text-shadow: 0 1px 10px rgba(0,0,0,.65);
+      max-width: 100%;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    /* Karakter tipografi per jenis produk */
+    .brand-name.fmt-esport {
+      font-family: 'Chakra Petch Local', var(--font-display);
+      font-style: italic; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .5px; font-size: 13.5px;
+    }
+    .brand-name.fmt-film {
+      font-family: 'Bebas Neue Local', var(--font-display);
+      font-weight: 400; text-transform: uppercase; letter-spacing: 1.6px; font-size: 18px;
+    }
+    .brand-name.fmt-util {
+      font-family: var(--font-display);
+      font-weight: 900; text-transform: uppercase; letter-spacing: -.2px; font-size: 13px;
+    }
+    .brand-name.fmt-app {
+      font-family: var(--font-display);
+      font-weight: 800; letter-spacing: -.1px; font-size: 14px;
     }
     .brand-meta {
       font-size: 11px;
@@ -2537,6 +2570,16 @@
     };
 
     // Brand Definitions Master Table
+    // Wordmark resmi per brand (kosong dulu). Isi begitu ada file wordmark publisher.
+    const WM = {};
+    // Karakter tipografi tiap produk: esport, film/streaming, utilitas, aplikasi.
+    const TONE = {
+      mlbb: 'fmt-esport', ff: 'fmt-esport', pubg: 'fmt-esport',
+      netflix: 'fmt-film', streaming_barat: 'fmt-film', streaming_asia: 'fmt-film',
+      pln: 'fmt-util', pulsa_reguler: 'fmt-util', masa_aktif: 'fmt-util',
+      canva: 'fmt-app', capcut: 'fmt-app', chatgpt_gemini: 'fmt-app',
+      microsoft_office: 'fmt-app', vpn_utility: 'fmt-app', editing_apps: 'fmt-app', spotify: 'fmt-app'
+    };
     // Artwork poster: gambar promosi resmi dari halaman toko aplikasi masing-masing.
     const ART = {
       mlbb: 'public/art/mlbb.jpg',
@@ -3287,7 +3330,7 @@
               <img src="${b.logo}" alt="${b.short}" class="brand-logo-img" loading="lazy">
             </div>
             <div class="brand-body">
-            <div class="brand-name">${b.short}</div>
+            ${WM[b.key] ? `<img class="brand-word" src="${WM[b.key]}" alt="${b.short}" loading="lazy">` : `<div class="brand-name ${TONE[b.key] || 'fmt-app'}">${b.short}</div>`}
             <div class="brand-meta">${b.count} Pilihan Paket</div>
             <div class="brand-price-tag">Mulai Rp ${b.minPrice.toLocaleString('id-ID')}</div>
             </div>

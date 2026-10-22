@@ -467,7 +467,13 @@
     .sr-field { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; color: var(--ink-500); }
     .sr-field .search-input { font-size: 14px; font-weight: 600; }
     .sr-sep { width: 1px; align-self: stretch; background: var(--line); }
-    .category-pills { display: flex; gap: 6px; align-items: center; flex-wrap: nowrap; }
+    .category-pills {
+      display: flex; gap: 6px; align-items: center; flex-wrap: nowrap;
+      min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .category-pills::-webkit-scrollbar { display: none; }
+    .category-pills .pill { flex: 0 0 auto; white-space: nowrap; }
     .pill {
       background: none; border: 1px solid transparent; color: var(--ink-600);
       padding: 9px 13px; border-radius: 999px; font-size: 12.5px; font-weight: 700;

@@ -1615,10 +1615,10 @@
     }
     .site-footer {
       /* Abu tua (abu baja logo), bukan putih: footer memisahkan diri dari latar halaman. */
-      margin-top: 44px; border-top: 1px solid #334054; background: #263041;
-      padding: 34px 0 26px; color: #C3CBD8;
+      margin-top: 36px; border-top: 1px solid #334054; background: #263041;
+      padding: 26px 0 18px; color: #C3CBD8;
     }
-    .footer-cols { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 26px; }
+    .footer-cols { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 20px; }
     .footer-brand-title { font-size: 15px; font-weight: 900; color: #F8F8F8; margin-bottom: 8px; }
     .footer-brand-desc { font-size: 12.3px; color: #A9B6C6; line-height: 1.65; max-width: 320px; }
     .footer-h { font-size: 11px; font-weight: 800; color: #90A0B8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
@@ -1628,13 +1628,13 @@
       padding: 0; cursor: pointer; font-family: inherit; text-align: left; font-weight: 600;
     }
     .footer-links a:hover, .footer-links button:hover { color: var(--brand); }
-    .pay-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .pay-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .pay-badge {
       font-size: 10px; font-weight: 800; color: #C3CBD8; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
       border-radius: 7px; padding: 4px 9px; letter-spacing: 0.2px;
     }
     .footer-bottom {
-      margin-top: 26px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.12);
+      margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.12);
       display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;
       font-size: 11.5px; color: #A9B6C6;
     }
@@ -1645,7 +1645,22 @@
       .referral-banner { padding: 22px; }
     }
     @media (max-width: 520px) {
-      .footer-cols { grid-template-columns: 1fr; }
+      /* 2 kolom, bukan 1: footer tidak memanjang ke bawah di HP */
+      .footer-cols { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .footer-cols > div:first-child { grid-column: 1 / -1; }
+      .footer-brand-desc { max-width: none; font-size: 11.8px; line-height: 1.55; }
+      .site-footer { padding: 20px 0 14px; margin-top: 28px; }
+      /* link 2 kolom di dalam tiap bagian: 12 item jadi 6 baris, bukan 12 */
+      .footer-links { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 10px; }
+      .footer-links a, .footer-links button { font-size: 11.4px; }
+      .footer-brand-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .pay-badge { font-size: 9px; padding: 3px 7px; }
+      .pay-badges { gap: 4px; margin-top: 8px; }
+      .footer-h { margin-bottom: 7px; }
+      .footer-bottom { margin-top: 12px; padding-top: 10px; font-size: 10.8px; }
+      /* LEGAL & KEAMANAN ikut 2 kolom, tidak memanjang sendiri */
+      .footer-cols > div:last-child { grid-column: 1 / -1; }
+      .footer-cols > div:last-child .footer-links { grid-template-columns: 1fr 1fr; }
       .strip-card { flex: 0 0 168px; }
       .stat-val { font-size: 17px; }
     }

@@ -1314,7 +1314,10 @@
       transition: grid-template-rows .35s cubic-bezier(0.16, 1, 0.3, 1);
       font-size: 12.8px; color: var(--ink-600); line-height: 1.7;
     }
-    .faq-a-in { overflow: hidden; min-height: 0; padding: 0 18px 16px; }
+    .faq-a-in { overflow: hidden; min-height: 0; padding: 0 18px; }
+    /* Jarak bawah lewat pseudo, bukan padding: padding tetap terhitung 16px walau
+       baris grid 0fr, jadi kartu tertutup menyisakan celah kosong. */
+    .faq-a-in::after { content: ''; display: block; height: 16px; }
     .faq-item.open .faq-a { grid-template-rows: 1fr; }
     @media (prefers-reduced-motion: reduce) { .faq-a { transition: none; } }
 

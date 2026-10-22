@@ -1308,8 +1308,15 @@
     .faq-q:hover { background: var(--surface-2); }
     .faq-ico { flex-shrink: 0; transition: transform 0.2s ease; color: var(--ink-a11y); font-size: 15px; font-weight: 900; }
     .faq-item.open .faq-ico { transform: rotate(45deg); color: var(--brand); }
-    .faq-a { display: none; padding: 0 18px 16px; font-size: 12.8px; color: var(--ink-600); line-height: 1.7; }
-    .faq-item.open .faq-a { display: block; }
+    /* Buka-tutup halus: 0fr -> 1fr (tanpa ukur tinggi di JS, tanpa max-height tebak-tebakan) */
+    .faq-a {
+      display: grid; grid-template-rows: 0fr;
+      transition: grid-template-rows .35s cubic-bezier(0.16, 1, 0.3, 1);
+      font-size: 12.8px; color: var(--ink-600); line-height: 1.7;
+    }
+    .faq-a-in { overflow: hidden; min-height: 0; padding: 0 18px 16px; }
+    .faq-item.open .faq-a { grid-template-rows: 1fr; }
+    @media (prefers-reduced-motion: reduce) { .faq-a { transition: none; } }
 
     .referral-banner {
       margin: 34px 0 10px; border-radius: 22px; padding: 26px 30px;
@@ -1842,27 +1849,27 @@
       <div class="faq-list">
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Apakah produk yang dijual legal dan aman? <span class="faq-ico">+</span></button>
-          <div class="faq-a">Ya. Produk yang tersedia berasal dari jalur distributor/pengisi resmi layanan terkait, dan pembelian diproses langsung ke akun tujuan tanpa meminta data login akun Anda.</div>
+          <div class="faq-a"><div class="faq-a-in">Ya. Produk yang tersedia berasal dari jalur distributor/pengisi resmi layanan terkait, dan pembelian diproses langsung ke akun tujuan tanpa meminta data login akun Anda.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Berapa lama pesanan diproses? <span class="faq-ico">+</span></button>
-          <div class="faq-a">Pesanan diproses otomatis 24 jam nonstop. Sebagian besar pesanan selesai dalam hitungan detik sampai beberapa menit setelah pembayaran terverifikasi. Jika antrean penyedia sedang padat, proses bisa lebih lama dan akan diperbarui pada halaman cek status pesanan.</div>
+          <div class="faq-a"><div class="faq-a-in">Pesanan diproses otomatis 24 jam nonstop. Sebagian besar pesanan selesai dalam hitungan detik sampai beberapa menit setelah pembayaran terverifikasi. Jika antrean penyedia sedang padat, proses bisa lebih lama dan akan diperbarui pada halaman cek status pesanan.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Bagaimana jika item tidak masuk? <span class="faq-ico">+</span></button>
-          <div class="faq-a">Simpan kode invoice Anda, lalu hubungi bot toko dengan menyertakan kode invoice tersebut. Pesanan yang terverifikasi gagal akan diproses ulang atau dikembalikan sesuai ketentuan garansi yang berlaku.</div>
+          <div class="faq-a"><div class="faq-a-in">Simpan kode invoice Anda, lalu hubungi bot toko dengan menyertakan kode invoice tersebut. Pesanan yang terverifikasi gagal akan diproses ulang atau dikembalikan sesuai ketentuan garansi yang berlaku.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Metode pembayaran apa saja yang diterima? <span class="faq-ico">+</span></button>
-          <div class="faq-a">Pembayaran melalui QRIS, sehingga bisa dipindai dari seluruh bank dan e-wallet yang mendukung QRIS (BCA, Mandiri, BRI, BNI, DANA, GoPay, OVO, ShopeePay, dan lainnya).</div>
+          <div class="faq-a"><div class="faq-a-in">Pembayaran melalui QRIS, sehingga bisa dipindai dari seluruh bank dan e-wallet yang mendukung QRIS (BCA, Mandiri, BRI, BNI, DANA, GoPay, OVO, ShopeePay, dan lainnya).</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Salah memasukkan ID atau nomor tujuan, bisa dibatalkan? <span class="faq-ico">+</span></button>
-          <div class="faq-a">Periksa kembali ID dan nickname yang tampil pada layar verifikasi sebelum membayar. Pesanan yang sudah dibayar dan dikirim ke tujuan tidak dapat dibatalkan, karena item langsung masuk ke akun yang terdaftar.</div>
+          <div class="faq-a"><div class="faq-a-in">Periksa kembali ID dan nickname yang tampil pada layar verifikasi sebelum membayar. Pesanan yang sudah dibayar dan dikirim ke tujuan tidak dapat dibatalkan, karena item langsung masuk ke akun yang terdaftar.</div></div>
         </div>
         <div class="faq-item">
           <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Saya menemukan pihak yang mengaku sebagai ALL YOU NEED, bagaimana? <span class="faq-ico">+</span></button>
-          <div class="faq-a">Kami hanya berkomunikasi melalui bot toko dan channel resmi yang tertaut di halaman ini. Kami tidak pernah meminta password, kode OTP, atau data login akun Anda. Abaikan dan laporkan akun yang mengatasnamakan kami.</div>
+          <div class="faq-a"><div class="faq-a-in">Kami hanya berkomunikasi melalui bot toko dan channel resmi yang tertaut di halaman ini. Kami tidak pernah meminta password, kode OTP, atau data login akun Anda. Abaikan dan laporkan akun yang mengatasnamakan kami.</div></div>
         </div>
       </div>
 

@@ -1550,6 +1550,9 @@
       transition: background-color .35s, color .35s, border-color .35s, box-shadow .35s,
                   transform .35s cubic-bezier(0.16,1,0.3,1);
     }
+    /* Ikon garis (stroke currentColor) di dalam kotak nomor: ikut warna status,
+       jadi menyala putih saat aktif tanpa file gambar tambahan. */
+    .step-card .step-num svg { width: 16px; height: 16px; display: block; }
     /* Sebelum aktif: abu-abu tenang. Sesudah aktif: biru penuh, angka putih. */
     .js-steps .step-card:not(.is-on) .step-num {
       background: #F1F5F9; color: #94A3B8; border-color: #E2E8F0;
@@ -1766,17 +1769,17 @@
       </div>
       <div class="steps-grid">
         <div class="step-card">
-          <div class="step-num">1</div>
+          <div class="step-num" role="img" aria-label="Langkah 1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></div>
           <div class="step-h">Pilih Layanan &amp; Nominal</div>
           <div class="step-p">Pilih brand, lalu tentukan nominal. Untuk game, cukup masukkan ID (dan server) — nickname akun akan diverifikasi otomatis di layar.</div>
         </div>
         <div class="step-card">
-          <div class="step-num">2</div>
+          <div class="step-num" role="img" aria-label="Langkah 2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><path d="M14 14h3v3h-3z"/><path d="M20.5 14v3"/><path d="M14 20.5h3"/><path d="M20.5 20.5h.01"/></svg></div>
           <div class="step-h">Bayar via QRIS</div>
           <div class="step-p">Pindai kode QRIS dari bank atau e-wallet apa pun. Tidak ada biaya admin tambahan, nominal dibayar persis seperti tagihan.</div>
         </div>
         <div class="step-card">
-          <div class="step-num">3</div>
+          <div class="step-num" role="img" aria-label="Langkah 3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2.5 4.5 13.5H10l-1 8 8.5-11H12l1-8Z"/></svg></div>
           <div class="step-h">Item Masuk Otomatis</div>
           <div class="step-p">Sistem mengirim pesanan begitu pembayaran terverifikasi. Simpan kode invoice untuk cek status atau klaim garansi.</div>
         </div>
@@ -2183,7 +2186,13 @@
         // (hero, skeleton, gambar) sehingga posisi absolut hasil ukur awal cepat basi.
         var rect = grid.getBoundingClientRect();
         var vh = window.innerHeight;
-        var p = (vh * 0.8 - rect.top) / (rect.height + vh * 0.6);
+        // 0 saat bagian ini muncul di 85% tinggi layar, 1 saat naik ke 25%.
+        // Dulu pembaginya ikut tinggi kartu, jadi di bagian bawah halaman progres
+        // mentok ~75% dan langkah 3 tak pernah menyala.
+        var p = (vh * 0.85 - rect.top) / (vh * 0.6);
+        // Halaman sudah di ujung: anggap selesai kalau bagian ini masih terlihat.
+        var atEnd = (window.scrollY + vh) >= (document.documentElement.scrollHeight - 2);
+        if (atEnd && rect.top < vh * 0.6) p = 1;
         p = Math.max(0, Math.min(1, p));
         if (Math.abs(p - lastP) < 0.002) return;
         lastP = p;
@@ -2191,7 +2200,7 @@
         var n = cards.length;
         for (var i = 0; i < n; i++) {
           // Badge ke-i menyala saat isi garis sudah melewati tengah segmennya.
-          cards[i].classList.toggle('is-on', p * n - i > 0.4);
+          cards[i].classList.toggle('is-on', p * n - i > 0.55);
         }
       }
       function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }

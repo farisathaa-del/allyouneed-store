@@ -229,9 +229,9 @@
       z-index: 1;
     }
     .hero-banner {
-      background: radial-gradient(circle at 85% 20%, rgba(0, 224, 248, 0.32) 0%, transparent 45%),
-                  radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
-                  linear-gradient(135deg, var(--hero-a) 0%, var(--ink-900) 55%, var(--ink-800) 100%);
+      /* Abu tua -> cyan hanya di sisi kanan (tempat kartu), teks tetap di zona gelap. */
+      background: radial-gradient(circle at 100% 0%, rgba(0, 224, 248, 0.30) 0%, transparent 55%),
+                  linear-gradient(100deg, #1B232E 0%, #202836 58%, #0E5563 100%);
       color: var(--surface);
       border-radius: var(--r-xl);
       padding: 46px 50px;
@@ -293,14 +293,14 @@
     .wall-card {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 9px 11px;
-      border-radius: 16px;
+      gap: 9px;
+      padding: 8px 12px 8px 9px;
+      border-radius: 15px;
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.11);
       box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.9);
     }
-    .wall-card img { width: 38px; height: 38px; border-radius: 11px; object-fit: cover; flex: none; }
+    .wall-card img { width: 34px; height: 34px; border-radius: 10px; object-fit: cover; flex: none; }
     .wall-txt { min-width: 0; }
     .wall-name {
       font-family: var(--font-display);
@@ -311,7 +311,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .wall-sub { font-size: 10.5px; color: rgba(255, 255, 255, 0.55); white-space: nowrap; }
+
 
     @media (prefers-reduced-motion: reduce) {
       .hero-col, .hero-col.down { animation: none; transform: none; }
@@ -1751,8 +1751,8 @@
         </div>
         <div class="hero-wall" aria-hidden="true">
           <div class="hero-wall-inner" id="heroWallInner">
-            <div class="hero-col "><div class="wall-card"><img src="public/logos/mlbb_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Mobile Legends</div><div class="wall-sub" data-wall="mlbb">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/netflix_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Netflix</div><div class="wall-sub" data-wall="netflix">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/pubg_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">PUBG Mobile</div><div class="wall-sub" data-wall="pubg">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/canva_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Canva Pro</div><div class="wall-sub" data-wall="canva">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/telkomsel_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Telkomsel</div><div class="wall-sub" data-wall="telkomsel">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/chatgpt_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">ChatGPT Plus</div><div class="wall-sub" data-wall="chatgpt_gemini">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/mlbb_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Mobile Legends</div><div class="wall-sub" data-wall="mlbb">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/netflix_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Netflix</div><div class="wall-sub" data-wall="netflix">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/pubg_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">PUBG Mobile</div><div class="wall-sub" data-wall="pubg">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/canva_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Canva Pro</div><div class="wall-sub" data-wall="canva">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/telkomsel_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Telkomsel</div><div class="wall-sub" data-wall="telkomsel">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/chatgpt_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">ChatGPT Plus</div><div class="wall-sub" data-wall="chatgpt_gemini">Resmi · 24 Jam</div></div></div></div>
-            <div class="hero-col down"><div class="wall-card"><img src="public/logos/ff_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Free Fire</div><div class="wall-sub" data-wall="ff">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/spotify_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Spotify</div><div class="wall-sub" data-wall="spotify">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/xl_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">XL Axiata</div><div class="wall-sub" data-wall="pulsa_reguler">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/capcut_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">CapCut Pro</div><div class="wall-sub" data-wall="capcut">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/pln_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Token PLN</div><div class="wall-sub" data-wall="pln">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/viu_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Viu Premium</div><div class="wall-sub" data-wall="streaming_asia">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/ff_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Free Fire</div><div class="wall-sub" data-wall="ff">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/spotify_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Spotify</div><div class="wall-sub" data-wall="spotify">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/xl_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">XL Axiata</div><div class="wall-sub" data-wall="pulsa_reguler">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/capcut_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">CapCut Pro</div><div class="wall-sub" data-wall="capcut">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/pln_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Token PLN</div><div class="wall-sub" data-wall="pln">Resmi · 24 Jam</div></div></div><div class="wall-card"><img src="public/logos/viu_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Viu Premium</div><div class="wall-sub" data-wall="streaming_asia">Resmi · 24 Jam</div></div></div></div>
+            <div class="hero-col "><div class="wall-card"><img src="public/logos/mlbb_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Mobile Legends</div></div></div><div class="wall-card"><img src="public/logos/netflix_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Netflix</div></div></div><div class="wall-card"><img src="public/logos/pubg_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">PUBG Mobile</div></div></div><div class="wall-card"><img src="public/logos/canva_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Canva Pro</div></div></div><div class="wall-card"><img src="public/logos/telkomsel_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Telkomsel</div></div></div><div class="wall-card"><img src="public/logos/chatgpt_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">ChatGPT Plus</div></div></div><div class="wall-card"><img src="public/logos/mlbb_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Mobile Legends</div></div></div><div class="wall-card"><img src="public/logos/netflix_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Netflix</div></div></div><div class="wall-card"><img src="public/logos/pubg_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">PUBG Mobile</div></div></div><div class="wall-card"><img src="public/logos/canva_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Canva Pro</div></div></div><div class="wall-card"><img src="public/logos/telkomsel_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Telkomsel</div></div></div><div class="wall-card"><img src="public/logos/chatgpt_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">ChatGPT Plus</div></div></div></div>
+            <div class="hero-col down"><div class="wall-card"><img src="public/logos/ff_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Free Fire</div></div></div><div class="wall-card"><img src="public/logos/spotify_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Spotify</div></div></div><div class="wall-card"><img src="public/logos/xl_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">XL Axiata</div></div></div><div class="wall-card"><img src="public/logos/capcut_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">CapCut Pro</div></div></div><div class="wall-card"><img src="public/logos/pln_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Token PLN</div></div></div><div class="wall-card"><img src="public/logos/viu_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Viu Premium</div></div></div><div class="wall-card"><img src="public/logos/ff_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Free Fire</div></div></div><div class="wall-card"><img src="public/logos/spotify_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Spotify</div></div></div><div class="wall-card"><img src="public/logos/xl_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">XL Axiata</div></div></div><div class="wall-card"><img src="public/logos/capcut_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">CapCut Pro</div></div></div><div class="wall-card"><img src="public/logos/pln_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Token PLN</div></div></div><div class="wall-card"><img src="public/logos/viu_g.jpg?v=15" alt="" width="38" height="38" loading="lazy" decoding="async"><div class="wall-txt"><div class="wall-name">Viu Premium</div></div></div></div>
           </div>
         </div>
       </div>
@@ -2328,19 +2328,6 @@
       hero.addEventListener('pointerleave', function () { wall.style.transform = ''; });
     })();
 
-    // Subteks dinding: jumlah paket & harga mulai, diambil dari data asli (bukan karangan).
-    function fillHeroWall() {
-      if (!allProducts || !allProducts.length) return;
-      document.querySelectorAll('.wall-sub[data-wall]').forEach(function (el) {
-        var key = el.getAttribute('data-wall');
-        var b = Object.values(BRANDS_DEF).find(function (x) { return x.key === key; });
-        if (!b || !b.filterFn) return;
-        var items = allProducts.filter(b.filterFn);
-        if (!items.length) return;
-        var min = Math.min.apply(null, items.map(function (p) { return p.harga; }));
-        el.textContent = items.length + ' paket · Rp ' + min.toLocaleString('id-ID');
-      });
-    }
     // ─── ANIMASI MASUK: satu kurva, satu observer, tanpa library ───
     (function initReveal() {
       var root = document.documentElement;
@@ -3280,7 +3267,6 @@
       wrap.innerHTML = html;
 
       // Animasi masuk hanya untuk render pertama (bukan tiap ketik di pencarian).
-      if (typeof fillHeroWall === 'function') fillHeroWall();
 
       if (!window.__hubGridRevealed && window.revealNew) {
         window.__hubGridRevealed = true;

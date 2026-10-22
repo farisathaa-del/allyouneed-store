@@ -1473,28 +1473,29 @@
       .spinner { animation: none; }
     }
     .site-footer {
-      margin-top: 44px; border-top: 1px solid var(--line); background: var(--surface);
-      padding: 34px 0 26px;
+      /* Abu tua (abu baja logo), bukan putih: footer memisahkan diri dari latar halaman. */
+      margin-top: 44px; border-top: 1px solid #334054; background: #263041;
+      padding: 34px 0 26px; color: #C3CBD8;
     }
     .footer-cols { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 26px; }
-    .footer-brand-title { font-size: 15px; font-weight: 900; color: var(--ink-900); margin-bottom: 8px; }
-    .footer-brand-desc { font-size: 12.3px; color: var(--ink-500); line-height: 1.65; max-width: 320px; }
-    .footer-h { font-size: 11px; font-weight: 800; color: var(--ink-a11y); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
+    .footer-brand-title { font-size: 15px; font-weight: 900; color: #F8F8F8; margin-bottom: 8px; }
+    .footer-brand-desc { font-size: 12.3px; color: #A9B6C6; line-height: 1.65; max-width: 320px; }
+    .footer-h { font-size: 11px; font-weight: 800; color: #90A0B8; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
     .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
     .footer-links a, .footer-links button {
-      font-size: 12.5px; color: #334155; text-decoration: none; background: none; border: none;
+      font-size: 12.5px; color: #D3DAE4; text-decoration: none; background: none; border: none;
       padding: 0; cursor: pointer; font-family: inherit; text-align: left; font-weight: 600;
     }
     .footer-links a:hover, .footer-links button:hover { color: var(--brand); }
     .pay-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
     .pay-badge {
-      font-size: 10px; font-weight: 800; color: var(--ink-600); background: #F1F5F9; border: 1px solid var(--line);
+      font-size: 10px; font-weight: 800; color: #C3CBD8; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
       border-radius: 7px; padding: 4px 9px; letter-spacing: 0.2px;
     }
     .footer-bottom {
-      margin-top: 26px; padding-top: 18px; border-top: 1px solid #F1F5F9;
+      margin-top: 26px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.12);
       display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;
-      font-size: 11.5px; color: var(--ink-a11y);
+      font-size: 11.5px; color: #A9B6C6;
     }
     @media (max-width: 860px) {
       .stat-bar { grid-template-columns: repeat(2, 1fr); }

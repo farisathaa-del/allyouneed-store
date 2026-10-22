@@ -1413,6 +1413,17 @@
     @media (min-width: 1025px) {
       .sticky-checkout-bar { display: none !important; }
     }
+
+    /* ═══ ANIMASI MASUK (IntersectionObserver + WAAPI, tanpa dependensi) ═══ */
+    /* Kondisi awal hanya berlaku selama kelas .anim aktif di <html>. */
+    .anim [data-reveal], .anim [data-stagger-item] { opacity: 0; }
+    .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+    .word > span { display: inline-block; }
+    .anim .hero-title .word > span { transform: translateY(115%); }
+    @media (prefers-reduced-motion: reduce) {
+      .anim [data-reveal], .anim [data-stagger-item] { opacity: 1 !important; }
+      .anim .hero-title .word > span { transform: none !important; }
+    }
   </style>
 
   <script type="application/ld+json">
@@ -1435,6 +1446,7 @@
   </script>
 </head>
 <body>
+  <script>document.documentElement.classList.add('anim');window.__animFailsafe = setTimeout(function(){document.documentElement.classList.remove('anim');}, 3000);</script>
   <a href="#brandGridWrap" class="skip-link">Lewati ke katalog produk</a>
 
   <!-- ─── Navbar ─── -->
@@ -1991,6 +2003,148 @@
       el.scrollIntoView({ behavior: 'smooth', block: block });
     }
 
+    // ─── ANIMASI MASUK: satu kurva, satu observer, tanpa library ───
+    (function initReveal() {
+      var root = document.documentElement;
+      var MQ = matchMedia('(prefers-reduced-motion: reduce)');
+      var EASE = 'cubic-bezier(.22,1,.36,1)';
+      var reduce = MQ.matches;
+      var DIST = reduce ? 10 : 30;
+      var DUR = reduce ? 500 : 850;
+      var REST = 'translate3d(0,0,0) scale(1)';
+
+      function done(el) {
+        el.removeAttribute('data-reveal');
+        el.removeAttribute('data-stagger-item');
+      }
+
+      function enter(el, delay, from) {
+        if (!el.animate) { done(el); return; }
+        delay = delay || 0;
+        var start = from || ('translate3d(0,' + DIST + 'px,0) scale(1)');
+        var anim;
+        try {
+          anim = el.animate(
+            [{ opacity: 0, transform: start }, { opacity: 1, transform: REST }],
+            { duration: DUR, delay: delay, easing: EASE, fill: 'both' }
+          );
+        } catch (e) { done(el); return; }
+        anim.onfinish = function () {
+          try { anim.cancel(); } catch (e) {}
+          el.style.opacity = '';
+          el.style.transform = '';
+          done(el);
+        };
+      }
+
+      // Judul hero dipecah per kata supaya bisa naik dari masker.
+      function splitWords(el) {
+        var words = el.textContent.trim().split(/\s+/);
+        el.textContent = '';
+        words.forEach(function (w, i) {
+          var wrap = document.createElement('span');
+          wrap.className = 'word';
+          var inner = document.createElement('span');
+          inner.textContent = w;
+          wrap.appendChild(inner);
+          el.appendChild(wrap);
+          if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+        });
+        return el.querySelectorAll('.word > span');
+      }
+
+      function tag(el, attr) { if (el) el.setAttribute(attr, ''); }
+
+      // Penanda otomatis untuk blok statis (markup tidak perlu diubah).
+      var GROUPS = [
+        ['.hero-trust-bar', '.hero-trust-item'],
+        ['.search-chips', '.search-chip'],
+        ['.category-pills', '.pill'],
+        ['.stat-bar', '.stat-cell'],
+        ['.steps-grid', '.step-card'],
+        ['.faq-list', '.faq-item'],
+        ['.footer-cols', ':scope > div']
+      ];
+      GROUPS.forEach(function (g) {
+        var group = document.querySelector(g[0]);
+        if (!group) return;
+        var items = group.querySelectorAll(g[1]);
+        if (!items.length) return;
+        tag(group, 'data-stagger');
+        items.forEach(function (el) { tag(el, 'data-stagger-item'); });
+      });
+
+      ['.search-box-wrap', '.sec-head'].forEach(function (sel) {
+        document.querySelectorAll(sel).forEach(function (el) { tag(el, 'data-reveal'); });
+      });
+
+      // Hero tampil begitu halaman dibuka.
+      var title = document.querySelector('.hero-title');
+      var words = title ? splitWords(title) : [];
+      var WORD_DUR = reduce ? 600 : 950;
+      words.forEach(function (w, i) {
+        var delay = 120 + i * 70;
+        var anim = w.animate(
+          [{ transform: reduce ? 'translateY(0%)' : 'translateY(115%)', opacity: reduce ? 1 : 0 },
+           { transform: 'translateY(0%)', opacity: 1 }],
+          { duration: WORD_DUR, delay: delay, easing: EASE, fill: 'both' }
+        );
+        onfinish = function () { try { anim.cancel(); } catch (e) {} w.style.transform = 'translateY(0%)'; };  // kunci posisi akhir: CSS .anim masih menyembunyikan
+      });
+      var heroDelay = 120 + words.length * 70;
+
+      var heroBits = [
+        ['.hero-badge', 50],
+        ['.hero-sub', heroDelay],
+        ['.hero-trust-bar', heroDelay + 120]
+      ];
+      heroBits.forEach(function (b) {
+        var el = document.querySelector(b[0]);
+        if (!el) return;
+        if (b[0] === '.hero-trust-bar') {
+          el.querySelectorAll('.hero-trust-item').forEach(function (item, i) {
+            enter(item, b[1] + i * 70);
+          });
+          el.removeAttribute('data-stagger');
+        } else { enter(el, b[1]); }
+      });
+
+      // Sisa blok: dipicu saat masuk 12% dari bawah layar.
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('[data-reveal],[data-stagger-item]').forEach(done);
+        clearTimeout(window.__animFailsafe);
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          io.unobserve(en.target);
+          if (en.target.hasAttribute('data-stagger')) {
+            var kids = en.target.querySelectorAll('[data-stagger-item]');
+            kids.forEach(function (el, i) { enter(el, Math.min(i, 8) * 70); });
+            en.target.removeAttribute('data-stagger');
+          } else {
+            enter(en.target, 0, en.target.getAttribute('data-reveal') === 'scale'
+              ? 'translate3d(0,' + DIST + 'px,0) scale(' + (reduce ? 0.99 : 0.95) + ')'
+              : null);
+          }
+        });
+      }, { rootMargin: '0px 0px -12% 0px' });
+
+      document.querySelectorAll('[data-reveal],[data-stagger]').forEach(function (el) { io.observe(el); });
+
+      // Elemen yang dirender belakangan (kartu brand, paket terlaris) memakai antrean yang sama.
+      window.revealNew = function (nodes, stagger) {
+        if (!nodes || !nodes.length) return;
+        Array.prototype.forEach.call(nodes, function (el, i) {
+          enter(el, stagger ? Math.min(i, 8) * 70 : 0);
+        });
+      };
+
+      clearTimeout(window.__animFailsafe);
+      window.__revealReady = true;
+    })();
+
     let allProducts = [];
     let activeOrderCode = null;
     let pendingSelectId = null;
@@ -2457,6 +2611,11 @@
           </div>
         `;
       }).join('');
+
+      if (!window.__hotStripRevealed && window.revealNew) {
+        window.__hotStripRevealed = true;
+        window.revealNew(wrap.querySelectorAll('.strip-card'), true);
+      }
     }
 
     function brandNameForProduct(p) {
@@ -2584,6 +2743,12 @@
       html += '</div>';
 
       wrap.innerHTML = html;
+
+      // Animasi masuk hanya untuk render pertama (bukan tiap ketik di pencarian).
+      if (!window.__hubGridRevealed && window.revealNew) {
+        window.__hubGridRevealed = true;
+        window.revealNew(wrap.querySelectorAll('.brand-card'), true);
+      }
     }
 
 

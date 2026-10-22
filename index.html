@@ -75,7 +75,9 @@
       --container: 1260px;
     }
 
-    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    html { -webkit-text-size-adjust: 100%; }
+    /* Lenis mengambil alih scroll; tanpa JS tetap mulus lewat anchor bawaan */
+    html.no-lenis { scroll-behavior: smooth; }
     body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
 
     /* Ikon SVG (menggantikan emoji sistem) */
@@ -1945,10 +1947,50 @@
   </div>
 
   <!-- ─── Script Storefront ─── -->
-  <script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script>
     // Basis API: kosong = satu domain dengan server. Saat di-host statis (GitHub Pages),
     // isi lewat script kecil window.API_BASE = 'https://...' sebelum file ini.
+    document.documentElement.classList.add('no-lenis'); // fallback bila Lenis gagal dimuat
     const API_BASE = window.API_BASE || '';
+    // ─── SMOOTH SCROLL (Lenis) — fondasi semua gerak ───
+    // Satu loop rAF; prefers-reduced-motion tidak memakai Lenis sama sekali.
+    var pageLenis = null;
+    (function initLenis() {
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || typeof window.Lenis !== 'function') return;
+      try {
+        pageLenis = new window.Lenis({
+          lerp: 0.1,
+          smoothWheel: true,
+          // Area yang punya scroll sendiri (list horizontal, dialog) tidak diambil alih.
+          prevent: function (node) {
+            if (!(node instanceof Element) || node === document.body || node === document.documentElement) return false;
+            var oy = getComputedStyle(node).overflowY;
+            return (oy === 'auto' || oy === 'scroll') && node.scrollHeight > node.clientHeight + 1;
+          }
+        });
+        var raf = function (t) { pageLenis.raf(t); requestAnimationFrame(raf); };
+        requestAnimationFrame(raf);
+        document.documentElement.classList.remove('no-lenis');
+        document.documentElement.classList.add('has-lenis');
+      } catch (e) { pageLenis = null; }
+    })();
+
+    function scrollPageTo(y, instant) {
+      if (pageLenis) { pageLenis.scrollTo(y, { immediate: !!instant, duration: 1.1 }); return; }
+      window.scrollTo({ top: y, behavior: instant ? 'auto' : 'smooth' });
+    }
+    function scrollElemTo(el, block) {
+      if (!el) return;
+      block = block || 'start';
+      if (pageLenis) {
+        pageLenis.scrollTo(el, { offset: block === 'center' ? -Math.round(window.innerHeight * 0.22) : -80, duration: 1.1 });
+        return;
+      }
+      el.scrollIntoView({ behavior: 'smooth', block: block });
+    }
+
     let allProducts = [];
     let activeOrderCode = null;
     let pendingSelectId = null;
@@ -2337,7 +2379,7 @@
       showHubView();
       onHubSearch(term);
       const wrap = document.getElementById('brandGridWrap');
-      if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollElemTo(wrap, 'start');
     }
 
     function toggleFaq(btn) {
@@ -2357,7 +2399,7 @@
     function scrollToFaq() {
       showHubView();
       const el = document.querySelector('.faq-list');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      scrollElemTo(el, 'center');
     }
 
     // ─── STATISTIK LIVE + STRIP PAKET TERLARIS (pola G2G & Lapakgaming) ───
@@ -2443,7 +2485,7 @@
 
     function showHubView() {
       currentView = 'HUB';
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      scrollPageTo(0, true);
       document.getElementById('hubView').style.display = 'block';
       document.getElementById('orderView').style.display = 'none';
       const legalEl = document.getElementById('legalView');
@@ -2562,7 +2604,7 @@
       showHubView();
       setTimeout(() => {
         const el = document.querySelector('.faq-list');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollElemTo(el, 'start');
       }, 60);
     }
 
@@ -2676,7 +2718,7 @@
       document.getElementById('hubView').style.display = 'none';
       document.getElementById('orderView').style.display = 'none';
       view.style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      scrollPageTo(0, true);
 
       box.innerHTML = `<h1>${doc.title}</h1>
         <div class="legal-updated">Terakhir diperbarui: ${LEGAL_UPDATED}</div>
@@ -2698,7 +2740,7 @@
       if (!brand) return;
 
       currentView = 'ORDER';
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      scrollPageTo(0, true);
       document.getElementById('hubView').style.display = 'none';
       document.getElementById('orderView').style.display = 'block';
       const legalEl2 = document.getElementById('legalView');

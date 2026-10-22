@@ -903,7 +903,7 @@
       align-items: center;
       gap: 4px;
     }
-    .trust-tag.blue { background: var(--brand-soft); color: var(--brand-ink); }
+    .trust-tag.blue { background: var(--brand-soft); color: #0A6E7E; }
     .trust-tag.green { background: #ECFDF5; color: #047857; }
     .trust-tag.yellow { background: #FEF3C7; color: #B45309; }
 
@@ -957,7 +957,7 @@
       display: block;
       font-size: 12.5px;
       font-weight: 700;
-      color: #334155;
+      color: var(--ink-600);
       margin-bottom: 6px;
     }
     .order-input {
@@ -1107,8 +1107,8 @@
       position: absolute;
       top: -7px;
       right: 10px;
-      background: #EF4444;
-      color: var(--on-dark);
+      background: #DC2626;
+      color: #FFFFFF;
       font-size: 9.5px;
       font-weight: 800;
       padding: 2px 8px;
@@ -1120,7 +1120,7 @@
       top: -7px;
       right: 10px;
       background: #F59E0B;
-      color: var(--on-dark);
+      color: #3D2A00;
       font-size: 9.5px;
       font-weight: 800;
       padding: 2px 8px;
@@ -1283,7 +1283,7 @@
       box-shadow: 0 8px 20px rgba(0, 224, 248, 0.25);
     }
     .btn-checkout-qris:disabled {
-      background: #CBD5E1;
+      background: #E2E8F0; color: #475569;
       cursor: not-allowed;
       transform: none;
     }
@@ -1754,14 +1754,16 @@
     html[data-theme="dark"] [style*="background:#FFFFFF"], html[data-theme="dark"] [style*="#FFF;"] {
       background: #151D26 !important; border-color: #2A3644 !important; color: #E6EDF4 !important;
     }
-    html[data-theme="dark"] .btn-checkout-qris:disabled { background: #26313D; color: #7E8B99; }
+    html[data-theme="dark"] .btn-checkout-qris:disabled { background: #26313D; color: #A6B3C0; }
     html[data-theme="dark"] .btn-checkout-qris { background: var(--brand); color: var(--on-brand); }
     html[data-theme="dark"] .btn-checkout-qris:hover:not(:disabled) { background: #35EBFF; }
     html[data-theme="dark"] .modal-close { background: #1E2833; color: var(--ink-600); }
     html[data-theme="dark"] .modal-close:hover { background: #26313D; color: #FFFFFF; }
-    html[data-theme="dark"] .brand-badge-popular { background: rgba(245,178,26,.22); color: #FFD87A; border-color: rgba(245,178,26,.4); }
+    html[data-theme="dark"] .brand-badge-popular { background: #F59E0B; color: #3D2A00; border-color: #F59E0B; }
     html[data-theme="dark"] .trust-tag.green { background: rgba(34,197,94,.16); color: #86EFAC; border-color: rgba(34,197,94,.32); }
     html[data-theme="dark"] .payment-tag-free { background: rgba(34,197,94,.16); color: #86EFAC; }
+    html[data-theme="dark"] .trust-tag.blue { color: #4FE9FF; background: #0C2A30; }
+    html[data-theme="dark"] [style*="color: #5B6470"] { color: #A3B1BF !important; }
     html[data-theme="dark"] .mobile-nav {
       background: #0D131A; border-top-color: #1E2833;
       box-shadow: 0 -8px 22px -12px rgba(0,0,0,.9);
@@ -2259,7 +2261,7 @@
           <div class="step-box-title">WhatsApp / Kontak Notifikasi (Opsional)</div>
         </div>
         <input type="text" id="orderBuyerWa" class="order-input" placeholder="contoh: 081234567890 (Untuk kirim bukti invoice otomatis)">
-        <div style="font-size: 11px; color: #888; margin-top: 5px;">*Bukti transaksi dan kode invoice akan tercatat otomatis di sistem.</div>
+        <div style="font-size: 11px; color: #5B6470; margin-top: 5px;">*Bukti transaksi dan kode invoice akan tercatat otomatis di sistem.</div>
       </div>
 
       </div><!-- /order-main -->
@@ -4104,7 +4106,7 @@
         `;
       });
 
-      gridWrap.innerHTML = html || '<div style="grid-column: 1/-1; text-align: center; padding: 24px; color: #888;">Tidak ada nominal dalam kategori ini.</div>';
+      gridWrap.innerHTML = html || '<div style="grid-column: 1/-1; text-align: center; padding: 24px; color: #5B6470;">Tidak ada nominal dalam kategori ini.</div>';
     }
 
     function selectTileProduct(productId) {

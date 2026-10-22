@@ -1210,7 +1210,10 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
+      flex: 1 1 auto;
     }
+    .payment-brand-row > div { min-width: 0; }
     .payment-title {
       font-size: 14px;
       font-weight: 800;
@@ -1226,8 +1229,17 @@
       color: #15803D;
       font-size: 10.5px;
       font-weight: 800;
-      padding: 3px 8px;
+      padding: 0 10px;
       border-radius: 99px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 22px;
+      line-height: 1;
+      white-space: nowrap;
+      text-align: center;
+      letter-spacing: 0.1px;
     }
 
     /* Sticky Bottom Checkout Bar (Mobile & Desktop) */
@@ -1540,19 +1552,37 @@
     .mobile-nav {
       display: none;
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 95;
-      background: #FFFFFF;
+      background: rgba(255, 255, 255, 0.92);
+      -webkit-backdrop-filter: saturate(160%) blur(14px);
+      backdrop-filter: saturate(160%) blur(14px);
       border-top: 1px solid var(--line);
-      box-shadow: 0 -6px 18px -6px rgba(15, 23, 42, 0.12);
-      padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -10px 28px -18px rgba(8, 8, 16, 0.45);
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
     }
-    .mobile-nav.on { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .mobile-nav.on { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
     .mobile-nav button {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      background: none; border: 0; padding: 6px 4px; cursor: pointer; font-family: inherit;
-      font-size: 10.5px; font-weight: 800; color: var(--ink-a11y); letter-spacing: 0.1px;
+      position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+      background: none; border: 0; border-radius: 14px; padding: 6px 4px 5px; min-height: 52px;
+      cursor: pointer; font-family: inherit; color: var(--ink-a11y);
+      -webkit-tap-highlight-color: transparent;
+      transition: background .18s ease, transform .18s ease;
     }
-    .mobile-nav button .ico { width: 20px; height: 20px; }
+    .mobile-nav .mn-ico {
+      display: grid; place-items: center; width: 34px; height: 26px; border-radius: 9px;
+      transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .mobile-nav .mn-ico .ico { width: 21px; height: 21px; }
+    .mobile-nav .mn-lbl {
+      font-size: 10.5px; font-weight: 800; letter-spacing: 0.15px; line-height: 1;
+      transition: color .2s ease;
+    }
     .mobile-nav button.active { color: var(--brand-ink); }
+    .mobile-nav button.active .mn-ico { background: var(--brand); box-shadow: 0 6px 14px -8px rgba(0, 224, 248, .9); }
+    .mobile-nav button.active .mn-ico .ico { color: var(--on-brand); }
+    .mobile-nav button.active .mn-lbl { color: var(--brand-ink); }
+    .mobile-nav button:active { transform: scale(.96); }
+    .mobile-nav button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
     @media (max-width: 899px) {
       body { padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
       .category-pills { scrollbar-width: none; -ms-overflow-style: none; }
@@ -1777,11 +1807,13 @@
     html[data-theme="dark"] .trust-tag.blue { color: #4FE9FF; background: #0C2A30; }
     html[data-theme="dark"] [style*="color: #5B6470"] { color: #A3B1BF !important; }
     html[data-theme="dark"] .mobile-nav {
-      background: #0D131A; border-top-color: #1E2833;
+      background: rgba(13, 19, 26, .94); border-top-color: #1E2833;
       box-shadow: 0 -8px 22px -12px rgba(0,0,0,.9);
     }
     html[data-theme="dark"] .mobile-nav button { color: #94A2B2; }
-    html[data-theme="dark"] .mobile-nav button.active { color: var(--brand); }
+    html[data-theme="dark"] .mobile-nav button .mn-ico { color: #94A2B2; }
+    html[data-theme="dark"] .mobile-nav button.active .mn-ico { color: var(--on-brand); }
+    html[data-theme="dark"] .mobile-nav button.active .mn-lbl { color: #4FE9FF; }
     html[data-theme="dark"] .sticky-checkout-bar {
       background: rgba(13,19,26,.96); border-color: #1E2833; box-shadow: 0 -8px 24px -14px rgba(0,0,0,.9);
     }
@@ -2347,14 +2379,17 @@
 
   <!-- ─── Bottom Nav Mobile ─── -->
   <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi utama mobile">
-    <button data-nav="katalog" onclick="showHubView()" class="active">
-      <svg class="ico" aria-hidden="true"><use href="#i-gamepad"/></svg> Katalog
+    <button data-nav="katalog" onclick="showHubView()" class="active" aria-label="Katalog">
+      <span class="mn-ico"><svg class="ico" aria-hidden="true"><use href="#i-gamepad"/></svg></span>
+      <span class="mn-lbl">Katalog</span>
     </button>
-    <button data-nav="pesanan" onclick="openTrackModal()">
-      <svg class="ico" aria-hidden="true"><use href="#i-ticket"/></svg> Pesanan
+    <button data-nav="pesanan" onclick="openTrackModal()" aria-label="Pesanan">
+      <span class="mn-ico"><svg class="ico" aria-hidden="true"><use href="#i-ticket"/></svg></span>
+      <span class="mn-lbl">Pesanan</span>
     </button>
-    <button data-nav="bantuan" onclick="openHelp()">
-      <svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg> Bantuan
+    <button data-nav="bantuan" onclick="openHelp()" aria-label="Bantuan">
+      <span class="mn-ico"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg></span>
+      <span class="mn-lbl">Bantuan</span>
     </button>
   </nav>
 
@@ -4245,7 +4280,7 @@
         totalEl.innerText = 'Rp ' + selectedProduct.harga.toLocaleString('id-ID');
         itemEl.innerText = selectedProduct.nama;
         btnEl.disabled = false;
-        btnEl.innerText = '<svg class="ico" style="vertical-align:-0.15em"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »';
+        btnEl.innerHTML = '<svg class="ico" style="vertical-align:-0.15em" aria-hidden="true"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »';
         if (sideName) sideName.innerText = selectedProduct.nama;
         if (sideTotal) sideTotal.innerText = 'Rp ' + selectedProduct.harga.toLocaleString('id-ID');
         if (sideQty) sideQty.innerText = String(currentStepperQty || 1) + ' akun';
@@ -4323,7 +4358,7 @@
         if (!json.ok) {
           alert('Gagal membuat pesanan: ' + (json.error || 'Terjadi kesalahan sistem'));
           btnEl.disabled = false;
-          btnEl.innerText = '<svg class="ico" style="vertical-align:-0.15em"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »';
+          btnEl.innerHTML = '<svg class="ico" style="vertical-align:-0.15em" aria-hidden="true"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »';
           return;
         }
 
@@ -4344,7 +4379,7 @@
         alert('Kendala jaringan: ' + err.message);
       } finally {
         btnEl.disabled = false;
-        btnEl.innerText = '<svg class="ico" style="vertical-align:-0.15em"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »';
+        btnEl.innerHTML = '<svg class="ico" style="vertical-align:-0.15em" aria-hidden="true"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »';
       }
     }
 
@@ -4397,12 +4432,21 @@
       document.getElementById('checkoutModal').classList.remove('open');
     }
 
+    // Sorot tombol nav yang sedang dipakai (umpan balik saat modal dibuka).
+    function markNav(name) {
+      document.querySelectorAll('#mobileNav button').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-nav') === name);
+      });
+    }
+
     function openTrackModal() {
       document.getElementById('trackModal').classList.add('open');
+      markNav('pesanan');
     }
     function closeTrackModal() {
       document.getElementById('trackModal').classList.remove('open');
       document.getElementById('trackResult').style.display = 'none';
+      markNav('katalog');
     }
 
     async function doTrackOrder() {

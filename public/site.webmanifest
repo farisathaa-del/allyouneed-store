@@ -1,14 +1,22 @@
 {
-  "name": "ALL YOU NEED — Digital Store",
+  "name": "ALL YOU NEED \u2014 Digital Store",
   "short_name": "ALL YOU NEED",
   "description": "Top up game, pulsa, token PLN & akun premium otomatis 24 jam.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAFAFB",
-  "theme_color": "#2563EB",
+  "theme_color": "#00E0F8",
   "lang": "id",
   "icons": [
-    { "src": "/public/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/public/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "/public/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/public/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }

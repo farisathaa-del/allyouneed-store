@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ALL YOU NEED — Top Up Game, Pulsa, Token PLN & Akun Premium 24 Jam</title>
   <meta name="description" content="Toko digital otomatis 24 jam: top up Mobile Legends, Free Fire, PUBG, pulsa & masa aktif, token PLN, serta akun premium (Netflix, Canva, ChatGPT). Bayar QRIS semua bank & e-wallet, tanpa biaya admin.">
-  <meta name="theme-color" content="#2563EB">
+  <meta name="theme-color" content="#00E0F8">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://allyouneeed.store/">
 
@@ -37,23 +37,26 @@
   <style>
     /* ═══════════════ FASE 0: DESIGN TOKENS (satu skala, nilai identik) ═══════════════ */
     :root {
-      --ink-900: #0F172A;
-      --ink-800: #1E293B;
-      --ink-600: #475569;
-      --ink-500: #64748B;
-      --ink-300: #94A3B8;
-      --ink-a11y: #5A6678;      /* teks kecil, kontras ≥ 4.5:1 di atas putih */
-      --line: #E2E8F0;
+      /* Palet diambil dari public/logo.png: #00E0F8 cyan, #405068 abu baja,
+         #90A0B8 abu terang, #080810 hitam, #F8F8F8 putih. */
+      --ink-900: #080810;
+      --ink-800: #263041;      /* turunan abu baja, untuk subjudul */
+      --ink-600: #405068;      /* abu baja logo — 8.2:1 di atas putih */
+      --ink-500: #5A6774;      /* turunan, teks bantu */
+      --ink-300: #90A0B8;      /* abu terang logo — non-teks saja */
+      --ink-a11y: #405068;     /* teks kecil — 8.2:1 di atas putih */
+      --line: #E2E7EC;
       --surface: #FFFFFF;
-      --surface-2: #F8FAFC;
-      --brand: #2563EB;
-      --brand-ink: #1D4ED8;
-      --brand-soft: #EFF6FF;
+      --surface-2: #F4F6F8;
+      --brand: #00E0F8;        /* cyan logo — isi/aksen, bukan teks di atas putih */
+      --brand-ink: #0B7F91;    /* cyan gelap — 4.7:1, aman untuk teks/ikon kecil */
+      --brand-soft: #E8FCFE;   /* turunan cyan sangat tipis */
+      --on-brand: #0B1220;     /* teks di atas cyan terang — 11.6:1 */
       --ok: #10B981;
       --ok-ink: #15803D;
       --warn: #F59E0B;
       --danger: #EF4444;
-      --hero-a: #0B1120;
+      --hero-a: #0B1220;
       --r-xs: 8px;
       --r-sm: 10px;
       --r-md: 14px;
@@ -101,7 +104,7 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background-color: #FAFAFB;
+      background-color: #F4F6F8;
       color: #111111;
       font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
       min-height: 100vh;
@@ -226,7 +229,7 @@
       z-index: 1;
     }
     .hero-banner {
-      background: radial-gradient(circle at 85% 20%, rgba(37, 99, 235, 0.32) 0%, transparent 45%),
+      background: radial-gradient(circle at 85% 20%, rgba(0, 224, 248, 0.32) 0%, transparent 45%),
                   radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.15) 0%, transparent 40%),
                   linear-gradient(135deg, var(--hero-a) 0%, var(--ink-900) 55%, var(--ink-800) 100%);
       color: var(--surface);
@@ -406,8 +409,8 @@
       box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04);
     }
     .search-box:focus-within {
-      border-color: var(--brand);
-      box-shadow: 0 10px 25px -4px rgba(37, 99, 235, 0.12), 0 0 0 3px rgba(37, 99, 235, 0.1);
+      border-color: var(--brand-ink);
+      box-shadow: 0 10px 25px -4px rgba(0, 224, 248, 0.12), 0 0 0 3px rgba(0, 224, 248, 0.1);
     }
     .search-input {
       border: none;
@@ -524,14 +527,14 @@
       color: inherit;
     }
     .brand-card:hover {
-      border-color: var(--brand);
+      border-color: var(--brand-ink);
       --tz: 12px;
       will-change: transform;
       transition:
         transform 0.07s linear,
         box-shadow 0.3s var(--ease),
         border-color 0.2s var(--ease);
-      box-shadow: 0 26px 46px -12px rgba(37, 99, 235, 0.26), 0 8px 18px -6px rgba(15, 23, 42, 0.10);
+      box-shadow: 0 26px 46px -12px rgba(0, 224, 248, 0.26), 0 8px 18px -6px rgba(15, 23, 42, 0.10);
     }
     /* Lapisan yang "mengambang" di dalam kartu 3D */
     .brand-card .brand-name     { transform: translateZ(22px); }
@@ -604,7 +607,7 @@
       font-weight: 700;
       color: var(--brand-ink);
       background: var(--brand-soft);
-      border: 1px solid #DBEAFE;
+      border: 1px solid #CFF6FB;
       padding: 4px 12px;
       border-radius: 99px;
       display: inline-block;
@@ -612,8 +615,8 @@
     }
     .brand-card:hover .brand-price-tag {
       background: var(--brand);
-      color: var(--surface);
-      border-color: var(--brand);
+      color: var(--on-brand);
+      border-color: var(--brand-ink);
     }
 
     /* ─── VIEW 2: ORDER STATION — 2 KOLOM (form kiri, ringkasan sticky kanan) ─── */
@@ -759,8 +762,8 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: #111111;
-      color: var(--surface);
+      background: var(--brand);
+      color: var(--on-brand);
       font-size: 13px;
       font-weight: 900;
       display: flex;
@@ -803,8 +806,8 @@
       font-weight: 600;
     }
     .order-input:focus {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      border-color: var(--brand-ink);
+      box-shadow: 0 0 0 3px rgba(0, 224, 248, 0.12);
     }
 
     /* Live Nickname / Prefix Feedback Box */
@@ -863,14 +866,14 @@
       transition: all 0.15s;
     }
     .denom-sub-tab:hover {
-      border-color: var(--brand);
-      color: var(--brand);
+      border-color: var(--brand-ink);
+      color: var(--brand-ink);
     }
     .denom-sub-tab.active {
       background: var(--brand);
-      border-color: var(--brand);
-      color: var(--surface);
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+      border-color: var(--brand-ink);
+      color: var(--on-brand);
+      box-shadow: 0 2px 8px rgba(0, 224, 248, 0.2);
     }
 
     /* 3-Column Compact Denom Tile Grid */
@@ -895,14 +898,14 @@
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
     }
     .denom-tile:hover {
-      border-color: var(--brand);
+      border-color: var(--brand-ink);
       transform: translateY(-2px);
-      box-shadow: 0 8px 18px -4px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 8px 18px -4px rgba(0, 224, 248, 0.12);
     }
     .denom-tile.selected {
-      border-color: var(--brand);
+      border-color: var(--brand-ink);
       background: var(--brand-soft);
-      box-shadow: 0 0 0 2px var(--brand), 0 8px 20px -4px rgba(37, 99, 235, 0.18);
+      box-shadow: 0 0 0 2px var(--brand), 0 8px 20px -4px rgba(0, 224, 248, 0.18);
       transform: translateY(-2px);
     }
     .tile-title {
@@ -927,7 +930,7 @@
       height: 20px;
       border-radius: 50%;
       background: var(--brand);
-      color: var(--surface);
+      color: var(--on-brand);
       align-items: center;
       justify-content: center;
     }
@@ -960,20 +963,20 @@
 
     /* Stepper Widget for Multi-Pass Inside Order Station */
     .order-stepper-box {
-      background: linear-gradient(135deg, #F0F7FF 0%, var(--brand-soft) 100%);
-      border: 1.5px solid #93C5FD;
+      background: linear-gradient(135deg, #F2FDFE 0%, var(--brand-soft) 100%);
+      border: 1.5px solid #66E9F7;
       border-radius: 18px;
       padding: 20px;
       margin-top: 16px;
       text-align: center;
       display: none;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.06);
+      box-shadow: 0 4px 14px rgba(0, 224, 248, 0.06);
     }
     .order-stepper-header {
       font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
-      color: #1E40AF;
+      color: #0B7F91;
       letter-spacing: 0.5px;
       margin-bottom: 12px;
     }
@@ -988,7 +991,7 @@
       width: 44px;
       height: 44px;
       border-radius: 12px;
-      border: 1.5px solid #BFDBFE;
+      border: 1.5px solid #A9EFF8;
       background: var(--surface);
       font-size: 16px;
       font-weight: 800;
@@ -1007,13 +1010,13 @@
     .step-qty-display {
       background: var(--surface);
       border: 2px solid var(--brand);
-      color: var(--brand);
+      color: var(--brand-ink);
       font-size: 16px;
       font-weight: 900;
       padding: 10px 24px;
       border-radius: 12px;
       min-width: 120px;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.1);
+      box-shadow: 0 4px 10px rgba(0, 224, 248, 0.1);
     }
 
     /* Step 3: Payment Method (QRIS) */
@@ -1090,7 +1093,7 @@
     }
     .sticky-item-name {
       font-size: 12px;
-      color: var(--brand);
+      color: var(--brand-ink);
       font-weight: 700;
     }
     .btn-checkout-qris {
@@ -1111,7 +1114,7 @@
     .btn-checkout-qris:hover {
       background: var(--brand);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 8px 20px rgba(0, 224, 248, 0.25);
     }
     .btn-checkout-qris:disabled {
       background: #CBD5E1;
@@ -1247,7 +1250,7 @@
       padding: 6px 14px; font-size: 12px; font-weight: 700; color: #334155;
       cursor: pointer; transition: all 0.15s ease;
     }
-    .search-chip:hover { border-color: var(--brand); color: var(--brand-ink); background: var(--brand-soft); transform: translateY(-1px); }
+    .search-chip:hover { border-color: var(--brand-ink); color: var(--brand-ink); background: var(--brand-soft); transform: translateY(-1px); }
 
     .stat-bar {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
@@ -1265,7 +1268,7 @@
 
     .sec-head { display: flex; align-items: flex-end; justify-content: space-between; margin: 44px 0 16px; gap: 12px; }
     .sec-title { font-family: var(--font-display); font-size: 21px; font-weight: 800; color: var(--ink-900); letter-spacing: -0.4px; }
-    .sec-title span { color: var(--brand); }
+    .sec-title span { color: var(--brand-ink); }
     .sec-sub { font-size: 12.5px; color: var(--ink-500); margin-top: 2px; }
 
     .strip-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; scroll-snap-type: x mandatory; }
@@ -1276,8 +1279,8 @@
       border: 1px solid var(--line); border-radius: 16px; padding: 14px;
       cursor: pointer; transition: all 0.2s cubic-bezier(0.16,1,0.3,1); position: relative;
     }
-    .strip-card:hover { transform: translateY(-3px); border-color: var(--brand); box-shadow: 0 10px 22px -6px rgba(37,99,235,0.18); }
-    .strip-brand { font-size: 11px; font-weight: 800; color: var(--brand); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+    .strip-card:hover { transform: translateY(-3px); border-color: var(--brand-ink); box-shadow: 0 10px 22px -6px rgba(0,224,248,0.18); }
+    .strip-brand { font-size: 11px; font-weight: 800; color: var(--brand-ink); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
     .strip-name { font-size: 13.5px; font-weight: 700; color: var(--ink-900); line-height: 1.3; margin-bottom: 8px; min-height: 36px; }
     .strip-price { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--ink-900); }
     .strip-tag {
@@ -1293,7 +1296,7 @@
     .step-num {
       width: 30px; height: 30px; border-radius: 10px; background: var(--brand-soft); color: var(--brand-ink);
       font-size: 13px; font-weight: 900; display: flex; align-items: center; justify-content: center;
-      margin-bottom: 10px; border: 1px solid #DBEAFE;
+      margin-bottom: 10px; border: 1px solid #CFF6FB;
     }
     .step-h { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink-900); margin-bottom: 5px; }
     .step-p { font-size: 12.5px; color: var(--ink-500); line-height: 1.55; }
@@ -1307,7 +1310,7 @@
     }
     .faq-q:hover { background: var(--surface-2); }
     .faq-ico { flex-shrink: 0; transition: transform 0.2s ease; color: var(--ink-a11y); font-size: 15px; font-weight: 900; }
-    .faq-item.open .faq-ico { transform: rotate(45deg); color: var(--brand); }
+    .faq-item.open .faq-ico { transform: rotate(45deg); color: var(--brand-ink); }
     /* Buka-tutup halus: 0fr -> 1fr (tanpa ukur tinggi di JS, tanpa max-height tebak-tebakan) */
     .faq-a {
       display: grid; grid-template-rows: 0fr;
@@ -1323,7 +1326,7 @@
 
     .referral-banner {
       margin: 34px 0 10px; border-radius: 22px; padding: 26px 30px;
-      background: radial-gradient(circle at 88% 15%, rgba(37,99,235,0.35) 0%, transparent 45%),
+      background: radial-gradient(circle at 88% 15%, rgba(0,224,248,0.35) 0%, transparent 45%),
                   linear-gradient(135deg, var(--hero-a) 0%, var(--ink-900) 60%, var(--ink-800) 100%);
       color: var(--surface); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
       border: 1px solid rgba(255,255,255,0.08);
@@ -1335,7 +1338,7 @@
       font-size: 13.5px; font-weight: 800; cursor: pointer; text-decoration: none; display: inline-block;
       white-space: nowrap; transition: all 0.2s;
     }
-    .referral-btn:hover { background: var(--brand); color: var(--surface); }
+    .referral-btn:hover { background: var(--brand); color: var(--on-brand); }
 
     /* ─── AKSESIBILITAS ─── */
     :focus-visible {
@@ -1348,7 +1351,7 @@
     }
     .skip-link {
       position: absolute; left: -9999px; top: 8px; z-index: 999;
-      background: var(--brand); color: #fff; padding: 10px 16px; border-radius: 10px;
+      background: var(--brand); color: var(--on-brand); padding: 10px 16px; border-radius: 10px;
       font-size: 13px; font-weight: 800; text-decoration: none;
     }
     .skip-link:focus { left: 12px; }
@@ -1372,7 +1375,7 @@
       font-size: 10.5px; font-weight: 800; color: var(--ink-a11y); letter-spacing: 0.1px;
     }
     .mobile-nav button .ico { width: 20px; height: 20px; }
-    .mobile-nav button.active { color: var(--brand); }
+    .mobile-nav button.active { color: var(--brand-ink); }
     @media (max-width: 899px) {
       body { padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
       .category-pills { scrollbar-width: none; -ms-overflow-style: none; }
@@ -1399,14 +1402,14 @@
     }
     .legal-doc ul, .legal-doc ol { margin: 8px 0 0 20px; display: flex; flex-direction: column; gap: 6px; }
     .legal-doc strong { color: var(--ink-900); }
-    .legal-doc a { color: var(--brand); text-decoration: none; font-weight: 700; }
+    .legal-doc a { color: var(--brand-ink); text-decoration: none; font-weight: 700; }
     .legal-doc a:hover { text-decoration: underline; }
     .legal-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
     .legal-toc button {
       border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 14px;
       font-size: 12.5px; font-weight: 700; color: var(--ink-700); cursor: pointer; font-family: inherit;
     }
-    .legal-toc button.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .legal-toc button.active { background: var(--brand); border-color: var(--brand-ink); color: var(--on-brand); }
     .legal-note {
       margin-top: 26px; padding: 14px 16px; border-radius: 14px; background: var(--surface-2);
       border: 1px solid var(--line); font-size: 12.5px; color: var(--ink-600); line-height: 1.65;
@@ -1447,7 +1450,7 @@
     }
     .state-ico {
       width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 12px; background: var(--brand-soft); color: var(--brand); font-size: 20px; font-weight: 900;
+      margin: 0 auto 12px; background: var(--brand-soft); color: var(--brand-ink); font-size: 20px; font-weight: 900;
     }
     .error-state .state-ico { background: #FEF2F2; color: #DC2626; }
     .state-chips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
@@ -1455,14 +1458,14 @@
       border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 14px;
       font-size: 12.5px; font-weight: 700; color: var(--ink-700); cursor: pointer; font-family: inherit;
     }
-    .state-chips button:hover { border-color: var(--brand); color: var(--brand); }
+    .state-chips button:hover { border-color: var(--brand-ink); color: var(--brand-ink); }
     .btn-retry {
-      border: 0; background: var(--brand); color: #fff; border-radius: 999px; padding: 10px 20px;
+      border: 0; background: var(--brand); color: var(--on-brand); border-radius: 999px; padding: 10px 20px;
       font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit;
     }
     .spinner {
-      width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(37, 99, 235, 0.25);
-      border-top-color: var(--brand); animation: spin 0.7s linear infinite; flex-shrink: 0;
+      width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(0, 224, 248, 0.25);
+      border-top-color: var(--brand-ink); animation: spin 0.7s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     @media (prefers-reduced-motion: reduce) {
@@ -1562,9 +1565,9 @@
       content: ''; position: absolute; left: 0; right: 0; top: -15px; height: 4px;
       border-radius: 4px; pointer-events: none;
     }
-    .steps-grid::before { background: #E2E8F0; }
+    .steps-grid::before { background: #E2E7EC; }
     .steps-grid::after {
-      background: var(--brand); box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.08);
+      background: var(--brand); box-shadow: 0 0 0 1px rgba(0, 224, 248, 0.08);
       transform-origin: 0 50%; transform: scaleX(var(--p, 0));
     }
     .js-steps { --p: 0; }
@@ -1577,14 +1580,14 @@
     /* Ikon garis (stroke currentColor) di dalam kotak nomor: ikut warna status,
        jadi menyala putih saat aktif tanpa file gambar tambahan. */
     .step-card .step-num svg { width: 16px; height: 16px; display: block; }
-    /* Sebelum aktif: abu-abu tenang. Sesudah aktif: biru penuh, angka putih. */
+    /* Sebelum aktif: abu tenang. Sesudah aktif: cyan penuh, ikon gelap. */
     .js-steps .step-card:not(.is-on) .step-num {
-      background: #F1F5F9; color: #94A3B8; border-color: #E2E8F0;
+      background: #F1F5F9; color: #90A0B8; border-color: #E2E7EC;
       box-shadow: none; transform: scale(0.94);
     }
     .js-steps .step-card.is-on .step-num {
-      background: var(--brand); color: #FFFFFF; border-color: var(--brand);
-      box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.45); transform: scale(1);
+      background: var(--brand); color: var(--on-brand); border-color: var(--brand-ink);
+      box-shadow: 0 4px 12px -2px rgba(0, 224, 248, 0.45); transform: scale(1);
     }
     .js-steps .step-card .step-p,
     .js-steps .step-card .step-h { transition: opacity .45s; }
@@ -1607,7 +1610,7 @@
     .order-side-card, .order-header-card, .payment-channel-card {
       --spot-a: 0;
       background-image: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
-                        rgba(37, 99, 235, var(--spot-a)), transparent 72%);
+                        rgba(0, 224, 248, var(--spot-a)), transparent 72%);
       background-repeat: no-repeat;
       transition: background-image .3s ease, --spot-a .25s ease;
     }
@@ -2532,7 +2535,7 @@
         short: 'Mobile Legends',
         sub: 'Top Up Diamond & Weekly Pass Resmi Moonton',
         logo: 'public/logos/mlbb_g.jpg?v=15',
-        bg: '#0F172A',
+        bg: '#080810',
         isGame: true,
         gameCode: 'mobile-legends',
         popular: true,
@@ -2558,7 +2561,7 @@
         short: 'PUBG Mobile',
         sub: 'Unknown Cash (UC) & Royale Pass Resmi',
         logo: 'public/logos/pubg_g.jpg?v=15',
-        bg: '#0F172A',
+        bg: '#080810',
         isGame: true,
         gameCode: 'pubg-mobile',
         popular: true,
@@ -2595,7 +2598,7 @@
         short: 'Pulsa Reguler',
         sub: 'Telkomsel, Indosat, XL, AXIS, Tri, Smartfren, by.U',
         logo: 'public/logos/xl_g.jpg?v=15',
-        bg: '#2563EB',
+        bg: '#00C9DF',
         isGame: false,
         popular: true,
         filterFn: p => p.id.startsWith('df:pulsa:') && !(p.nama && p.nama.toUpperCase().includes('MASA AKTIF'))
@@ -3586,8 +3589,8 @@
                 <div style="width:36px; height:36px; border-radius:50%; background:#DCFCE7; color:#15803D; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;"><svg class="ico"><use href="#i-check"/></svg></div>
                 <div style="flex:1;">
                   <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:#15803D; font-weight:800;">Akun Terverifikasi Resmi</div>
-                  <div style="font-size:15px; font-weight:900; color:#0F172A;">${json.data.nickname}</div>
-                  <div style="font-size:11px; color:#64748B;">ID ${uId} ${zId ? '(Server ' + zId + ')' : ''} Valid</div>
+                  <div style="font-size:15px; font-weight:900; color:#080810;">${json.data.nickname}</div>
+                  <div style="font-size:11px; color:#5A6774;">ID ${uId} ${zId ? '(Server ' + zId + ')' : ''} Valid</div>
                 </div>
               </div>
             `;
@@ -4029,7 +4032,7 @@
       }
       const resBox = document.getElementById('trackResult');
       resBox.style.display = 'block';
-      resBox.innerHTML = '<div style="color: #64748B; font-size: 13px;">Mencari pesanan...</div>';
+      resBox.innerHTML = '<div style="color: #5A6774; font-size: 13px;">Mencari pesanan...</div>';
 
       try {
         const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(code));
@@ -4041,7 +4044,7 @@
           if (o.status === 'BATAL') badge = '<span style="color:#EF4444; font-weight:800;">DIBATALKAN</span>';
 
           resBox.innerHTML = `
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px; text-align: left; font-size: 13px;">
+            <div style="background: #F4F6F8; border: 1px solid #E2E7EC; border-radius: 14px; padding: 14px; text-align: left; font-size: 13px;">
               <div style="margin-bottom: 5px;">Invoice: <b>${o.code}</b></div>
               <div style="margin-bottom: 5px;">Produk: <b>${o.product_name}</b></div>
               <div style="margin-bottom: 5px;">Total: <b>Rp ${o.price.toLocaleString('id-ID')}</b></div>

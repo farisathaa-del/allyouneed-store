@@ -1588,22 +1588,30 @@
       .steps-grid::after { transition: none; }
     }
 
-    /* ═══ SOROTAN KURSOR DI KARTU BRAND ═══ */
-    /* ::before, bukan ::after: pseudo pertama dilukis di bawah isi kartu,
-       jadi sorotan tidak menimpa logo/teks dan tidak perlu z-index pada anak. */
-    .brand-card::before {
-      content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-      background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.16), transparent 70%);
-      opacity: 0; transition: opacity .3s ease;
+    /* ═══ SOROTAN KURSOR: SEMUA KARTU ═══ */
+    /* Dilukis sebagai background-image kartu, bukan pseudo-element: setiap kartu
+       sudah punya warna latar polos, jadi tidak ada pseudo yang bentrok dan sorotan
+       otomatis berada DI BELAKANG logo/teks. */
+    @property --spot-a { syntax: '<number>'; inherits: false; initial-value: 0; }
+    .brand-card, .strip-card, .step-card, .denom-tile, .wall-card,
+    .order-side-card, .order-header-card, .payment-channel-card {
+      --spot-a: 0;
+      background-image: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
+                        rgba(37, 99, 235, var(--spot-a)), transparent 72%);
+      background-repeat: no-repeat;
+      transition: background-image .3s ease, --spot-a .25s ease;
     }
-    .brand-card:hover::before { opacity: 1; }
+    .brand-card:hover, .strip-card:hover, .step-card:hover, .denom-tile:hover, .wall-card:hover,
+    .order-side-card:hover, .order-header-card:hover, .payment-channel-card:hover { --spot-a: 0.12; }
     /* Perangkat sentuh: jangan biarkan sisa sorotan menempel setelah diketuk */
-    @media (hover: none) and (pointer: coarse) { .brand-card:hover::before { opacity: 0; } }
+    @media (hover: none) and (pointer: coarse) {
+      .brand-card:hover, .strip-card:hover, .step-card:hover, .denom-tile:hover, .wall-card:hover,
+      .order-side-card:hover, .order-header-card:hover, .payment-channel-card:hover { --spot-a: 0; }
+    }
     /* ═══ TOMBOL MAGNETIC (hanya pointer presisi) ═══ */
     .magnetic { transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
     .magnetic.is-pulling { transition: transform .1s linear; }
     @media (prefers-reduced-motion: reduce) {
-      .brand-card::before { transition: none; }
       .magnetic { transition: none; }
     }
   </style>
@@ -2844,12 +2852,12 @@
 
 
 
-    // ─── SOROTAN KURSOR KARTU BRAND (mandiri; tidak ikut mati bersama tilt 3D) ───
-    // Sengaja tidak memakai media query hover: di laptop 2-in-1 / mode tablet query itu
-    // sering melaporkan 'coarse' walau kursor mouse dipakai. Deteksinya lewat pointerType.
+    // ─── SOROTAN KURSOR: SEMUA KARTU ───
+    // Deteksi lewat pointerType (bukan media query hover) karena laptop 2-in-1 sering
+    // melaporkan hover:none walau memakai mouse. Jari/pena diabaikan.
     (function initCardSpotlight() {
-      var grid = document.getElementById('brandGridWrap');
-      if (!grid) return;
+      var SEL = '.brand-card, .strip-card, .step-card, .denom-tile, .wall-card, ' +
+                '.order-side-card, .order-header-card, .payment-channel-card';
       var card = null, raf = 0, pt = null;
 
       function apply() {
@@ -2863,16 +2871,14 @@
         card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
       }
 
-      grid.addEventListener('pointermove', function (e) {
-        if (e.pointerType && e.pointerType !== 'mouse') return;   // jari/pena diabaikan
-        var c = e.target.closest ? e.target.closest('.brand-card') : null;
-        if (!c) return;
+      document.addEventListener('pointermove', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;   // sentuh/pena: lewati
+        var c = e.target && e.target.closest ? e.target.closest(SEL) : null;
+        if (!c) { card = null; pt = null; return; }
         card = c;
         pt = { x: e.clientX, y: e.clientY };
         if (!raf) raf = requestAnimationFrame(apply);
       }, { passive: true });
-
-      grid.addEventListener('pointerleave', function () { card = null; pt = null; }, { passive: true });
     })();
 
     // ─── TOMBOL MAGNETIC: CTA utama sedikit tertarik ke kursor ───

@@ -1589,19 +1589,21 @@
     }
 
     /* ═══ SOROTAN KURSOR DI KARTU BRAND ═══ */
-    .brand-card::after {
+    /* ::before, bukan ::after: pseudo pertama dilukis di bawah isi kartu,
+       jadi sorotan tidak menimpa logo/teks dan tidak perlu z-index pada anak. */
+    .brand-card::before {
       content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-      background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.10), transparent 68%);
-      opacity: 0; transition: opacity .35s ease;
+      background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.16), transparent 70%);
+      opacity: 0; transition: opacity .3s ease;
     }
-    @media (hover: hover) and (pointer: fine) {
-      .brand-card:hover::after { opacity: 1; }
-    }
+    .brand-card:hover::before { opacity: 1; }
+    /* Perangkat sentuh: jangan biarkan sisa sorotan menempel setelah diketuk */
+    @media (hover: none) and (pointer: coarse) { .brand-card:hover::before { opacity: 0; } }
     /* ═══ TOMBOL MAGNETIC (hanya pointer presisi) ═══ */
     .magnetic { transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
     .magnetic.is-pulling { transition: transform .1s linear; }
     @media (prefers-reduced-motion: reduce) {
-      .brand-card::after { display: none; }
+      .brand-card::before { transition: none; }
       .magnetic { transition: none; }
     }
   </style>
@@ -2807,8 +2809,6 @@
         const py = Math.min(1, Math.max(0, (y - rect.top) / rect.height));
         active.style.setProperty('--ry', ((px - 0.5) * 2 * MAX).toFixed(2) + 'deg');
         active.style.setProperty('--rx', ((0.5 - py) * 2 * MAX).toFixed(2) + 'deg');
-        active.style.setProperty('--mx', (px * 100).toFixed(1) + '%');   // sorotan ikut kursor
-        active.style.setProperty('--my', (py * 100).toFixed(1) + '%');
       }
 
       function reset(card) {
@@ -2842,6 +2842,38 @@
       window.addEventListener('blur', () => { if (active) reset(active); });
     })();
 
+
+
+    // ─── SOROTAN KURSOR KARTU BRAND (mandiri; tidak ikut mati bersama tilt 3D) ───
+    // Sengaja tidak memakai media query hover: di laptop 2-in-1 / mode tablet query itu
+    // sering melaporkan 'coarse' walau kursor mouse dipakai. Deteksinya lewat pointerType.
+    (function initCardSpotlight() {
+      var grid = document.getElementById('brandGridWrap');
+      if (!grid) return;
+      var card = null, raf = 0, pt = null;
+
+      function apply() {
+        raf = 0;
+        if (!card || !pt) return;
+        var r = card.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        var px = Math.min(1, Math.max(0, (pt.x - r.left) / r.width));
+        var py = Math.min(1, Math.max(0, (pt.y - r.top) / r.height));
+        card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+      }
+
+      grid.addEventListener('pointermove', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;   // jari/pena diabaikan
+        var c = e.target.closest ? e.target.closest('.brand-card') : null;
+        if (!c) return;
+        card = c;
+        pt = { x: e.clientX, y: e.clientY };
+        if (!raf) raf = requestAnimationFrame(apply);
+      }, { passive: true });
+
+      grid.addEventListener('pointerleave', function () { card = null; pt = null; }, { passive: true });
+    })();
 
     // ─── TOMBOL MAGNETIC: CTA utama sedikit tertarik ke kursor ───
     (function initMagnetic() {

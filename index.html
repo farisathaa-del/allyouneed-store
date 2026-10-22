@@ -1495,6 +1495,40 @@
       .anim [data-reveal], .anim [data-stagger-item] { opacity: 1 !important; }
       .anim .hero-title .word > span { transform: none !important; }
     }
+
+    /* ═══ PAKET TERLARIS: SATU BARIS BERPUTAR (pewaktu = animasi titik) ═══ */
+    .rot-wrap { position: relative; }
+    .rot-grid { --cols: 2; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 12px; }
+    @media (min-width: 640px) { .rot-grid { --cols: 3; } }
+    @media (min-width: 768px) { .rot-grid { --cols: 4; gap: 14px; } }
+    @media (min-width: 1024px) { .rot-grid { --cols: 5; } }
+    .rot-grid .strip-card {
+      flex: none;
+      display: none;
+      opacity: 1;
+      transition: opacity .4s cubic-bezier(0.16, 1, 0.3, 1), transform .4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .rot-grid.is-js .strip-card { opacity: 0; transform: translate3d(0, 6px, 0); }
+    .rot-grid.is-js .strip-card.is-shown { display: flex; flex-direction: column; }
+    .rot-grid.is-js .strip-card.is-shown:not(.is-out) { opacity: 1; transform: none; }
+
+    .rot-dots { display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 14px; }
+    .rot-dot-btn { padding: 10px 3px; line-height: 0; background: none; border: 0; cursor: pointer; }
+    .rot-dot-pill {
+      display: block; position: relative; width: 18px; height: 4px; border-radius: 99px;
+      background: rgba(15, 23, 42, 0.16); overflow: hidden; transition: width .3s cubic-bezier(0.16, 1, 0.3, 1), background-color .3s;
+    }
+    .rot-dot-btn:hover .rot-dot-pill { background: rgba(15, 23, 42, 0.3); }
+    .rot-dot-btn.is-active .rot-dot-pill { width: 36px; }
+    .rot-dot-fill { position: absolute; inset: 0; background: var(--brand); transform: scaleX(0); transform-origin: 0 50%; }
+    .rot-dot-btn.is-active .rot-dot-fill { animation: rotFill 3s linear forwards; }
+    .rot-wrap.is-paused .rot-dot-fill { animation-play-state: paused; }
+    @keyframes rotFill { to { transform: scaleX(1); } }
+    .rot-dots[hidden] { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .rot-grid.is-js .strip-card { opacity: 1 !important; transform: none !important; display: flex; flex-direction: column; }
+      .rot-dots { display: none; }
+    }
   </style>
 
   <script type="application/ld+json">
@@ -1677,8 +1711,9 @@
           <div class="sec-sub">Paket langganan dan nominal yang paling sering dipesan pelanggan.</div>
         </div>
       </div>
-      <div class="strip-scroll" id="hotStrip">
-        <!-- Rendered by JS -->
+      <div class="rot-wrap" id="hotRot">
+        <div class="rot-grid" id="hotStrip"></div>
+        <div class="rot-dots" id="hotDots"></div>
       </div>
 
       <!-- ─── Cara Pesan 3 Langkah (pola Warung Rebahan: "Cara Order") ─── -->
@@ -2729,10 +2764,148 @@
         `;
       }).join('');
 
-      if (!window.__hotStripRevealed && window.revealNew) {
-        window.__hotStripRevealed = true;
-        window.revealNew(wrap.querySelectorAll('.strip-card'), true);
+      if (typeof initHotCarousel === 'function') initHotCarousel();
+    }
+
+
+    // ─── PAKET TERLARIS: satu baris bergantian, pewaktu dari animasi titik ───
+    // Tidak ada setInterval: titik aktif punya animasi 3s, begitu selesai (animationend) baru berganti.
+    // Jeda otomatis saat kursor di atasnya, saat fokus keyboard, dan saat bagian ini di luar layar.
+    function initHotCarousel() {
+      var wrap = document.getElementById('hotRot');
+      var grid = document.getElementById('hotStrip');
+      var dotsBox = document.getElementById('hotDots');
+      if (!wrap || !grid) return;
+      var cards = Array.prototype.slice.call(grid.querySelectorAll('.strip-card'));
+      if (!cards.length) return;
+
+      var STAGGER = 50, FADE = 400;
+      var per = 0, pages = 1, page = 0, busy = false, shown = [], gen = 0;
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reduce) {                       // tanpa gerak: tampilkan semua, tanpa titik
+        grid.style.setProperty('--cols', '2');
+        cards.forEach(function (c) { c.style.display = 'flex'; c.style.flexDirection = 'column'; });
+        if (dotsBox) dotsBox.hidden = true;
+        return;
       }
+      if (dotsBox) dotsBox.hidden = false;
+
+      function columns() {
+        var mq = function (px) { return matchMedia('(min-width: ' + px + 'px)').matches; };
+        return mq(1024) ? 5 : mq(768) ? 4 : mq(640) ? 3 : 2;
+      }
+      function pick(p) {
+        var out = [];
+        for (var i = 0; i < per && i < cards.length; i++) out.push(cards[(p * per + i) % cards.length]);
+        return out;
+      }
+      function paint(list) {
+        cards.forEach(function (c) { c.classList.remove('is-shown', 'is-out'); c.style.transitionDelay = ''; });
+        list.forEach(function (c, i) { c.style.order = i; c.classList.add('is-shown'); });
+        shown = list;
+      }
+      function markDot() {
+        if (!dotsBox) return;
+        var btns = dotsBox.querySelectorAll('.rot-dot-btn');
+        for (var i = 0; i < btns.length; i++) {
+          btns[i].classList.remove('is-active');
+          btns[i].setAttribute('aria-current', 'false');
+        }
+        if (btns[page]) {
+          void btns[page].offsetWidth;      // ulangi isi dari nol
+          btns[page].classList.add('is-active');
+          btns[page].setAttribute('aria-current', 'true');
+        }
+      }
+      function buildDots() {
+        if (!dotsBox) return;
+        dotsBox.innerHTML = '';
+        if (pages < 2) return;
+        for (var i = 0; i < pages; i++) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'rot-dot-btn';
+          b.setAttribute('aria-label', 'Tampilkan paket kelompok ' + (i + 1) + ' dari ' + pages);
+          b.innerHTML = '<span class="rot-dot-pill"><span class="rot-dot-fill"></span></span>';
+          (function (idx) { b.addEventListener('click', function () { go(idx); }); })(i);
+          dotsBox.appendChild(b);
+        }
+      }
+      function layout() {
+        var first = shown.length ? cards.indexOf(shown[0]) : 0;
+        gen++;
+        busy = false;
+        var cols = columns();
+        per = cols;
+        grid.style.setProperty('--cols', String(cols));
+        pages = cards.length > per ? Math.ceil(cards.length / per) : 1;
+        page = Math.min(pages - 1, Math.floor(first / per));
+        buildDots();
+        paint(pick(page));
+        markDot();
+      }
+      function go(target) {
+        if (busy || pages < 2) return;
+        target = ((target % pages) + pages) % pages;
+        if (target === page) { markDot(); return; }
+        busy = true;
+        page = target;
+        markDot();
+        var out = shown, next = pick(page), g = gen;
+        out.forEach(function (c, i) {
+          c.style.transitionDelay = (i * STAGGER) + 'ms';
+          c.classList.add('is-out');
+        });
+        setTimeout(function () {
+          if (g !== gen) return;
+          out.forEach(function (c) { c.classList.remove('is-shown', 'is-out'); c.style.transitionDelay = ''; });
+          next.forEach(function (c, i) {
+            c.style.order = i;
+            c.style.transitionDelay = (i * STAGGER) + 'ms';
+            c.classList.add('is-shown', 'is-out');
+          });
+          shown = next;
+          void grid.offsetWidth;
+          requestAnimationFrame(function () { next.forEach(function (c) { c.classList.remove('is-out'); }); });
+          setTimeout(function () {
+            if (g !== gen) return;
+            next.forEach(function (c) { c.style.transitionDelay = ''; });
+            busy = false;
+          }, next.length * STAGGER + FADE + 60);
+        }, out.length * STAGGER + FADE);
+      }
+
+      grid.classList.add('is-js');
+      layout();
+
+      wrap.onanimationend = function (ev) {          // assignment, bukan addEventListener: tidak menumpuk
+        if (ev.animationName === 'rotFill') go(page + 1);
+      };
+
+      var hovering = false, focused = false, offscreen = false;
+      function syncPause() { wrap.classList.toggle('is-paused', hovering || focused || offscreen); }
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        wrap.onpointerenter = function () { hovering = true; syncPause(); };
+        wrap.onpointerleave = function () { hovering = false; syncPause(); };
+      }
+      wrap.onfocusin = function (ev) {
+        var kb = false;
+        try { kb = ev.target.matches(':focus-visible'); } catch (e) { kb = false; }
+        focused = kb; syncPause();
+      };
+      wrap.onfocusout = function () { focused = false; syncPause(); };
+      if (wrap.__io) { wrap.__io.disconnect(); }
+      if ('IntersectionObserver' in window) {
+        offscreen = true; syncPause();
+        wrap.__io = new IntersectionObserver(function (en) { offscreen = !en[0].isIntersecting; syncPause(); }, { threshold: 0.2 });
+        wrap.__io.observe(wrap);
+      }
+      clearTimeout(wrap.__rt);
+      addEventListener('resize', function () {
+        clearTimeout(wrap.__rt);
+        wrap.__rt = setTimeout(function () { if (columns() !== per) layout(); }, 150);
+      });
     }
 
     function brandNameForProduct(p) {

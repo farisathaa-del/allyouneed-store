@@ -2880,39 +2880,51 @@
       mlbb: 'public/logos/wm_mlbb_w.png',
       ff: 'public/logos/wm_ff_w.png',
       pubg: 'public/logos/wm_pubg_w.png',
-      netflix: 'public/logos/wm_netflix.svg',
-      streaming_asia: 'public/logos/wm_streaming_asia.svg'
+      netflix: 'public/logos/wm_netflix.svg'
     };
     const WM_INV = {};
     // Karakter tipografi tiap produk: esport, film/streaming, utilitas, aplikasi.
     const TONE = {
       mlbb: 'fmt-esport', ff: 'fmt-esport', pubg: 'fmt-esport',
-      netflix: 'fmt-film', streaming_barat: 'fmt-film', streaming_asia: 'fmt-film',
-      pln: 'fmt-util', pulsa_reguler: 'fmt-util', masa_aktif: 'fmt-util',
-      canva: 'fmt-app', capcut: 'fmt-app', chatgpt_gemini: 'fmt-app',
-      microsoft_office: 'fmt-app', vpn_utility: 'fmt-app', editing_apps: 'fmt-app', spotify: 'fmt-app'
+      netflix: 'fmt-film', viu: 'fmt-film', bstation: 'fmt-film', drama: 'fmt-film', youku: 'fmt-film',
+      prime_video: 'fmt-film', vidio: 'fmt-film',
+      pln: 'fmt-util', pulsa: 'fmt-util',
+      canva: 'fmt-app', capcut: 'fmt-app', chatgpt: 'fmt-app', gemini: 'fmt-app',
+      microsoft_office: 'fmt-app', vpn_utility: 'fmt-app', spotify: 'fmt-app',
+      zoom: 'fmt-app', remini: 'fmt-app', meitu: 'fmt-app', wink: 'fmt-app',
+      picsart: 'fmt-app', scribd: 'fmt-app'
     };
     // Artwork poster: gambar promosi resmi dari halaman toko aplikasi masing-masing.
     const ART = {
       mlbb: 'public/art6w/mlbb.webp', ff: 'public/art6w/ff.webp', pubg: 'public/art6w/pubg.webp',
       netflix: 'public/art6w/netflix.webp', canva: 'public/art6w/canva.webp', capcut: 'public/art6w/capcut.webp',
-      chatgpt_gemini: 'public/art6w/chatgpt_gemini.webp', spotify: 'public/art6w/spotify.webp',
-      streaming_asia: 'public/art6w/streaming_asia.webp', streaming_barat: 'public/art6w/streaming_barat.webp',
-      microsoft_office: 'public/art6w/microsoft_office.webp', vpn_utility: 'public/art6w/vpn_utility.webp',
-      editing_apps: 'public/art6w/editing_apps.webp', pln: 'public/art6w/pln.webp',
-      masa_aktif: 'public/art6w/masa_aktif.webp', pulsa_reguler: 'public/art6w/pulsa_reguler.webp'
+      spotify: 'public/art6w/spotify.webp', microsoft_office: 'public/art6w/microsoft_office.webp',
+      vpn_utility: 'public/art6w/vpn_utility.webp', pln: 'public/art6w/pln.webp',
+      pulsa: 'public/art6w/pulsa_reguler.webp',
+      viu: 'public/art7/viu.webp', bstation: 'public/art7/bstation.webp',
+      drama: 'public/art7/drama.webp', youku: 'public/art7/youku.webp',
+      prime_video: 'public/art7/prime_video.webp', vidio: 'public/art7/vidio.webp',
+      zoom: 'public/art7/zoom.webp', remini: 'public/art7/remini.webp',
+      meitu: 'public/art7/meitu.webp', wink: 'public/art7/wink.webp',
+      picsart: 'public/art7/picsart.webp', scribd: 'public/art7/scribd.webp',
+      chatgpt: 'public/art7/chatgpt.webp', gemini: 'public/art7/gemini.webp'
     };
     // Ikon resmi (tanpa tulisan) untuk sisi belakang kartu
     const ICON = {
       mlbb: 'public/logos/mlbb.png', ff: 'public/logos/ff.png', pubg: 'public/logos/pubg_r.png',
       netflix: 'public/logos/netflix.png', canva: 'public/logos/canva.png', capcut: 'public/logos/capcut.png',
-      chatgpt_gemini: 'public/logos/chatgpt.png', spotify: 'public/logos/spotify.png',
-      streaming_asia: 'public/logos/viu.png', streaming_barat: 'public/logos/prime.png',
-      microsoft_office: 'public/logos/office365.png', vpn_utility: 'public/logos/expressvpn.png',
-      editing_apps: 'public/logos/remini.png', pln: 'public/logos/pln.png',
-      masa_aktif: 'public/logos/telkomsel_r.png', pulsa_reguler: 'public/logos/xlmark_r.png'
+      spotify: 'public/logos/spotify.png', microsoft_office: 'public/logos/office365.png',
+      vpn_utility: 'public/logos/expressvpn.png', pln: 'public/logos/pln.png',
+      pulsa: 'public/logos/xlmark_r.png',
+      viu: 'public/logos/viu.png', bstation: 'public/logos/bstation.png',
+      drama: 'public/logos/drama.png', youku: 'public/logos/youku.png',
+      prime_video: 'public/logos/prime.png', vidio: 'public/logos/vidio.png',
+      zoom: 'public/logos/zoom.png', remini: 'public/logos/remini.png',
+      meitu: 'public/logos/meitu.png', wink: 'public/logos/wink.png',
+      picsart: 'public/logos/picsart.png', scribd: 'public/logos/scribd.png',
+      chatgpt: 'public/logos/chatgpt.png', gemini: 'public/logos/gemini.png'
     };
-
+    // Ikon resmi (tanpa tulisan) untuk sisi belakang kartu
     const BRANDS_DEF = {
       'mlbb': {
         key: 'mlbb',
@@ -2962,32 +2974,22 @@
         logo: 'public/logos/pln_g.jpg?v=15',
         bg: '#0284C7',
         isGame: false,
+        
         popular: false,
         filterFn: p => p.id.startsWith('df:pln:') || (p.nama && p.nama.toUpperCase().includes('PLN'))
       },
-      'masa_aktif': {
-        key: 'masa_aktif',
+      'pulsa': {
+        key: 'pulsa',
         category: 'PULSA',
-        title: 'Perpanjang Masa Aktif Kartu',
-        short: 'Masa Aktif Kartu',
-        sub: 'Perpanjang Telkomsel, Indosat, Tri, XL & AXIS',
-        logo: 'public/logos/telkomsel_g.jpg?v=15',
-        bg: '#DC2626',
-        isGame: false,
-        popular: false,
-        filterFn: p => p.id.startsWith('df:active:') || (p.nama && p.nama.toUpperCase().includes('MASA AKTIF'))
-      },
-      'pulsa_reguler': {
-        key: 'pulsa_reguler',
-        category: 'PULSA',
-        title: 'Pulsa Reguler All Operator',
-        short: 'Pulsa Reguler',
+        title: 'Pulsa Reguler & Masa Aktif Kartu',
+        short: 'Pulsa & Masa Aktif',
         sub: 'Telkomsel, Indosat, XL, AXIS, Tri, Smartfren, by.U',
         logo: 'public/logos/xl_g.jpg?v=15',
         bg: '#00C9DF',
         isGame: false,
+        
         popular: true,
-        filterFn: p => p.id.startsWith('df:pulsa:') && !(p.nama && p.nama.toUpperCase().includes('MASA AKTIF'))
+        filterFn: p => p.id.startsWith('df:pulsa:') || p.id.startsWith('df:active:') || (p.nama && p.nama.toUpperCase().includes('MASA AKTIF'))
       },
       'netflix': {
         key: 'netflix',
@@ -2998,8 +3000,87 @@
         logo: 'public/logos/netflix_g.jpg?v=15',
         bg: '#141414',
         isGame: false,
+        
         popular: false,
         filterFn: p => p.nama && p.nama.toUpperCase().includes('NETFLIX')
+      },
+      'viu': {
+        key: 'viu',
+        category: 'PREMIUM',
+        title: 'Viu Premium',
+        short: 'Viu',
+        sub: 'Drama Korea & Asia Tanpa Iklan',
+        logo: 'public/logos/tiles/viu_g.jpg',
+        bg: '#FFC200',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('VIU')
+      },
+      'bstation': {
+        key: 'bstation',
+        category: 'PREMIUM',
+        title: 'Bstation Premium',
+        short: 'Bstation',
+        sub: 'Anime & Drama Asia Full HD',
+        logo: 'public/logos/tiles/bstation_g.jpg',
+        bg: '#00A1D6',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('BSTATION')
+      },
+      'youku': {
+        key: 'youku',
+        category: 'PREMIUM',
+        title: 'Youku Premium',
+        short: 'Youku',
+        sub: 'Drama & Film China Resmi',
+        logo: 'public/logos/tiles/youku_g.jpg',
+        bg: '#1E90FF',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('YOUKU')
+      },
+      'drama': {
+        key: 'drama',
+        category: 'PREMIUM',
+        title: 'Drama All In One',
+        short: 'Drama All In One',
+        sub: 'Drama China, Korea & Asia Harian',
+        logo: 'public/logos/tiles/drama_g.jpg',
+        bg: '#E11D48',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('DRAMA')
+      },
+      'prime_video': {
+        key: 'prime_video',
+        category: 'PREMIUM',
+        title: 'Prime Video',
+        short: 'Prime Video',
+        sub: 'Film Hollywood & Serial Amazon',
+        logo: 'public/logos/tiles/prime_video_g.jpg',
+        bg: '#00A8E1',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('PRIME')
+      },
+      'vidio': {
+        key: 'vidio',
+        category: 'PREMIUM',
+        title: 'Vidio Platinum',
+        short: 'Vidio Platinum',
+        sub: 'Liga 1, Film & Serial Premier',
+        logo: 'public/logos/tiles/vidio_g.jpg',
+        bg: '#E4002B',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('VIDIO')
       },
       'canva': {
         key: 'canva',
@@ -3010,20 +3091,9 @@
         logo: 'public/logos/canva_g.jpg?v=15',
         bg: '#00C4CC',
         isGame: false,
+        
         popular: false,
         filterFn: p => p.nama && p.nama.toUpperCase().includes('CANVA')
-      },
-      'chatgpt_gemini': {
-        key: 'chatgpt_gemini',
-        category: 'PREMIUM',
-        title: 'ChatGPT Plus & Google Gemini',
-        short: 'ChatGPT / Gemini',
-        sub: 'Akses AI Tercanggih GPT-4 & Gemini Pro',
-        logo: 'public/logos/chatgpt_g.jpg?v=15',
-        bg: '#10A37F',
-        isGame: false,
-        popular: false,
-        filterFn: p => p.nama && (p.nama.toUpperCase().includes('CHATGPT') || p.nama.toUpperCase().includes('GEMINI'))
       },
       'capcut': {
         key: 'capcut',
@@ -3034,6 +3104,7 @@
         logo: 'public/logos/capcut_g.jpg?v=15',
         bg: '#111111',
         isGame: false,
+        
         popular: false,
         filterFn: p => p.nama && p.nama.toUpperCase().includes('CAPCUT')
       },
@@ -3046,32 +3117,113 @@
         logo: 'public/logos/spotify_g.jpg?v=15',
         bg: '#121212',
         isGame: false,
+        
         popular: false,
         filterFn: p => p.nama && p.nama.toUpperCase().includes('SPOTIFY')
       },
-      'streaming_asia': {
-        key: 'streaming_asia',
+      'chatgpt': {
+        key: 'chatgpt',
         category: 'PREMIUM',
-        title: 'Asian Drama & Anime (Viu, Bstation, Youku)',
-        short: 'Viu & Bstation',
-        sub: 'Streaming Drama Korea, China & Anime HD',
-        logo: 'public/logos/viu_g.jpg?v=15',
-        bg: '#FFC200',
+        title: 'ChatGPT Plus',
+        short: 'ChatGPT Plus',
+        sub: 'Akses GPT Terbaru & Fitur Plus',
+        logo: 'public/logos/tiles/chatgpt_g.jpg',
+        bg: '#10A37F',
         isGame: false,
+        
         popular: false,
-        filterFn: p => p.nama && (p.nama.toUpperCase().includes('VIU') || p.nama.toUpperCase().includes('BSTATION') || p.nama.toUpperCase().includes('YOUKU') || p.nama.toUpperCase().includes('DRAMA'))
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('CHATGPT')
       },
-      'streaming_barat': {
-        key: 'streaming_barat',
+      'gemini': {
+        key: 'gemini',
         category: 'PREMIUM',
-        title: 'Prime Video & Vidio Premier',
-        short: 'Prime & Vidio',
-        sub: 'Film Hollywood & Siaran Olahraga Live',
-        logo: 'public/logos/prime_g.jpg?v=15',
-        bg: '#00A8E1',
+        title: 'Google Gemini Pro',
+        short: 'Google Gemini',
+        sub: 'AI Google & Integrasi Workspace',
+        logo: 'public/logos/tiles/gemini_g.jpg',
+        bg: '#4285F4',
         isGame: false,
+        
         popular: false,
-        filterFn: p => p.nama && (p.nama.toUpperCase().includes('PRIME') || p.nama.toUpperCase().includes('VIDIO'))
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('GEMINI')
+      },
+      'remini': {
+        key: 'remini',
+        category: 'PREMIUM',
+        title: 'Remini Premium',
+        short: 'Remini',
+        sub: 'Perjelas Foto AI Tanpa Watermark',
+        logo: 'public/logos/tiles/remini_g.jpg',
+        bg: '#FF334B',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('REMINI')
+      },
+      'meitu': {
+        key: 'meitu',
+        category: 'PREMIUM',
+        title: 'Meitu VIP',
+        short: 'Meitu',
+        sub: 'Edit Foto & Beauty AI Premium',
+        logo: 'public/logos/tiles/meitu_g.jpg',
+        bg: '#FF4FA0',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('MEITU')
+      },
+      'wink': {
+        key: 'wink',
+        category: 'PREMIUM',
+        title: 'Wink VIP',
+        short: 'Wink',
+        sub: 'Edit Video & Beauty AI Premium',
+        logo: 'public/logos/tiles/wink_g.jpg',
+        bg: '#7C3AED',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('WINK')
+      },
+      'picsart': {
+        key: 'picsart',
+        category: 'PREMIUM',
+        title: 'PicsArt Pro',
+        short: 'PicsArt Pro',
+        sub: 'Desain, Edit Foto & Template Pro',
+        logo: 'public/logos/tiles/picsart_g.jpg',
+        bg: '#C209C1',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('PICSART')
+      },
+      'scribd': {
+        key: 'scribd',
+        category: 'PREMIUM',
+        title: 'Scribd Premium',
+        short: 'Scribd',
+        sub: 'E-book, Audiobook & Dokumen',
+        logo: 'public/logos/tiles/scribd_g.jpg',
+        bg: '#1E7B85',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('SCRIBD')
+      },
+      'zoom': {
+        key: 'zoom',
+        category: 'PREMIUM',
+        title: 'Zoom Premium (Pro)',
+        short: 'Zoom Premium',
+        sub: 'Meeting Online Tanpa Batas Waktu',
+        logo: 'public/logos/tiles/zoom_g.jpg',
+        bg: '#2D8CFF',
+        isGame: false,
+        
+        popular: false,
+        filterFn: p => p.nama && p.nama.toUpperCase().includes('ZOOM')
       },
       'microsoft_office': {
         key: 'microsoft_office',
@@ -3082,6 +3234,7 @@
         logo: 'public/logos/office365_g.jpg?v=15',
         bg: '#EB3C00',
         isGame: false,
+        
         popular: false,
         filterFn: p => p.nama && (p.nama.toUpperCase().includes('WINDOWS') || p.nama.toUpperCase().includes('OFFICE') || p.nama.toUpperCase().includes('PROJECT') || p.nama.toUpperCase().includes('VISIO'))
       },
@@ -3094,20 +3247,9 @@
         logo: 'public/logos/expressvpn_g.jpg?v=15',
         bg: '#DA3940',
         isGame: false,
+        
         popular: false,
-        filterFn: p => p.nama && (p.nama.toUpperCase().includes('EXPRESS') || p.nama.toUpperCase().includes('HMA') || p.nama.toUpperCase().includes('VPN') || p.nama.toUpperCase().includes('GETCONTACT') || p.nama.toUpperCase().includes('ZOOM'))
-      },
-      'editing_apps': {
-        key: 'editing_apps',
-        category: 'PREMIUM',
-        title: 'Photo & Video Editing (Remini, PicsArt, Alight)',
-        short: 'Editing Apps',
-        sub: 'Remini AI, PicsArt Pro, Meitu VIP & Alight Motion',
-        logo: 'public/logos/remini_g.jpg?v=15',
-        bg: '#FF334B',
-        isGame: false,
-        popular: false,
-        filterFn: p => p.nama && (p.nama.toUpperCase().includes('REMINI') || p.nama.toUpperCase().includes('PICSART') || p.nama.toUpperCase().includes('MEITU') || p.nama.toUpperCase().includes('WINK') || p.nama.toUpperCase().includes('ALIGHT') || p.nama.toUpperCase().includes('SCRIBD'))
+        filterFn: p => p.nama && (p.nama.toUpperCase().includes('EXPRESS') || p.nama.toUpperCase().includes('HMA') || p.nama.toUpperCase().includes('VPN') || p.nama.toUpperCase().includes('GETCONTACT'))
       }
     };
 

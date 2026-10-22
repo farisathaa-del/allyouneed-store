@@ -2,5 +2,5 @@
 
 Host statis untuk pratinjau di ponsel. API diarahkan ke server toko lewat `window.API_BASE` di `index.html`.
 
-- API: `https://planning-shipments-ventures-hip.trycloudflare.com`
+- API: `https://toolbox-lyrics-planner-testimonials.trycloudflare.com`
 - Repo ini hanya berisi frontend; backend (bot + QRIS) berjalan di server sendiri.

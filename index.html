@@ -627,7 +627,7 @@
       color: #FFFFFF;
       margin-bottom: 2px;
       line-height: 1.15;
-      text-shadow: 0 1px 10px rgba(0,0,0,.65);
+      text-shadow: 0 1px 2px rgba(0,0,0,.95), 0 2px 14px rgba(0,0,0,.85);
       max-width: 100%;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
@@ -712,7 +712,7 @@
     }
     .bc-shade {
       position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(to top, rgba(6,10,16,.90) 0%, rgba(6,10,16,.48) 24%, rgba(6,10,16,.08) 52%, transparent 70%);
+      background: linear-gradient(to top, rgba(4,7,12,.97) 0%, rgba(4,7,12,.86) 12%, rgba(6,10,16,.45) 32%, rgba(6,10,16,.06) 56%, transparent 72%);
     }
     .bc-wm {
       position: absolute; left: 12px; right: 12px; bottom: 11px;
@@ -749,6 +749,15 @@
     .bc-pk b { color: #F8F8F8; }
     .bc-pr { font-size: 12px; font-weight: 800; color: var(--on-brand); background: var(--brand); padding: 5px 11px; border-radius: 7px; }
     .bc-pr span { font-weight: 600; opacity: .75; }
+    .brand-badge-out {
+      position: absolute; top: 10px; right: 10px; z-index: 7;
+      background: rgba(8,8,16,.82); color: #F8F8F8; border: 1px solid rgba(248,248,248,.28);
+      font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 99px; letter-spacing: .3px;
+      backdrop-filter: blur(4px);
+    }
+    .brand-card.is-out .bc-front { filter: grayscale(.45) brightness(.82); }
+    .brand-card.is-out .bc-back { background: linear-gradient(160deg,#12161C,#0C1016); }
+    .bc-out { font-size: 12px; font-weight: 800; color: #FF8A8A; letter-spacing: .2px; }
     /* Di layar sentuh: berbalik saat disentuh, bukan saat hover */
     @media (hover: none) { .brand-card:hover .bc-flip { transform: none; } }
     @media (prefers-reduced-motion: reduce) { .bc-flip { transition: none; } }
@@ -3381,9 +3390,10 @@
           ...b,
           count: matched.length,
           minPrice: minPrice,
+          out: matched.length === 0,     // stok habis: tetap tampil, diberi label
           items: matched
         };
-      }).filter(b => b.count > 0);
+      }).sort((a, b) => (a.out === b.out ? 0 : a.out ? 1 : -1));
 
       // Filter berdasarkan Kategori Pill
       let filtered = brandList;
@@ -3422,11 +3432,11 @@
       html += '<div class="brand-grid">';
       filtered.forEach(b => {
         html += `
-          <div class="brand-card" onclick="brandTap(event,'${b.key}')" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.count} pilihan paket">
+          <div class="brand-card${b.out ? ' is-out' : ''}" onclick="brandTap(event,'${b.key}',${b.count})" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.out ? 'stok habis' : b.count + ' pilihan paket'}">
             <div class="bc-flip">
               <div class="bc-face bc-front" style="--brand-canvas:${b.bg};background-image:url('${ART[b.key] || ''}')">
                 <div class="bc-shade"></div>
-                ${b.popular ? '<span class="brand-badge-popular">POPULER</span>' : ''}
+                ${b.out ? '<span class="brand-badge-out">HABIS</span>' : (b.popular ? '<span class="brand-badge-popular">POPULER</span>' : '')}
                 <div class="bc-wm">
                   ${WM[b.key] ? `<img class="brand-word${WM_INV[b.key] ? ' inv' : ''}" src="${WM[b.key]}" alt="${b.short}" loading="lazy">` : `<div class="brand-name ${TONE[b.key] || 'fmt-app'}">${b.short}</div>`}
                 </div>
@@ -3434,8 +3444,9 @@
               <div class="bc-face bc-back">
                 <img class="bc-ico" src="${ICON[b.key] || b.logo}" alt="" loading="lazy">
                 <div class="bc-name">${b.short}</div>
+                ${b.out ? '<div class="bc-out">Stok sedang habis</div>' : `
                 <div class="bc-pk"><b>${b.count}</b> pilihan paket</div>
-                <div class="bc-pr"><span>dari</span> Rp ${b.minPrice.toLocaleString('id-ID')}</div>
+                <div class="bc-pr"><span>dari</span> Rp ${b.minPrice.toLocaleString('id-ID')}</div>`}
               </div>
             </div>
           </div>
@@ -3602,7 +3613,7 @@
 
     // ─── VIEW 2: ORDER STATION LOGIC ───
     // Kartu brand: di layar sentuh sentuhan pertama membalik kartu, kedua membuka paket.
-    function brandTap(e, key) {
+    function brandTap(e, key, count) {
       const card = e && e.currentTarget && e.currentTarget.closest
         ? e.currentTarget.closest('.brand-card')
         : null;
@@ -3612,6 +3623,7 @@
         card.classList.add('flipped');
         return;
       }
+      if (count === 0) { alert('Stok untuk layanan ini sedang habis. Coba lagi nanti.'); return; }
       openBrandOrder(key);
     }
 

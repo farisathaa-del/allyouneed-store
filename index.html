@@ -129,7 +129,21 @@
       top: 0;
       background: #FFFFFF;
       z-index: 100;
+      transition: padding .3s cubic-bezier(0.16,1,0.3,1), box-shadow .3s ease;
     }
+    /* Menyusut sedikit + bayangan halus setelah halaman digulir */
+    .navbar.is-scrolled {
+      padding-top: 10px; padding-bottom: 10px;
+      box-shadow: 0 8px 28px -18px rgba(15, 23, 42, 0.35);
+    }
+    /* Garis progres baca 3px menempel di dasar navbar */
+    .navbar::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px;
+      background: var(--brand); border-radius: 0 3px 3px 0;
+      transform: scaleX(var(--sp, 0)); transform-origin: 0 50%;
+      will-change: transform;
+    }
+    @media (prefers-reduced-motion: reduce) { .navbar { transition: none; } }
     .brand {
       display: flex;
       align-items: center;
@@ -2166,6 +2180,34 @@
     }
 
 
+
+
+    // ─── Navbar: menyusut saat digulir + garis progres baca 3px ───
+    (function initHeaderProgress() {
+      var nav = document.querySelector('.navbar');
+      if (!nav) return;
+      var ticking = false, lastSp = -1, lastScrolled = null;
+
+      function paint() {
+        ticking = false;
+        var y = window.scrollY || window.pageYOffset || 0;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var sp = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+        if (Math.abs(sp - lastSp) > 0.001) {
+          lastSp = sp;
+          nav.style.setProperty('--sp', sp.toFixed(4));
+        }
+        var scrolled = y > 8;
+        if (scrolled !== lastScrolled) {
+          lastScrolled = scrolled;
+          nav.classList.toggle('is-scrolled', scrolled);
+        }
+      }
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll);
+      paint();
+    })();
 
     // ─── CARA PESAN: garis progres & langkah menyala mengikuti scroll ───
     // Ukuran diukur sekali (dan saat resize), tiap frame scroll hanya berhitung dari angka itu.

@@ -2890,6 +2890,7 @@
     // Brand Definitions Master Table
     // Wordmark resmi per brand (kosong dulu). Isi begitu ada file wordmark publisher.
     // Wordmark resmi (logotype produk). pubg perlu dibalik jadi putih (aslinya hitam).
+    const WM_H = { magic_chess: 40 };   // wordmark lebar (rasio 2.5:1) perlu lebih tinggi
     const WM = {
       mlbb: 'public/logos/wm_mlbb_w.png',
       ff: 'public/logos/wm_ff_w.png',
@@ -3624,7 +3625,7 @@
                 <div class="bc-shade"></div>
                 ${b.out ? '<span class="brand-badge-out">HABIS</span>' : (b.popular ? '<span class="brand-badge-popular">POPULER</span>' : '')}
                 <div class="bc-wm">
-                  ${WM[b.key] ? `<img class="brand-word${WM_INV[b.key] ? ' inv' : ''}" src="${WM[b.key]}" alt="${b.short}" loading="lazy">` : `<div class="brand-name ${TONE[b.key] || 'fmt-app'}">${b.short}</div>`}
+                  ${WM[b.key] ? `<img class="brand-word${WM_INV[b.key] ? ' inv' : ''}" src="${WM[b.key]}" alt="${b.short}"${WM_H[b.key] ? ` style="height:${WM_H[b.key]}px"` : ''} loading="lazy">` : `<div class="brand-name ${TONE[b.key] || 'fmt-app'}">${b.short}</div>`}
                 </div>
               </div>
               <div class="bc-face bc-back">

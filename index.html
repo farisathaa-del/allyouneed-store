@@ -2128,6 +2128,7 @@
             <button class="pill" data-cat="PREMIUM" onclick="filterHubCat('PREMIUM')"><svg class="ico ico-sm"><use href="#i-shield"/></svg> Akun Premium</button>
             <button class="pill" data-cat="PLN" onclick="filterHubCat('PLN')"><svg class="ico ico-sm"><use href="#i-bolt"/></svg> Token PLN</button>
             <button class="pill" data-cat="PULSA" onclick="filterHubCat('PULSA')"><svg class="ico ico-sm"><use href="#i-sim"/></svg> Pulsa</button>
+            <button class="pill" data-cat="GAS" onclick="filterHubCat('GAS')"><svg class="ico ico-sm"><use href="#i-ticket"/></svg> Gas &amp; BBM</button>
           </div>
         </div>
         <div class="sr-bottom">
@@ -2493,6 +2494,7 @@
             <li><button onclick="showHubView(); filterHubCat('PREMIUM')">Akun Premium</button></li>
             <li><button onclick="showHubView(); filterHubCat('PLN')">Token PLN</button></li>
             <li><button onclick="showHubView(); filterHubCat('PULSA')">Pulsa &amp; Masa Aktif</button></li>
+            <li><button onclick="showHubView(); filterHubCat('GAS')">Gas &amp; Voucher BBM</button></li>
           </ul>
         </div>
         <div>
@@ -2904,7 +2906,8 @@
       canva: 'fmt-app', capcut: 'fmt-app', chatgpt: 'fmt-app', gemini: 'fmt-app',
       microsoft_office: 'fmt-app', vpn_utility: 'fmt-app', spotify: 'fmt-app',
       zoom: 'fmt-app', remini: 'fmt-app', meitu: 'fmt-app', wink: 'fmt-app',
-      picsart: 'fmt-app', scribd: 'fmt-app'
+      picsart: 'fmt-app', scribd: 'fmt-app',
+      magic_chess: 'fmt-esport', pertamina_gas: 'fmt-util', mypertamina: 'fmt-util'
     };
     // Artwork poster: gambar promosi resmi dari halaman toko aplikasi masing-masing.
     const ART = {
@@ -2919,7 +2922,10 @@
       zoom: 'public/art7/zoom.webp', remini: 'public/art7/remini.webp',
       meitu: 'public/art7/meitu.webp', wink: 'public/art7/wink.webp',
       picsart: 'public/art7/picsart.webp', scribd: 'public/art7/scribd.webp',
-      chatgpt: 'public/art7/chatgpt.webp', gemini: 'public/art7/gemini.webp'
+      chatgpt: 'public/art7/chatgpt.webp', gemini: 'public/art7/gemini.webp',
+      magic_chess: 'public/art8/magic_chess.webp',
+      pertamina_gas: 'public/art8/pertamina_gas.webp',
+      mypertamina: 'public/art8/mypertamina.webp'
     };
     // Ikon resmi (tanpa tulisan) untuk sisi belakang kartu
     const ICON = {
@@ -2934,336 +2940,113 @@
       zoom: 'public/logos/zoom.png', remini: 'public/logos/remini.png',
       meitu: 'public/logos/meitu.png', wink: 'public/logos/wink.png',
       picsart: 'public/logos/picsart.png', scribd: 'public/logos/scribd.png',
-      chatgpt: 'public/logos/chatgpt.png', gemini: 'public/logos/gemini.png'
+      chatgpt: 'public/logos/chatgpt.png', gemini: 'public/logos/gemini.png',
+      magic_chess: 'public/logos/magic_chess.png',
+      pertamina_gas: 'public/logos/pertamina_gas.png',
+      mypertamina: 'public/logos/mypertamina.png'
     };
     // Ikon resmi (tanpa tulisan) untuk sisi belakang kartu
-    const BRANDS_DEF = {
-      'mlbb': {
-        key: 'mlbb',
-        category: 'TOPUP',
-        title: 'Mobile Legends: Bang Bang',
-        short: 'Mobile Legends',
-        sub: 'Top Up Diamond & Weekly Pass Resmi Moonton',
-        logo: 'public/logos/mlbb_g.jpg?v=15',
-        bg: '#080810',
-        isGame: true,
-        gameCode: 'mobile-legends',
-        popular: true,
-        filterFn: p => p.id.startsWith('df:game:ml') || (p.nama && p.nama.toUpperCase().includes('MLBB'))
-      },
-      'ff': {
-        key: 'ff',
-        category: 'TOPUP',
-        title: 'Garena Free Fire',
-        short: 'Free Fire',
-        sub: 'Diamond, Membership & Level Up Pass Resmi',
-        logo: 'public/logos/ff_g.jpg?v=15',
-        bg: '#1C1917',
-        isGame: true,
-        gameCode: 'free-fire',
-        popular: true,
-        filterFn: p => p.id.startsWith('df:game:ff') || (p.nama && p.nama.toUpperCase().includes('FREE FIRE'))
-      },
-      'pubg': {
-        key: 'pubg',
-        category: 'TOPUP',
-        title: 'PUBG Mobile (UC)',
-        short: 'PUBG Mobile',
-        sub: 'Unknown Cash (UC) & Royale Pass Resmi',
-        logo: 'public/logos/pubg_g.jpg?v=15',
-        bg: '#080810',
-        isGame: true,
-        gameCode: 'pubg-mobile',
-        popular: true,
-        filterFn: p => p.id.startsWith('df:game:pubg') || (p.nama && p.nama.toUpperCase().includes('PUBG'))
-      },
-      'pln': {
-        key: 'pln',
-        category: 'PLN',
-        title: 'Token Listrik PLN Prabayar',
-        short: 'Token PLN',
-        sub: '20 Digit Stroom Resmi PT PLN (Persero)',
-        logo: 'public/logos/pln_g.jpg?v=15',
-        bg: '#0284C7',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.id.startsWith('df:pln:') || (p.nama && p.nama.toUpperCase().includes('PLN'))
-      },
-      'pulsa': {
-        key: 'pulsa',
-        category: 'PULSA',
-        title: 'Pulsa Reguler & Masa Aktif Kartu',
-        short: 'Pulsa & Masa Aktif',
-        sub: 'Telkomsel, Indosat, XL, AXIS, Tri, Smartfren, by.U',
-        logo: 'public/logos/telkomsel_g.jpg?v=16',
-        bg: '#00C9DF',
-        isGame: false,
-        
-        popular: true,
-        filterFn: p => p.id.startsWith('df:pulsa:') || p.id.startsWith('df:active:') || (p.nama && p.nama.toUpperCase().includes('MASA AKTIF'))
-      },
-      'netflix': {
-        key: 'netflix',
-        category: 'PREMIUM',
-        title: 'Netflix Premium 4K UHD',
-        short: 'Netflix',
-        sub: 'Akun Premium Anti-Limit Bergaransi',
-        logo: 'public/logos/netflix_g.jpg?v=15',
-        bg: '#141414',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('NETFLIX')
-      },
-      'viu': {
-        key: 'viu',
-        category: 'PREMIUM',
-        title: 'Viu Premium',
-        short: 'Viu',
-        sub: 'Drama Korea & Asia Tanpa Iklan',
-        logo: 'public/logos/tiles/viu_g.jpg',
-        bg: '#FFC200',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('VIU')
-      },
-      'bstation': {
-        key: 'bstation',
-        category: 'PREMIUM',
-        title: 'Bstation Premium',
-        short: 'Bstation',
-        sub: 'Anime & Drama Asia Full HD',
-        logo: 'public/logos/tiles/bstation_g.jpg',
-        bg: '#00A1D6',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('BSTATION')
-      },
-      'youku': {
-        key: 'youku',
-        category: 'PREMIUM',
-        title: 'Youku Premium',
-        short: 'Youku',
-        sub: 'Drama & Film China Resmi',
-        logo: 'public/logos/tiles/youku_g.jpg',
-        bg: '#1E90FF',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('YOUKU')
-      },
-      'drama': {
-        key: 'drama',
-        category: 'PREMIUM',
-        title: 'Drama All In One',
-        short: 'Drama All In One',
-        sub: 'Drama China, Korea & Asia Harian',
-        logo: 'public/logos/tiles/drama_g.jpg',
-        bg: '#E11D48',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('DRAMA')
-      },
-      'prime_video': {
-        key: 'prime_video',
-        category: 'PREMIUM',
-        title: 'Prime Video',
-        short: 'Prime Video',
-        sub: 'Film Hollywood & Serial Amazon',
-        logo: 'public/logos/tiles/prime_video_g.jpg',
-        bg: '#00A8E1',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('PRIME')
-      },
-      'vidio': {
-        key: 'vidio',
-        category: 'PREMIUM',
-        title: 'Vidio Platinum',
-        short: 'Vidio Platinum',
-        sub: 'Liga 1, Film & Serial Premier',
-        logo: 'public/logos/tiles/vidio_g.jpg',
-        bg: '#E4002B',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('VIDIO')
-      },
-      'canva': {
-        key: 'canva',
-        category: 'PREMIUM',
-        title: 'Canva Pro Edu / Lifetime',
-        short: 'Canva Pro',
-        sub: 'Akses Penuh Seluruh Template & Brand Kit',
-        logo: 'public/logos/canva_g.jpg?v=15',
-        bg: '#00C4CC',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('CANVA')
-      },
-      'capcut': {
-        key: 'capcut',
-        category: 'PREMIUM',
-        title: 'CapCut Pro Video Editor',
-        short: 'CapCut Pro',
-        sub: 'Template Premium & Fitur AI Video Pro',
-        logo: 'public/logos/capcut_g.jpg?v=15',
-        bg: '#111111',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('CAPCUT')
-      },
-      'spotify': {
-        key: 'spotify',
-        category: 'PREMIUM',
-        title: 'Spotify Premium Family Plan',
-        short: 'Spotify',
-        sub: 'Bebas Iklan & Download Lagu Offline 320kbps',
-        logo: 'public/logos/spotify_g.jpg?v=15',
-        bg: '#121212',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('SPOTIFY')
-      },
-      'chatgpt': {
-        key: 'chatgpt',
-        category: 'PREMIUM',
-        title: 'ChatGPT Plus',
-        short: 'ChatGPT Plus',
-        sub: 'Akses GPT Terbaru & Fitur Plus',
-        logo: 'public/logos/tiles/chatgpt_g.jpg',
-        bg: '#10A37F',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('CHATGPT')
-      },
-      'gemini': {
-        key: 'gemini',
-        category: 'PREMIUM',
-        title: 'Google Gemini Pro',
-        short: 'Google Gemini',
-        sub: 'AI Google & Integrasi Workspace',
-        logo: 'public/logos/tiles/gemini_g.jpg',
-        bg: '#4285F4',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('GEMINI')
-      },
-      'remini': {
-        key: 'remini',
-        category: 'PREMIUM',
-        title: 'Remini Premium',
-        short: 'Remini',
-        sub: 'Perjelas Foto AI Tanpa Watermark',
-        logo: 'public/logos/tiles/remini_g.jpg',
-        bg: '#FF334B',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('REMINI')
-      },
-      'meitu': {
-        key: 'meitu',
-        category: 'PREMIUM',
-        title: 'Meitu VIP',
-        short: 'Meitu',
-        sub: 'Edit Foto & Beauty AI Premium',
-        logo: 'public/logos/tiles/meitu_g.jpg',
-        bg: '#FF4FA0',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('MEITU')
-      },
-      'wink': {
-        key: 'wink',
-        category: 'PREMIUM',
-        title: 'Wink VIP',
-        short: 'Wink',
-        sub: 'Edit Video & Beauty AI Premium',
-        logo: 'public/logos/tiles/wink_g.jpg',
-        bg: '#7C3AED',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('WINK')
-      },
-      'picsart': {
-        key: 'picsart',
-        category: 'PREMIUM',
-        title: 'PicsArt Pro',
-        short: 'PicsArt Pro',
-        sub: 'Desain, Edit Foto & Template Pro',
-        logo: 'public/logos/tiles/picsart_g.jpg',
-        bg: '#C209C1',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('PICSART')
-      },
-      'scribd': {
-        key: 'scribd',
-        category: 'PREMIUM',
-        title: 'Scribd Premium',
-        short: 'Scribd',
-        sub: 'E-book, Audiobook & Dokumen',
-        logo: 'public/logos/tiles/scribd_g.jpg',
-        bg: '#1E7B85',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('SCRIBD')
-      },
-      'zoom': {
-        key: 'zoom',
-        category: 'PREMIUM',
-        title: 'Zoom Premium (Pro)',
-        short: 'Zoom Premium',
-        sub: 'Meeting Online Tanpa Batas Waktu',
-        logo: 'public/logos/tiles/zoom_g.jpg',
-        bg: '#2D8CFF',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && p.nama.toUpperCase().includes('ZOOM')
-      },
-      'microsoft_office': {
-        key: 'microsoft_office',
-        category: 'PREMIUM',
-        title: 'Microsoft 365, Windows & Office',
-        short: 'Office 365 & Windows',
-        sub: 'Lisensi Asli Microsoft 365, Project & Windows 10/11',
-        logo: 'public/logos/office365_g.jpg?v=15',
-        bg: '#EB3C00',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && (p.nama.toUpperCase().includes('WINDOWS') || p.nama.toUpperCase().includes('OFFICE') || p.nama.toUpperCase().includes('PROJECT') || p.nama.toUpperCase().includes('VISIO'))
-      },
-      'vpn_utility': {
-        key: 'vpn_utility',
-        category: 'PREMIUM',
-        title: 'VPN Premium & Utility (ExpressVPN, HMA)',
-        short: 'VPN & Utility',
-        sub: 'ExpressVPN, HMA VPN & Getcontact Premium',
-        logo: 'public/logos/expressvpn_g.jpg?v=15',
-        bg: '#DA3940',
-        isGame: false,
-        
-        popular: false,
-        filterFn: p => p.nama && (p.nama.toUpperCase().includes('EXPRESS') || p.nama.toUpperCase().includes('HMA') || p.nama.toUpperCase().includes('VPN') || p.nama.toUpperCase().includes('GETCONTACT'))
-      }
+    // ═══════════════════════════════════════════════════════════════════
+    // KATALOG DATA-DRIVEN — sumber kebenaran = DB bot Telegram.
+    // Brand, paket, dan harga TIDAK lagi ditulis manual di sini: kartu
+    // dibentuk dari products.brand + products.tipe yang dikirim server.
+    // Menambah SKU di bot otomatis muncul di web, tanpa sentuh file ini.
+    // ═══════════════════════════════════════════════════════════════════
+    const BRAND_META = {
+      mlbb: { category: 'TOPUP', order: 1, title: 'Mobile Legends: Bang Bang', short: 'Mobile Legends', sub: 'Diamond, Weekly Pass & Starlight', logo: 'public/logos/mlbb_g.jpg?v=15', bg: '#080810' },
+      ff: { category: 'TOPUP', order: 2, title: 'Garena Free Fire', short: 'Free Fire', sub: 'Diamond, Membership & Level Up Pass', logo: 'public/logos/ff_g.jpg?v=15', bg: '#1C1917' },
+      pubg: { category: 'TOPUP', order: 3, title: 'PUBG Mobile (UC)', short: 'PUBG Mobile', sub: 'Unknown Cash (UC) & Royale Pass', logo: 'public/logos/pubg_g.jpg?v=15', bg: '#080810' },
+      magic_chess: { category: 'TOPUP', order: 4, title: 'Magic Chess: Go Go', short: 'Magic Chess', sub: 'Diamond & Weekly Card Resmi Moonton', logo: 'public/logos/magic_chess.png', bg: '#3B0F6B' },
+      pln: { category: 'PLN', order: 5, title: 'Token Listrik PLN Prabayar', short: 'Token PLN', sub: '20 Digit Stroom Resmi PT PLN (Persero)', logo: 'public/logos/pln_g.jpg?v=15', bg: '#0284C7' },
+      pulsa: { category: 'PULSA', order: 6, groupBy: 'brand', title: 'Pulsa Reguler & Masa Aktif Kartu', short: 'Pulsa & Masa Aktif', sub: 'Telkomsel, Indosat, XL, AXIS, Tri — pulsa & tambah masa aktif', logo: 'public/logos/telkomsel_g.jpg?v=16', bg: '#00C9DF' },
+      pertamina_gas: { category: 'GAS', order: 7, title: 'Gas Pertamina 3 Kg', short: 'Gas Pertamina', sub: 'Isi ulang gas 3 kg via Pertamina', logo: 'public/logos/pertamina_gas.png', bg: '#1B3B6F' },
+      mypertamina: { category: 'GAS', order: 8, title: 'Voucher BBM MyPertamina', short: 'Voucher MyPertamina', sub: 'Voucher BBM digital 25rb–200rb, kode otomatis', logo: 'public/logos/mypertamina.png', bg: '#0C2B4A' },
+      netflix: { category: 'PREMIUM', order: 9, title: 'Netflix Premium 4K UHD', short: 'Netflix', sub: 'Akun Premium Anti-Limit Bergaransi', logo: 'public/logos/netflix_g.jpg?v=15', bg: '#141414' },
+      viu: { category: 'PREMIUM', order: 10, title: 'Viu Premium', short: 'Viu', sub: 'Drama Korea & Asia Tanpa Iklan', logo: 'public/logos/tiles/viu_g.jpg', bg: '#FFC200' },
+      bstation: { category: 'PREMIUM', order: 11, title: 'Bstation Premium', short: 'Bstation', sub: 'Anime & Drama Asia Full HD', logo: 'public/logos/tiles/bstation_g.jpg', bg: '#00A1D6' },
+      youku: { category: 'PREMIUM', order: 12, title: 'Youku Premium', short: 'Youku', sub: 'Drama & Film China Resmi', logo: 'public/logos/tiles/youku_g.jpg', bg: '#1E90FF' },
+      drama: { category: 'PREMIUM', order: 13, title: 'Drama All In One', short: 'Drama All In One', sub: 'Drama China, Korea & Asia Harian', logo: 'public/logos/tiles/drama_g.jpg', bg: '#E11D48' },
+      prime_video: { category: 'PREMIUM', order: 14, title: 'Prime Video', short: 'Prime Video', sub: 'Film Hollywood & Serial Amazon', logo: 'public/logos/tiles/prime_video_g.jpg', bg: '#00A8E1' },
+      vidio: { category: 'PREMIUM', order: 15, title: 'Vidio Platinum', short: 'Vidio Platinum', sub: 'Liga 1, Film & Serial Premier', logo: 'public/logos/tiles/vidio_g.jpg', bg: '#E4002B' },
+      canva: { category: 'PREMIUM', order: 16, title: 'Canva Pro Edu / Lifetime', short: 'Canva Pro', sub: 'Akses Penuh Seluruh Template & Brand Kit', logo: 'public/logos/canva_g.jpg?v=15', bg: '#00C4CC' },
+      capcut: { category: 'PREMIUM', order: 17, title: 'CapCut Pro Video Editor', short: 'CapCut Pro', sub: 'Template Premium & Fitur AI Video Pro', logo: 'public/logos/capcut_g.jpg?v=15', bg: '#111111' },
+      chatgpt: { category: 'PREMIUM', order: 18, title: 'ChatGPT Plus', short: 'ChatGPT Plus', sub: 'Akses GPT Terbaru & Fitur Plus', logo: 'public/logos/tiles/chatgpt_g.jpg', bg: '#10A37F' },
+      gemini: { category: 'PREMIUM', order: 19, title: 'Google Gemini Pro', short: 'Google Gemini', sub: 'AI Google & Integrasi Workspace', logo: 'public/logos/tiles/gemini_g.jpg', bg: '#4285F4' },
+      remini: { category: 'PREMIUM', order: 20, title: 'Remini Premium', short: 'Remini', sub: 'Perjelas Foto AI Tanpa Watermark', logo: 'public/logos/tiles/remini_g.jpg', bg: '#FF334B' },
+      meitu: { category: 'PREMIUM', order: 21, title: 'Meitu VIP', short: 'Meitu', sub: 'Edit Foto & Beauty AI Premium', logo: 'public/logos/tiles/meitu_g.jpg', bg: '#FF4FA0' },
+      wink: { category: 'PREMIUM', order: 22, title: 'Wink VIP', short: 'Wink', sub: 'Edit Video & Beauty AI Premium', logo: 'public/logos/tiles/wink_g.jpg', bg: '#7C3AED' },
+      picsart: { category: 'PREMIUM', order: 23, title: 'PicsArt Pro', short: 'PicsArt Pro', sub: 'Desain, Edit Foto & Template Pro', logo: 'public/logos/tiles/picsart_g.jpg', bg: '#C209C1' },
+      scribd: { category: 'PREMIUM', order: 24, title: 'Scribd Premium', short: 'Scribd', sub: 'E-book, Audiobook & Dokumen', logo: 'public/logos/tiles/scribd_g.jpg', bg: '#1E7B85' },
+      zoom: { category: 'PREMIUM', order: 25, title: 'Zoom Premium (Pro)', short: 'Zoom Premium', sub: 'Meeting Online Tanpa Batas Waktu', logo: 'public/logos/tiles/zoom_g.jpg', bg: '#2D8CFF' },
+      spotify: { category: 'PREMIUM', order: 26, title: 'Spotify Premium Family Plan', short: 'Spotify', sub: 'Bebas Iklan & Download Lagu Offline', logo: 'public/logos/spotify_g.jpg?v=15', bg: '#121212' },
+      microsoft_office: { category: 'PREMIUM', order: 27, title: 'Microsoft 365, Windows & Office', short: 'Office 365 & Windows', sub: 'Lisensi Asli Microsoft 365, Project & Windows 10/11', logo: 'public/logos/office365_g.jpg?v=15', bg: '#EB3C00' },
+      vpn_utility: { category: 'PREMIUM', order: 28, title: 'VPN Premium & Utility', short: 'VPN & Utility', sub: 'ExpressVPN, HMA VPN & Getcontact Premium', logo: 'public/logos/expressvpn_g.jpg?v=15', bg: '#DA3940' },
+      data: { category: 'DATA', order: 29, groupBy: 'brand', title: 'Paket Data Internet', short: 'Paket Data', sub: 'Kuota internet semua operator', logo: 'public/logos/allyouneed.png', bg: '#0EA5E9' },
+      emoney: { category: 'EWALLET', order: 30, groupBy: 'brand', title: 'Top Up E-Wallet', short: 'E-Wallet', sub: 'DANA, OVO, ShopeePay, GoPay', logo: 'public/logos/dana.svg', bg: '#118EEA' }
     };
+
+    // Aturan pengenal brand premium (id UUID / jaspay:*) — namanya tidak punya kolom brand
+    const PREMIUM_RULES = [
+      ['netflix', /NETFLIX/i], ['viu', /\bVIU\b/i], ['bstation', /BSTATION/i], ['youku', /YOUKU/i],
+      ['drama', /DRAMA ALL IN ONE/i], ['prime_video', /PRIME\s*VIDEO/i], ['vidio', /VIDIO/i],
+      ['canva', /CANVA/i], ['capcut', /CAPCUT/i], ['chatgpt', /CHATGPT|OPENAI/i], ['gemini', /GEMINI/i],
+      ['remini', /REMINI/i], ['meitu', /MEITU/i], ['wink', /\bWINK\b/i], ['picsart', /PICSART/i],
+      ['scribd', /SCRIBD/i], ['zoom', /\bZOOM\b/i], ['spotify', /SPOTIFY/i],
+      ['microsoft_office', /MICROSOFT|WINDOWS|VISIO|PROJECT|OFFICE\s*365/i],
+      ['vpn_utility', /VPN|EXPRESS|HMA|GETCONTACT/i]
+    ];
+
+    const OP_LABEL = {
+      TELKOMSEL: 'Telkomsel & by.U', INDOSAT: 'Indosat Ooredoo', XL: 'XL Axiata',
+      AXIS: 'AXIS', TRI: 'Tri (Three)', SMARTFREN: 'Smartfren'
+    };
+
+    // Tentukan kartu katalog mana yang memuat satu produk
+    function classifyProduct(p) {
+      const id = String(p.id || '');
+      const nama = String(p.nama || '');
+      const br = String(p.brand || '').toUpperCase();
+      if (id.startsWith('df:game:')) {
+        if (br.includes('MOBILE LEGENDS')) return 'mlbb';
+        if (br.includes('FREE FIRE')) return 'ff';
+        if (br.includes('PUBG')) return 'pubg';
+        if (br.includes('MAGIC CHESS')) return 'magic_chess';
+        return null;
+      }
+      if (id.startsWith('df:pulsa:') || id.startsWith('df:active:')) return 'pulsa';
+      if (id.startsWith('df:pln:')) return 'pln';
+      if (id.startsWith('df:gas:')) return 'pertamina_gas';
+      if (id.startsWith('df:voucher:')) return 'mypertamina';
+      if (id.startsWith('df:data:')) return 'data';
+      if (id.startsWith('df:emoney:')) return 'emoney';
+      for (const [key, re] of PREMIUM_RULES) if (re.test(nama)) return key;
+      return null;
+    }
+
+    let BRANDS_DEF = {};
+
+    function buildBrandDefs() {
+      const defs = {};
+      for (const p of allProducts) {
+        const key = classifyProduct(p);
+        if (!key) continue;
+        if (!defs[key]) {
+          const meta = BRAND_META[key] || {
+            category: 'PREMIUM', order: 99, title: 'Produk Digital', short: 'Produk Digital',
+            sub: 'Katalog resmi', logo: 'public/logos/allyouneed.png', bg: '#0B1220'
+          };
+          defs[key] = Object.assign({ key, isGame: false, popular: ['mlbb', 'ff', 'pubg', 'pulsa'].includes(key) }, meta, {
+            filterFn: (x) => classifyProduct(x) === key
+          });
+        }
+      }
+      // urutkan sesuai BRAND_META.order
+      const ordered = {};
+      Object.values(defs).sort((a, b) => (a.order || 99) - (b.order || 99))
+        .forEach(b => { ordered[b.key] = b; });
+      BRANDS_DEF = ordered;
+      return ordered;
+    }
 
     // ─── INITIALIZATION & DATA FETCH ───
     function renderSkeletons() {
@@ -3330,6 +3113,7 @@
           }
           window.STORE_STATS = json.stats || {};
           allProducts = json.products.filter(p => p.aktif);
+          buildBrandDefs();
           renderBrandHub();
           renderHubExtras();
           startSocialProofToast();
@@ -3545,18 +3329,17 @@
 
       const wrap = document.getElementById('hotStrip');
       if (!wrap) return;
-      const HOT_IDS = ['df:game:mlweek', 'df:game:ff50', 'df:game:ml86', 'df:game:pubg325', 'df:pln:pln20', 'df:pulsa:s5'];
-      const HOT_PREMIUM = /NETFLIX|CANVA|CHATGPT|GEMINI|SPOTIFY|VIDIO|CAPCUT/i;
+      // Pilih paket nyata: termurah per brand inti + satu paket premium terjangkau
+      const PRIORITY = ['mlbb', 'ff', 'pubg', 'magic_chess', 'pln', 'pulsa', 'pertamina_gas', 'netflix', 'canva'];
       let picks = [];
-      HOT_IDS.forEach(id => {
-        const p = allProducts.find(x => x.id === id);
-        if (p) picks.push(p);
+      PRIORITY.forEach(k => {
+        const b = BRANDS_DEF[k];
+        if (!b) return;
+        const list = allProducts.filter(p => b.filterFn(p)).sort((a, b2) => a.harga - b2.harga);
+        if (!list.length) return;
+        const pick = list[Math.min(1, list.length - 1)];   // paket kedua termurah: lebih mewakili
+        if (!picks.some(x => x.id === pick.id)) picks.push(pick);
       });
-      const prem = allProducts.filter(p => HOT_PREMIUM.test(p.nama || '')).sort((a, b) => a.harga - b.harga).slice(0, 3);
-      prem.forEach(p => { if (!picks.some(x => x.id === p.id)) picks.push(p); });
-      if (picks.length < 5) {
-        picks = picks.concat(allProducts.filter(p => !HOT_PREMIUM.test(p.nama || '')).sort((a, b) => a.harga - b.harga).slice(0, 8));
-      }
       picks = picks.slice(0, 8);
 
       wrap.innerHTML = picks.map(p => {
@@ -4220,42 +4003,44 @@
       }
     }
 
-    // ─── STEP 2: DENOMINATION TILES LOGIC ───
+    // ─── STEP 2: DENOMINATION TILES (data-driven: pakai kolom `tipe` / `brand`) ───
     function renderStep2Denoms(brand) {
       const tabsWrap = document.getElementById('orderSubTabs');
-      const gridWrap = document.getElementById('orderDenomGrid');
       const stepperWrap = document.getElementById('orderStepperWrap');
-      stepperWrap.style.display = 'none';
+      if (stepperWrap) stepperWrap.style.display = 'none';
 
       const items = allProducts.filter(p => brand.filterFn(p));
-
-      // Parsing sub-tabs khusus per brand
       let subTabs = [];
-      if (brand.key === 'mlbb') {
-        subTabs = ['Pass & Starlight', 'Misi Event (5-86 Dm)', 'Denom Reguler (172-706 Dm)', 'Tier Sultan (1.000+)'];
-      } else if (brand.key === 'ff') {
-        subTabs = ['Membership & Pass', 'Pecahan Kecil (5-100 Dm)', 'Pecahan Sedang (140-500 Dm)', 'Tier Sultan (720+)'];
-      } else if (brand.key === 'pubg') {
-        subTabs = ['Royale Pass Tier', 'Pecahan Kecil (30-150 UC)', 'Pecahan Sedang (210-660 UC)', 'Tier Sultan (1.000+)'];
-      } else if (brand.category === 'PULSA') {
-        subTabs = ['Telkomsel & by.U', 'Indosat Ooredoo', 'Tri (Three)', 'XL Axiata', 'AXIS', 'Smartfren'];
+
+      if (brand.groupBy === 'brand') {
+        // Pulsa & masa aktif / e-wallet / data: tab per operator
+        const labels = [];
+        items.forEach(p => {
+          const raw = String(p.brand || '').toUpperCase();
+          if (!raw) return;
+          const lab = OP_LABEL[raw] || raw;
+          if (!labels.includes(lab)) labels.push(lab);
+        });
+        if (labels.length > 1) subTabs = labels;
+      } else {
+        // Game & premium: tab per jenis paket (Umum / Membership / Indonesia / ...)
+        const tipes = [];
+        items.forEach(p => {
+          const t = String(p.tipe || '').trim();
+          if (t && !tipes.includes(t)) tipes.push(t);
+        });
+        if (tipes.length > 1) subTabs = tipes;
       }
 
-      // Render Sub-Tabs
       if (subTabs.length > 1) {
         tabsWrap.style.display = 'flex';
         selectedSubTab = subTabs[0];
-        let tHtml = '';
-        subTabs.forEach(t => {
-          tHtml += `
-            <button class="denom-sub-tab ${selectedSubTab === t ? 'active' : ''}" onclick="selectOrderSubTab('${t}')">
-              ${t}
-            </button>
-          `;
-        });
-        tabsWrap.innerHTML = tHtml;
+        tabsWrap.innerHTML = subTabs.map(t =>
+          `<button class="denom-sub-tab ${selectedSubTab === t ? 'active' : ''}" onclick="selectOrderSubTab('${String(t).replace(/'/g, "\\'")}')">${t}</button>`
+        ).join('');
       } else {
         tabsWrap.style.display = 'none';
+        tabsWrap.innerHTML = '';      // jangan tinggalkan tab brand sebelumnya
         selectedSubTab = 'ALL';
       }
 
@@ -4268,83 +4053,40 @@
         b.classList.toggle('active', b.innerText.trim() === tabName);
       });
       const brand = BRANDS_DEF[activeBrandKey];
-      const items = allProducts.filter(p => brand.filterFn(p));
-      renderFilteredTiles(items);
+      if (!brand) return;
+      renderFilteredTiles(allProducts.filter(p => brand.filterFn(p)));
     }
 
     function renderFilteredTiles(items) {
       const gridWrap = document.getElementById('orderDenomGrid');
       let displayItems = items;
+      const brand = BRANDS_DEF[activeBrandKey] || {};
 
-      // Filter logic per tab
-      if (selectedSubTab !== 'ALL') {
-        if (activeBrandKey === 'mlbb') {
-          if (selectedSubTab.includes('Pass')) {
-            displayItems = items.filter(p => (p.id.includes('week') || p.id.includes('starlight') || p.id.includes('twilight')) && !p.id.match(/^df:game:mlweek\d+$/));
-          } else if (selectedSubTab.includes('Misi Event')) {
-            displayItems = items.filter(p => ['df:game:ml5','df:game:ml10','df:game:ml12','df:game:ml14','df:game:ml19','df:game:ml28','df:game:ml36','df:game:ml44','df:game:ml59','df:game:ml86'].includes(p.id));
-          } else if (selectedSubTab.includes('Reguler')) {
-            displayItems = items.filter(p => ['df:game:ml172','df:game:ml257','df:game:ml344','df:game:ml429','df:game:ml514','df:game:ml706'].includes(p.id));
-          } else if (selectedSubTab.includes('Sultan')) {
-            displayItems = items.filter(p => ['df:game:ml878','df:game:ml963','df:game:ml1412','df:game:ml2195','df:game:ml3688','df:game:ml5532'].includes(p.id));
-          }
-        } else if (activeBrandKey === 'ff') {
-          if (selectedSubTab.includes('Membership')) {
-            displayItems = items.filter(p => (p.id.includes('ffm') || p.id.includes('level')) && !p.id.match(/^df:game:ffm1_\d+$/));
-          } else if (selectedSubTab.includes('Kecil')) {
-            displayItems = items.filter(p => ['df:game:ff5','df:game:ff12','df:game:ff20','df:game:ff50','df:game:ff70','df:game:ff100'].includes(p.id));
-          } else if (selectedSubTab.includes('Sedang')) {
-            displayItems = items.filter(p => ['df:game:ff140','df:game:ff210','df:game:ff355','df:game:ff500'].includes(p.id));
-          } else if (selectedSubTab.includes('Sultan')) {
-            displayItems = items.filter(p => ['df:game:ff720','df:game:ff1000','df:game:ff1440','df:game:ff2000'].includes(p.id));
-          }
-        } else if (activeBrandKey === 'pubg') {
-          if (selectedSubTab.includes('Royale Pass')) {
-            displayItems = items.filter(p => ['df:game:pubg325','df:game:pubg660','df:game:pubg1800'].includes(p.id));
-          } else if (selectedSubTab.includes('Kecil')) {
-            displayItems = items.filter(p => ['df:game:pubg30','df:game:pubg60','df:game:pubg100','df:game:pubg150'].includes(p.id));
-          } else if (selectedSubTab.includes('Sedang')) {
-            displayItems = items.filter(p => ['df:game:pubg210','df:game:pubg300','df:game:pubg325','df:game:pubg500','df:game:pubg660'].includes(p.id));
-          } else if (selectedSubTab.includes('Sultan')) {
-            displayItems = items.filter(p => ['df:game:pubg1000','df:game:pubg1800','df:game:pubg3850','df:game:pubg8100'].includes(p.id));
-          }
-        } else if (BRANDS_DEF[activeBrandKey].category === 'PULSA') {
+      if (selectedSubTab !== 'ALL' && selectedSubTab) {
+        if (brand.groupBy === 'brand') {
           displayItems = items.filter(p => {
-            const u = p.nama.toUpperCase();
-            if (selectedSubTab.includes('Telkomsel')) return u.includes('TELKOMSEL') || u.includes('BY.U');
-            if (selectedSubTab.includes('Indosat')) return u.includes('INDOSAT');
-            if (selectedSubTab.includes('Tri')) return u.includes('TRI') || u.includes('THREE');
-            if (selectedSubTab.includes('XL')) return u.includes('XL');
-            if (selectedSubTab.includes('AXIS')) return u.includes('AXIS');
-            if (selectedSubTab.includes('Smartfren')) return u.includes('SMARTFREN');
-            return true;
+            const raw = String(p.brand || '').toUpperCase();
+            return (OP_LABEL[raw] || raw) === selectedSubTab;
           });
+        } else {
+          displayItems = items.filter(p => String(p.tipe || '') === selectedSubTab);
         }
       }
 
-      displayItems.sort((a, b) => a.harga - b.harga);
+      displayItems = displayItems.slice().sort((a, b) => a.harga - b.harga);
 
-      let html = '';
-      displayItems.forEach(p => {
-        let badge = '';
-        if (p.id === 'df:game:mlweek' || p.id === 'df:game:ffm1') badge = '<span class="tile-badge-best">PALING LARIS</span>';
-        else if (p.id === 'df:game:ml86') badge = '<span class="tile-badge-promo">MISI 100 DM</span>';
-        else if (p.id === 'df:game:ml257') badge = '<span class="tile-badge-promo">MISI 250 DM</span>';
-        else if (p.id === 'df:game:mlstarlight') badge = '<span class="tile-badge-best">STARLIGHT</span>';
-        else if (p.id === 'df:game:pubg325') badge = '<span class="tile-badge-promo">ROYALE PASS</span>';
-
+      const html = displayItems.map(p => {
         const isSel = selectedProduct && selectedProduct.id === p.id;
-        const cleanName = p.nama.replace(/^MLBB\s+/i, '').replace(/^Free Fire\s+/i, '').replace(/^PUBG Mobile\s+/i, '');
-
-        html += `
+        const cleanName = String(p.nama || '')
+          .replace(/^MLBB\s+/i, '').replace(/^Free Fire\s+/i, '')
+          .replace(/^PUBG Mobile\s+/i, '').replace(/^Magic Chess Go Go\s+/i, '');
+        return `
           <div class="denom-tile ${isSel ? 'selected' : ''}" onclick="selectTileProduct('${p.id}')">
-            ${badge}
             <div class="tile-title">${cleanName}</div>
             <div class="tile-price">Rp ${p.harga.toLocaleString('id-ID')}</div>
             <div class="tile-check-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-          </div>
-        `;
-      });
+          </div>`;
+      }).join('');
 
       gridWrap.innerHTML = html || '<div style="grid-column: 1/-1; text-align: center; padding: 24px; color: #5B6470;">Tidak ada nominal dalam kategori ini.</div>';
     }

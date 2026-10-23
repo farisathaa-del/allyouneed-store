@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <script>window.API_BASE = 'https://platform-viewing-looking-riding.trycloudflare.com';</script>
+  <script>window.API_BASE = 'https://toolbox-lyrics-planner-testimonials.trycloudflare.com';</script>
+
 <script>
   /* Tema: system (default) -> gelap -> terang. Dijalankan sebelum CSS agar tidak berkedip. */
   (function () {
@@ -627,18 +628,25 @@
     }
     .brand-badge-popular {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      left: 12px;
+      bottom: 46px;              /* di atas pita wordmark, tidak menimpa artwork */
       z-index: 7;
-      background: #FEF3C7;
-      color: #92400E;
-      border: 1px solid #FDE68A;
-      font-size: 10px;
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(8,20,26,.72);
+      color: #7CF3FF;
+      border: 1px solid rgba(0,224,248,.42);
+      font-size: 9.5px;
       font-weight: 800;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 99px;
-      letter-spacing: 0.3px;
-      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.08);
+      letter-spacing: 0.5px;
+      line-height: 1;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .brand-badge-popular::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: #00E0F8; box-shadow: 0 0 6px rgba(0,224,248,.9);
     }
     /* Dua font lokal untuk meniru karakter logotype tiap produk
        (aslinya wordmark resmi publisher — kita dekati lewat tipografi). */
@@ -1129,8 +1137,8 @@
       position: absolute;
       top: -7px;
       right: 10px;
-      background: #F59E0B;
-      color: #3D2A00;
+      background: var(--brand);
+      color: var(--on-brand);
       font-size: 9.5px;
       font-weight: 800;
       padding: 2px 8px;
@@ -1471,10 +1479,15 @@
     .strip-brand { font-size: 11px; font-weight: 800; color: var(--brand-ink); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
     .strip-name { font-size: 13.5px; font-weight: 700; color: var(--ink-900); line-height: 1.3; margin-bottom: 8px; min-height: 36px; }
     .strip-price { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--ink-900); }
+    .strip-card { display: flex; flex-direction: column; align-items: flex-start; }
     .strip-tag {
-      position: absolute; top: 10px; right: 10px; background: #FEF3C7; color: #92400E;
-      border: 1px solid #FDE68A; font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 99px;
+      position: static; display: inline-flex; align-items: center; gap: 4px;
+      background: var(--brand-soft); color: var(--brand-ink);
+      border: 1px solid rgba(0,224,248,.45);
+      font-size: 9.5px; font-weight: 800; letter-spacing: .5px; line-height: 1;
+      padding: 4px 8px; border-radius: 99px; margin-bottom: 9px;
     }
+    .strip-tag::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
     .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .step-card {
@@ -1778,7 +1791,7 @@
     html[data-theme="dark"] .search-chip:hover { border-color: var(--brand-ink); color: var(--brand-ink); background: var(--brand-soft); }
     /* tambalan warna terang yang belum pakai token */
     html[data-theme="dark"] .trust-tag.yellow { background: rgba(245,158,11,.16); color: #F5C26B; border-color: rgba(245,158,11,.3); }
-    html[data-theme="dark"] .strip-tag { background: rgba(245,158,11,.16); color: #F5C26B; border-color: rgba(245,158,11,.3); }
+    html[data-theme="dark"] .strip-tag { background: rgba(0,224,248,.14); color: #7CF3FF; border-color: rgba(0,224,248,.42); }
     html[data-theme="dark"] .stat-cell, html[data-theme="dark"] .step-card, html[data-theme="dark"] .strip-card, html[data-theme="dark"] .faq-item { box-shadow: none; }
     html[data-theme="dark"] .skel-band, html[data-theme="dark"] .skel-line { background: linear-gradient(100deg, #151D26 30%, #1D2731 50%, #151D26 70%); }
     html[data-theme="dark"] .strip-scroll::-webkit-scrollbar-thumb,
@@ -1800,7 +1813,7 @@
     html[data-theme="dark"] .btn-checkout-qris:hover:not(:disabled) { background: #35EBFF; }
     html[data-theme="dark"] .modal-close { background: #1E2833; color: var(--ink-600); }
     html[data-theme="dark"] .modal-close:hover { background: #26313D; color: #FFFFFF; }
-    html[data-theme="dark"] .brand-badge-popular { background: #F59E0B; color: #3D2A00; border-color: #F59E0B; }
+    html[data-theme="dark"] .brand-badge-popular { background: rgba(8,20,26,.8); color: #7CF3FF; border-color: rgba(0,224,248,.42); }
     html[data-theme="dark"] .trust-tag.green { background: rgba(34,197,94,.16); color: #86EFAC; border-color: rgba(34,197,94,.32); }
     html[data-theme="dark"] .payment-tag-free { background: rgba(34,197,94,.16); color: #86EFAC; }
     html[data-theme="dark"] .trust-tag.blue { color: #4FE9FF; background: #0C2A30; }
@@ -2156,7 +2169,7 @@
       <!-- ─── Strip Paket Terlaris & Promo (pola Lapakgaming: "Lagi Populer") ─── -->
       <div class="sec-head">
         <div>
-          <div class="sec-title"><svg class="ico" style="color:#F59E0B"><use href="#i-fire"/></svg> Paket <span>Terlaris &amp; Promo</span></div>
+          <div class="sec-title"><svg class="ico"><use href="#i-fire"/></svg> Paket <span>Terlaris &amp; Promo</span></div>
           <div class="sec-sub">Paket langganan dan nominal yang paling sering dipesan pelanggan.</div>
         </div>
       </div>

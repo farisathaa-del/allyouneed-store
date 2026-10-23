@@ -961,6 +961,34 @@
       color: var(--ink-900);
     }
 
+    /* Langkah 5: Syarat & Ketentuan */
+    .terms-intro { font-size: 12.5px; color: var(--ink-600); line-height: 1.55; margin-bottom: 12px; }
+    .terms-acc { border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; overflow: hidden; background: #FBFCFE; }
+    .terms-acc > summary {
+      list-style: none; cursor: pointer; padding: 12px 14px;
+      font-size: 13px; font-weight: 800; color: var(--ink-900);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .terms-acc > summary::-webkit-details-marker { display: none; }
+    .terms-acc > summary::after { content: '+'; font-size: 17px; font-weight: 800; color: var(--brand-ink); line-height: 1; }
+    .terms-acc[open] > summary::after { content: '\2212'; }
+    .terms-acc[open] > summary { border-bottom: 1px solid var(--line); }
+    .terms-acc ul { margin: 0; padding: 12px 14px 14px 30px; }
+    .terms-acc li { font-size: 12.5px; color: var(--ink-600); line-height: 1.65; margin-bottom: 6px; text-align: justify; }
+    .terms-acc li:last-child { margin-bottom: 0; }
+    .terms-acc li b { color: var(--ink-900); }
+    .terms-src { display: block; font-size: 11px; color: var(--ink-300); margin-top: 2px; }
+    .terms-agree {
+      display: flex; align-items: flex-start; gap: 10px; margin-top: 14px;
+      padding: 13px 14px; border-radius: 14px; cursor: pointer;
+      background: rgba(0, 224, 248, 0.07); border: 1px solid rgba(0, 224, 248, 0.34);
+    }
+    .terms-agree input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--brand-ink); flex: 0 0 auto; }
+    .terms-agree span { font-size: 12.5px; line-height: 1.5; color: var(--ink-900); font-weight: 600; text-align: justify; }
+    .terms-agree.warn { animation: termsShake .45s ease; border-color: #EF4444; background: #FEF2F2; }
+    @keyframes termsShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    @media (prefers-reduced-motion: reduce) { .terms-agree.warn { animation: none; } }
+
     /* Step 1: Form Inputs & Auto-check Nickname */
     .input-grid-2 {
       display: grid;
@@ -2266,7 +2294,7 @@
           <p id="orderBrandDesc" class="order-header-sub">Pengiriman instan otomatis 24 jam via server resmi.</p>
           <div class="order-header-badges">
             <span class="trust-tag green"><svg class="ico ico-sm"><use href="#i-bolt"/></svg> Otomatis 24 Jam</span>
-            <span class="trust-tag blue"><svg class="ico ico-sm"><use href="#i-shield"/></svg> 100% Legal & Bergaransi</span>
+            <span class="trust-tag blue" id="trustGaransiTag"><svg class="ico ico-sm"><use href="#i-shield"/></svg> Garansi Sesuai Paket</span>
             <span class="trust-tag yellow"><svg class="ico ico-sm"><use href="#i-lock"/></svg> Tanpa Password</span>
           </div>
         </div>
@@ -2347,6 +2375,20 @@
         </div>
         <input type="text" id="orderBuyerWa" class="order-input" aria-label="Nomor WhatsApp untuk bukti invoice (opsional)" inputmode="tel" placeholder="contoh: 081234567890 (Untuk kirim bukti invoice otomatis)">
         <div style="font-size: 11px; color: #5B6470; margin-top: 5px;">*Bukti transaksi dan kode invoice akan tercatat otomatis di sistem.</div>
+      </div>
+
+      <!-- ─── LANGKAH 5: SYARAT & KETENTUAN (umum + per katalog + keterangan produk) ─── -->
+      <div class="step-box" id="termsBox">
+        <div class="step-box-header">
+          <div class="step-number">5</div>
+          <div class="step-box-title">Syarat &amp; Ketentuan</div>
+        </div>
+        <div class="terms-intro">Ketentuan umum berlaku untuk semua katalog. Ketentuan katalog dan keterangan produk muncul otomatis mengikuti brand dan paket yang Anda pilih.</div>
+        <div id="termsGroups"></div>
+        <label class="terms-agree" id="termsAgreeRow" for="termsAgree">
+          <input type="checkbox" id="termsAgree" onchange="onTermsAgreeChange()">
+          <span>Saya sudah membaca dan menyetujui Syarat &amp; Ketentuan di atas, termasuk ketentuan katalog dan paket yang saya pilih.</span>
+        </label>
       </div>
 
       </div><!-- /order-main -->
@@ -3043,7 +3085,7 @@
             category: 'PREMIUM', order: 99, title: 'Produk Digital', short: 'Produk Digital',
             sub: 'Katalog resmi', logo: 'public/logos/allyouneed.png', bg: '#0B1220'
           };
-          defs[key] = Object.assign({ key, isGame: false, popular: ['mlbb', 'ff', 'pubg', 'pulsa'].includes(key) }, meta, {
+          defs[key] = Object.assign({ key, isGame: (meta.category === 'TOPUP'), popular: ['mlbb', 'ff', 'pubg', 'pulsa'].includes(key) }, meta, {
             filterFn: (x) => classifyProduct(x) === key
           });
         }
@@ -3854,6 +3896,8 @@
 
       // Reset selection
       selectedProduct = null;
+      renderOrderTerms(null);
+      updateGaransiTag(null);
       updateStickyCheckoutBar();
 
       // Deep-link dari strip "Paket Terlaris": pilih nominal otomatis bila produk ada di brand ini
@@ -3873,6 +3917,7 @@
       const fbBox = document.getElementById('liveFeedbackBox');
       const guideEl = document.getElementById('accountGuideNote');
       fbBox.style.display = 'none';
+      container.innerHTML = '';      // jangan tinggalkan form brand sebelumnya
 
       if (brand.isGame) {
         if (brand.key === 'mlbb') {
@@ -3908,7 +3953,26 @@
             </div>
           `;
           guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Cara Cek Character ID:</b> Buka PUBG Mobile -> Masuk profil di pojok kiri atas -> Salin deretan angka Character ID.';
+        } else {
+          // Fallback semua game lain (Magic Chess: Go Go, dan game baru dari DB)
+          titleEl.innerText = '1. Masukkan User ID Akun ' + (brand.short || 'Game');
+          container.innerHTML = `
+            <div class="form-group-single">
+              <label class="input-label" for="gameUserId">User ID (Angka):</label>
+              <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 1234567890" oninput="onGameIdInput()">
+            </div>
+          `;
+          guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Cara Cek User ID:</b> Buka game -> masuk ke menu profil -> salin deretan angka User ID. Pastikan tidak ada spasi.';
         }
+      } else if (brand.key === 'mypertamina' || brand.category === 'GAS') {
+        titleEl.innerText = '1. Masukkan Nomor HP Terdaftar MyPertamina';
+        container.innerHTML = `
+          <div class="form-group-single">
+            <label class="input-label" for="pertaminaPhoneInput">Nomor HP di Aplikasi MyPertamina:</label>
+            <input type="tel" id="pertaminaPhoneInput" class="order-input" placeholder="contoh: 081234567890" inputmode="tel">
+          </div>
+        `;
+        guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Info:</b> Voucher BBM dikirim ke nomor HP yang terdaftar di aplikasi MyPertamina. Nomor yang salah tidak dapat dipindahkan.';
       } else if (brand.key === 'pln') {
         titleEl.innerText = '1. Masukkan Nomor Meter / ID Pelanggan PLN';
         container.innerHTML = `
@@ -4137,6 +4201,8 @@
         stepperWrap.style.display = 'none';
       }
 
+      renderOrderTerms(selectedProduct);
+      updateGaransiTag(selectedProduct);
       updateStickyCheckoutBar();
     }
 
@@ -4208,12 +4274,156 @@
       } else {
         totalEl.innerText = 'Rp ' + selectedProduct.harga.toLocaleString('id-ID');
         itemEl.innerText = selectedProduct.nama;
-        btnEl.disabled = false;
-        btnEl.innerHTML = '<svg class="ico" style="vertical-align:-0.15em" aria-hidden="true"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »';
+        btnEl.disabled = !termsAgreed;
+        btnEl.innerHTML = termsAgreed
+          ? '<svg class="ico" style="vertical-align:-0.15em" aria-hidden="true"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »'
+          : 'Centang S&amp;K Dulu';
         if (sideName) sideName.innerText = selectedProduct.nama;
         if (sideTotal) sideTotal.innerText = 'Rp ' + selectedProduct.harga.toLocaleString('id-ID');
         if (sideQty) sideQty.innerText = String(currentStepperQty || 1) + ' akun';
-        if (sideBtn) sideBtn.disabled = false;
+        if (sideBtn) { sideBtn.disabled = !termsAgreed; sideBtn.innerText = termsAgreed ? 'Bayar via QRIS' : 'Centang S&K Dulu'; }
+      }
+    }
+
+    // ─── SYARAT & KETENTUAN (umum + per katalog + keterangan produk) ───
+    let termsAgreed = false;
+
+    const TERMS_COMMON = [
+      'Harga yang tertera adalah harga final dalam Rupiah. Tidak ada biaya admin tambahan dari kami; biaya yang mungkin muncul mengikuti bank atau e-wallet Anda.',
+      'Pesanan diproses otomatis setelah pembayaran QRIS terverifikasi. Kode invoice dicatat di sistem dan dikirim ke WhatsApp bila nomor diisi.',
+      'Pesanan yang sudah dibayar dan diproses <b>tidak dapat dibatalkan</b> atau diuangkan kembali.',
+      'Kebenaran ID akun, nomor HP, atau nomor meter sepenuhnya tanggung jawab pembeli. Produk yang sudah terkirim ke tujuan salah tidak dapat ditarik kembali.',
+      'Garansi mengikuti paket yang dipilih. Klaim maksimal <b>1×24 jam</b> sejak produk diterima, hanya melalui bot Telegram resmi, dengan menyertakan kode invoice.',
+      'Produk hanya untuk penggunaan pribadi dan tidak untuk dijual ulang tanpa izin. Harga dan jenis paket dapat berubah mengikuti penyedia.'
+    ];
+
+    const TERMS_CATALOG = {
+      game: [
+        'Masukkan <b>User ID</b> (dan <b>Zone ID</b> untuk Mobile Legends) dengan benar. Item masuk langsung ke akun yang diinput dan tidak dapat dipindahkan.',
+        'Proses otomatis 24 jam, umumnya di bawah 1 menit. Pada jam sibuk, event, atau maintenance publisher, proses bisa lebih lama.',
+        'Item event, membership, dan pass mengikuti ketersediaan serta jadwal publisher game.',
+        'Bila produk memerlukan login akun (mis. paket diamond harian), ikuti petunjuk pada keterangan produk di bawah.'
+      ],
+      pulsa: [
+        'Nomor HP harus aktif dan sesuai operator yang dipilih. Pulsa/kuota dikirim otomatis ke nomor tersebut.',
+        'Nomor yang salah input tidak dapat dibatalkan atau dipindahkan setelah transaksi dikirim ke operator.',
+        'Paket tambah masa aktif hanya menambah masa aktif kartu dan <b>tidak akumulasi</b> kecuali dinyatakan lain pada keterangan produk.',
+        'Gangguan operator dapat menyebabkan keterlambatan. Transaksi yang gagal diproses ulang atau dikembalikan sesuai ketentuan garansi.'
+      ],
+      pln: [
+        'Masukkan nomor meter / ID pelanggan (11–12 digit) dengan benar. Token dikirim ke nomor tujuan yang diinput.',
+        'Token listrik 20 digit dikirim setelah pembayaran lunas. Simpan token sebelum memasangnya.',
+        'Token yang sudah dipakai atau salah input tidak dapat dibatalkan maupun diterbitkan ulang.'
+      ],
+      voucher: [
+        'Kode voucher dikirim setelah pembayaran lunas dan hanya dapat dipakai satu kali.',
+        'Pastikan nomor/ID yang didaftarkan benar. Kode yang sudah terpakai tidak dapat diterbitkan ulang.'
+      ],
+      akun: [
+        'Tipe akun (<b>Private / Sharing / Link</b>) dan masa garansi mengikuti paket yang dipilih — lihat bagian "Ketentuan paket ini".',
+        'Dilarang mengubah email/password pada akun sharing dan dilarang mengubah profil pengguna lain.',
+        'Satu akun untuk satu device kecuali dinyatakan lain. Melebihi batas device dapat menyebabkan logout paksa.',
+        'Masa aktif tetap berjalan meski akun belum dipakai atau belum login.',
+        'Garansi berupa perbaikan (fix) atau penggantian akun selama masa garansi. Refund hanya diberikan bila tidak ada solusi teknis.'
+      ]
+    };
+
+    const CATALOG_TERMS_LABEL = {
+      game: 'Ketentuan katalog game & top up',
+      pulsa: 'Ketentuan katalog pulsa & data',
+      pln: 'Ketentuan katalog token PLN',
+      voucher: 'Ketentuan katalog voucher',
+      akun: 'Ketentuan katalog akun premium'
+    };
+
+    function catalogGroupFor(brand) {
+      if (!brand) return null;
+      if (brand.isGame || brand.category === 'TOPUP') return 'game';
+      if (brand.key === 'pln') return 'pln';
+      if (brand.key === 'pulsa') return 'pulsa';
+      if (brand.category === 'GAS') return 'voucher';
+      return 'akun';
+    }
+
+    function parseProductMeta(deskripsi) {
+      const t = String(deskripsi || '');
+      const g = t.match(/Garansi:\s*([^|]+)/i);
+      const tp = t.match(/Tipe:\s*([^|]+)/i);
+      return {
+        garansi: g ? g[1].trim() : '',
+        tipe: tp ? tp[1].trim() : ''
+      };
+    }
+
+    function termsGroup(title, items, source) {
+      if (!items || !items.length) return '';
+      const lis = items.map(x => `<li>${x}</li>`).join('');
+      const src = source ? `<span class="terms-src">${source}</span>` : '';
+      return `<details class="terms-acc"><summary>${title}${src}</summary><ul>${lis}</ul></details>`;
+    }
+
+    function renderOrderTerms(product) {
+      const box = document.getElementById('termsGroups');
+      const brand = BRANDS_DEF[activeBrandKey];
+      if (!box || !brand) return;
+
+      let html = termsGroup('Ketentuan umum ALL YOU NEED', TERMS_COMMON);
+
+      const grp = catalogGroupFor(brand);
+      if (grp && TERMS_CATALOG[grp]) {
+        html += termsGroup(CATALOG_TERMS_LABEL[grp], TERMS_CATALOG[grp]);
+      }
+
+      if (product) {
+        const meta = parseProductMeta(product.deskripsi);
+        const perPkg = [];
+        if (meta.tipe) perPkg.push(`Tipe akun/paket: <b>${meta.tipe}</b>.`);
+        if (meta.garansi) perPkg.push(`Masa garansi paket ini: <b>${meta.garansi}</b>.`);
+        perPkg.push(`Nama paket: <b>${product.nama}</b> — Rp ${Number(product.harga).toLocaleString('id-ID')}.`);
+        html += termsGroup('Ketentuan paket ini', perPkg);
+
+        if (product.digi) {
+          const d = product.digi;
+          const rows = [];
+          if (d.desc) rows.push(`<b>Keterangan produk:</b> ${d.desc}`);
+          if (d.tipe || d.kategori) rows.push(`Tipe: ${d.tipe || '-'} · Kategori: ${d.kategori || '-'}.`);
+          if (d.cut) rows.push(`Jam cut-off harian: <b>${d.cut}</b>. Transaksi di luar jam tersebut diproses pada jadwal berikutnya.`);
+          rows.push('Produk ini dipasok melalui marketplace Digiflazz (PT Digiflazz Interkoneksi Indonesia). Invoice transaksi diterbitkan atas nama penjual di Digiflazz.');
+          rows.push('Permasalahan transaksi diselesaikan berdasarkan bukti transaksi; Digiflazz berperan sebagai mediator, bukan pihak penjual.');
+          html += termsGroup('Keterangan produk dari Digiflazz', rows, 'Sumber: price list & S&amp;K Digiflazz');
+        }
+      }
+
+      box.innerHTML = html;
+    }
+
+    function updateGaransiTag(product) {
+      const el = document.getElementById('trustGaransiTag');
+      if (!el) return;
+      const icon = '<svg class="ico ico-sm"><use href="#i-shield"/></svg> ';
+      if (!product) { el.innerHTML = icon + 'Garansi Sesuai Paket'; return; }
+      const meta = parseProductMeta(product.deskripsi);
+      if (/no garansi/i.test(meta.garansi)) el.innerHTML = icon + 'Tanpa Garansi (sesuai paket)';
+      else if (meta.garansi) el.innerHTML = icon + 'Garansi ' + meta.garansi;
+      else el.innerHTML = icon + 'Garansi Sesuai Paket';
+    }
+
+    function onTermsAgreeChange() {
+      const cb = document.getElementById('termsAgree');
+      termsAgreed = !!(cb && cb.checked);
+      const row = document.getElementById('termsAgreeRow');
+      if (row && termsAgreed) row.classList.remove('warn');
+      updateStickyCheckoutBar();
+    }
+
+    function warnTermsAgree() {
+      const row = document.getElementById('termsAgreeRow');
+      if (row) {
+        row.classList.remove('warn');
+        void row.offsetWidth;
+        row.classList.add('warn');
+        const y = row.getBoundingClientRect().top + window.scrollY - 160;
+        window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }
 
@@ -4221,6 +4431,10 @@
     async function proceedOrderCheckout() {
       if (!selectedProduct) {
         alert('Silakan pilih salah satu nominal terlebih dahulu!');
+        return;
+      }
+      if (!termsAgreed) {
+        warnTermsAgree();
         return;
       }
 
@@ -4244,6 +4458,14 @@
         targetAcc = inp ? inp.value.trim() : '';
         if (!targetAcc) {
           alert('Silakan masukkan Nomor Meter / ID Pelanggan PLN!');
+          if (inp) inp.focus();
+          return;
+        }
+      } else if (brand.key === 'mypertamina' || brand.category === 'GAS') {
+        const inp = document.getElementById('pertaminaPhoneInput');
+        targetAcc = inp ? inp.value.trim() : '';
+        if (!targetAcc) {
+          alert('Silakan masukkan nomor HP terdaftar MyPertamina!');
           if (inp) inp.focus();
           return;
         }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <script>window.API_BASE = 'https://platform-viewing-looking-riding.trycloudflare.com';</script>
+  <script>window.API_BASE = 'https://relative-caps-initiatives-bacterial.trycloudflare.com';</script>
 
 <script>
   /* Tema: system (default) -> gelap -> terang. Dijalankan sebelum CSS agar tidak berkedip. */
@@ -3085,8 +3085,17 @@
     async function initStore(attempt) {
       if (!allProducts.length) renderSkeletons();
       try {
-        const res = await fetch(API_BASE + '/api/store/data');
-        const json = await res.json();
+        // API live dulu; kalau tunnel mati, pakai snapshot data.json yang ikut ter-deploy
+        let json = null, lastErr = null;
+        for (const url of [API_BASE + '/api/store/data', './data.json']) {
+          try {
+            const r = await fetch(url, { cache: 'no-store' });
+            if (!r.ok) continue;
+            const j = await r.json();
+            if (j && j.ok) { json = j; break; }
+          } catch (err) { lastErr = err; }
+        }
+        if (!json) throw (lastErr || new Error('Data katalog tidak tersedia'));
         if (json.ok) {
           if (json.config) {
             if (json.config.bot_username) {

@@ -4102,6 +4102,67 @@
       }
     }
 
+    // Live Cek Nama Pelanggan PLN (Digiflazz /inquiry-pln)
+    let plnTimeout = null;
+    let plnSeq = 0;
+    function onPlnInput() {
+      const el = document.getElementById('plnIdInput');
+      const fb = document.getElementById('liveFeedbackBox');
+      if (!el || !fb) return;
+
+      const digits = el.value.replace(/\D/g, '');
+      if (el.value !== digits) el.value = digits;
+
+      clearTimeout(plnTimeout);
+      const seq = ++plnSeq;
+
+      if (digits.length < 10) { fb.style.display = 'none'; return; }
+
+      fb.className = 'live-account-badge loading';
+      fb.innerHTML = '<span class="spinner"></span> Memeriksa nomor meter ke server PLN...';
+      fb.style.display = 'flex';
+
+      plnTimeout = setTimeout(async () => {
+        try {
+          const res = await fetch(API_BASE + '/api/store/check-pln', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ meterNo: digits })
+          });
+          const json = await res.json();
+          if (seq !== plnSeq) return;
+          const d = (json && json.data) || {};
+
+          if (json.ok && d.ok && d.name) {
+            fb.className = 'live-account-badge success';
+            fb.innerHTML = `
+              <div style="display:flex; align-items:center; gap:12px; width:100%;">
+                <div style="width:36px; height:36px; border-radius:50%; background:#DCFCE7; color:#15803D; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;"><svg class="ico"><use href="#i-check"/></svg></div>
+                <div style="flex:1;">
+                  <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:#15803D; font-weight:800;">Pelanggan PLN Terverifikasi</div>
+                  <div class="lab-name">${d.name}</div>
+                  <div class="lab-meta" style="font-size:11px; opacity:.82;">Meter ${digits}${d.power ? ' &middot; ' + d.power : ''}</div>
+                </div>
+              </div>
+            `;
+          } else if (d.notFound) {
+            fb.className = 'live-account-badge warning';
+            fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Nomor <b>${digits}</b> tidak terdaftar di PLN. Periksa kembali nomornya.`;
+          } else if (d.reason === 'limit') {
+            fb.className = 'live-account-badge warning';
+            fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Cek nama terlalu sering. Tunggu sebentar, atau lanjutkan dengan memastikan nomor benar.`;
+          } else {
+            fb.className = 'live-account-badge warning';
+            fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Nama pelanggan belum bisa dicek otomatis. Pastikan nomor meter sudah benar.`;
+          }
+        } catch (e) {
+          if (seq !== plnSeq) return;
+          fb.className = 'live-account-badge warning';
+          fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Server cek PLN sibuk. Order tetap bisa dilanjutkan.`;
+        }
+      }, 800);
+    }
+
     // Live Game Nickname Verifier
     let nickTimeout = null;
     function onGameIdInput() {

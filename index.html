@@ -825,8 +825,10 @@
       .bc-back { display: none; }
       .bc-front { background-position: center 32%; }
       .brand-card { perspective: none; }
-      /* info di sisi depan, diletakkan di atas wordmark agar tidak bentrok badge POPULER */
+      /* info di sisi depan, tepat di atas wordmark */
       .bc-meta { display: flex; top: auto; bottom: 44px; justify-content: flex-start; }
+      /* badge POPULER pindah ke pojok atas kiri supaya tidak menimpa chip harga */
+      .brand-badge-popular { top: 8px; bottom: auto; left: 8px; }
     }
     /* HP sempit: 2 kolom supaya artwork & info harga tetap terbaca */
     @media (max-width: 520px) {

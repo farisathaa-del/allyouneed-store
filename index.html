@@ -4789,15 +4789,42 @@
     })();
 
     // ─── SOCIAL PROOF LIVE TOAST SIMULATOR ───
+    // Judul = produk yang baru dibeli. Baris kedua diselang-seling dari daftar ini
+    // (tanpa nama daerah), diacak merata supaya tidak ada yang muncul dua kali beruntun.
     const SAMPLE_TOASTS = [
-      { t: '86 Diamond MLBB', s: 'Banda Aceh · 1 menit lalu' },
-      { t: 'Weekly Diamond Pass', s: 'Aceh Singkil · 2 menit lalu' },
-      { t: 'Masa Aktif Telkomsel 360 Hari', s: 'Subulussalam · 3 menit lalu' },
-      { t: 'Canva Pro Lifetime Edu', s: 'Medan · 4 menit lalu' },
-      { t: 'Token Listrik PLN 100.000', s: 'Singkil · 5 menit lalu' },
-      { t: 'Free Fire 140 Diamond', s: 'Tapaktuan · 6 menit lalu' },
-      { t: 'Netflix Premium 1 Bulan', s: 'Banda Aceh · 7 menit lalu' }
+      '86 Diamond MLBB',
+      'Weekly Diamond Pass',
+      'Masa Aktif Telkomsel 360 Hari',
+      'Canva Pro Lifetime Edu',
+      'Token Listrik PLN 100.000',
+      'Free Fire 140 Diamond',
+      'Netflix Premium 1 Bulan'
     ];
+    const TOAST_SUBS = [
+      'Baru saja diproses · otomatis 24 jam',
+      'Pengiriman instan · tanpa antre',
+      'Transaksi berhasil · QRIS terverifikasi',
+      'Stok tersedia · kirim otomatis',
+      'Baru saja selesai · 5 detik masuk'
+    ];
+    let subBag = [];
+    let lastSub = '';
+    function nextToastSub() {
+      if (!subBag.length) {
+        subBag = TOAST_SUBS.slice();
+        for (let i = subBag.length - 1; i > 0; i--) {           // Fisher-Yates
+          const j = Math.floor(Math.random() * (i + 1));
+          [subBag[i], subBag[j]] = [subBag[j], subBag[i]];
+        }
+        // putaran baru: jangan mulai dengan kalimat yang sama seperti barusan
+        if (subBag[subBag.length - 1] === lastSub && subBag.length > 1) {
+          [subBag[subBag.length - 1], subBag[subBag.length - 2]] =
+            [subBag[subBag.length - 2], subBag[subBag.length - 1]];
+        }
+      }
+      lastSub = subBag.pop();
+      return lastSub;
+    }
     let toastIndex = 0;
     let toastTimer = null;
 
@@ -4818,10 +4845,9 @@
 
       function show() {
         if (!toastMayShow()) return;
-        const item = SAMPLE_TOASTS[toastIndex % SAMPLE_TOASTS.length];
+        titleEl.textContent = SAMPLE_TOASTS[toastIndex % SAMPLE_TOASTS.length];
         toastIndex++;
-        titleEl.textContent = item.t;
-        subEl.textContent = item.s;
+        subEl.textContent = nextToastSub();
         toastEl.classList.add('show');
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toastEl.classList.remove('show'), 6000);

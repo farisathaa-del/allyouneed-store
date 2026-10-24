@@ -254,8 +254,11 @@
     .hero-banner {
       /* Warna diambil langsung dari logo: hitam #080810 -> abu baja #405068 -> cyan gelap,
          ditambah pantulan cyan logo di sudut kanan atas. */
-      background: radial-gradient(circle at 100% 0%, rgba(0, 224, 248, 0.30) 0%, transparent 55%),
-                  linear-gradient(100deg, #080810 0%, #405068 62%, #0C7C8C 100%);
+      background-image: radial-gradient(circle at 100% 0%, rgba(0, 224, 248, 0.30) 0%, transparent 55%),
+                        linear-gradient(100deg, #080810 0%, #405068 62%, #0C7C8C 100%);
+      background-origin: border-box;
+      background-repeat: no-repeat;
+      background-color: #080810;
       color: var(--on-dark);
       border-radius: var(--r-xl);
       padding: 46px 50px;
@@ -1603,8 +1606,11 @@
     .referral-banner {
       /* Sama persis dengan hero banner: hitam #080810 -> abu baja #405068 -> cyan gelap. */
       margin: 34px 0 10px; border-radius: 22px; padding: 26px 30px;
-      background: radial-gradient(circle at 100% 0%, rgba(0,224,248,0.30) 0%, transparent 55%),
-                  linear-gradient(100deg, #080810 0%, #405068 62%, #0C7C8C 100%);
+      background-image: radial-gradient(circle at 100% 0%, rgba(0,224,248,0.30) 0%, transparent 55%),
+                        linear-gradient(100deg, #080810 0%, #405068 62%, #0C7C8C 100%);
+      background-origin: border-box;
+      background-repeat: no-repeat;
+      background-color: #080810;
       color: var(--on-dark); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
       border: 1px solid rgba(255,255,255,0.08);
     }
@@ -2452,9 +2458,9 @@
           <div class="step-box-title">Kontak Pengiriman Pesanan</div>
         </div>
         <input type="text" id="orderBuyerName" class="order-input" aria-label="Nama pembeli" placeholder="Nama Anda (opsional)" style="margin-bottom: 8px;">
-        <input type="tel" id="orderBuyerWa" class="order-input" aria-label="Nomor WhatsApp pembeli" inputmode="tel" placeholder="No. WhatsApp aktif — contoh 081234567890" style="margin-bottom: 8px;">
-        <input type="email" id="orderBuyerEmail" class="order-input" aria-label="Alamat email pembeli" placeholder="Email aktif — contoh nama@gmail.com">
-        <div style="font-size: 11px; color: #5B6470; margin-top: 5px;">*Detail pesanan, kredensial akun, dan PIN dikirim ke WhatsApp/email ini. Isi minimal salah satu.</div>
+        <input type="email" id="orderBuyerEmail" class="order-input" aria-label="Alamat email pembeli (wajib)" placeholder="Email aktif — wajib, contoh nama@gmail.com" style="margin-bottom: 8px;">
+        <input type="tel" id="orderBuyerWa" class="order-input" aria-label="Nomor WhatsApp pembeli (opsional)" inputmode="tel" placeholder="No. WhatsApp aktif (opsional) — contoh 081234567890">
+        <div style="font-size: 11px; color: #5B6470; margin-top: 5px;">*Email <b>wajib</b> diisi — invoice, kredensial, dan PIN pesanan dikirim ke email ini. Nomor WhatsApp opsional untuk kontak cepat.</div>
       </div>
 
       <!-- ─── LANGKAH 5: SYARAT & KETENTUAN (umum + per katalog + keterangan produk) ─── -->
@@ -4575,6 +4581,13 @@
 
       const waInp = document.getElementById('orderBuyerWa');
       const buyerWa = waInp ? waInp.value.trim() : '';
+      const emailInp = document.getElementById('orderBuyerEmail');
+      const buyerEmail = emailInp ? emailInp.value.trim() : '';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(buyerEmail)) {
+        alert('Email wajib diisi dengan benar — invoice dan kredensial pesanan dikirim ke email ini.');
+        if (emailInp) emailInp.focus();
+        return;
+      }
 
       const btnEl = document.getElementById('btnStickyCheckout');
       btnEl.disabled = true;
@@ -4590,7 +4603,7 @@
             targetAccount: targetAcc,
             buyerName: (document.getElementById('orderBuyerName') || {}).value || '',
             buyerWa: buyerWa,
-            buyerEmail: (document.getElementById('orderBuyerEmail') || {}).value || ''
+            buyerEmail: buyerEmail
           })
         });
 

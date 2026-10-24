@@ -15,7 +15,7 @@
   })();
 </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>ALL YOU NEED — Top Up Game, Pulsa, Token PLN & Akun Premium 24 Jam</title>
   <meta name="description" content="Toko digital otomatis 24 jam: top up Mobile Legends, Free Fire, PUBG, pulsa & masa aktif, token PLN, serta akun premium (Netflix, Canva, ChatGPT). Bayar QRIS semua bank & e-wallet, tanpa biaya admin.">
   <meta name="theme-color" content="#00E0F8">
@@ -119,12 +119,19 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* Sentuh: tanpa kotak biru bawaan browser & tanpa jeda 300ms double-tap */
+    a, button, [role="button"], summary, label {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
     body {
       background-color: #F4F6F8;
       color: #111111;
       font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
       min-height: 100vh;
+      min-height: 100dvh;
       -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
     }
 
     /* Animasi masuk view (compositor-only: opacity + translate) */
@@ -790,6 +797,17 @@
     .bc-pk b { color: #F8F8F8; }
     .bc-pr { font-size: 12px; font-weight: 800; color: var(--on-brand); background: var(--brand); padding: 5px 11px; border-radius: 7px; }
     .bc-pr span { font-weight: 600; opacity: .75; }
+    /* Bar ringkas di sisi depan — pengganti sisi belakang saat flip dimatikan di HP */
+    .bc-meta {
+      display: none; position: absolute; top: 10px; left: 10px; right: 10px; z-index: 6;
+      align-items: center; justify-content: space-between; gap: 6px;
+    }
+    .bc-meta .m-pk, .bc-meta .m-pr {
+      font-size: 10.5px; font-weight: 800; line-height: 1; padding: 5px 8px; border-radius: 99px;
+      white-space: nowrap; backdrop-filter: blur(6px);
+    }
+    .bc-meta .m-pk { color: #F8F8F8; background: rgba(8,8,16,.74); border: 1px solid rgba(248,248,248,.22); }
+    .bc-meta .m-pr { color: #080810; background: #00E0F8; }
     .brand-badge-out {
       position: absolute; top: 10px; right: 10px; z-index: 7;
       background: rgba(8,8,16,.82); color: #F8F8F8; border: 1px solid rgba(248,248,248,.28);
@@ -800,7 +818,21 @@
     .brand-card.is-out .bc-back { background: linear-gradient(160deg,#12161C,#0C1016); }
     .bc-out { font-size: 12px; font-weight: 800; color: #FF8A8A; letter-spacing: .2px; }
     /* Di layar sentuh: berbalik saat disentuh, bukan saat hover */
-    @media (hover: none) { .brand-card:hover .bc-flip { transform: none; } }
+    /* Perangkat sentuh (tidak ada kursor): flip 3D DIMATIKAN TOTAL.
+       Kartu tampil datar, info paket & harga langsung di sisi depan. */
+    @media (hover: none), (pointer: coarse) {
+      .bc-flip { transform: none !important; transform-style: flat; transition: none; will-change: auto; }
+      .bc-back { display: none; }
+      .bc-front { background-position: center 32%; }
+      .brand-card { perspective: none; }
+      /* info di sisi depan, diletakkan di atas wordmark agar tidak bentrok badge POPULER */
+      .bc-meta { display: flex; top: auto; bottom: 44px; justify-content: flex-start; }
+    }
+    /* HP sempit: 2 kolom supaya artwork & info harga tetap terbaca */
+    @media (max-width: 520px) {
+      .brand-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .bc-meta .m-pk, .bc-meta .m-pr { font-size: 10px; padding: 4px 7px; }
+    }
     @media (prefers-reduced-motion: reduce) { .bc-flip { transition: none; } }
 
     /* ─── VIEW 2: ORDER STATION — 2 KOLOM (form kiri, ringkasan sticky kanan) ─── */
@@ -1454,6 +1486,12 @@
     @media (max-width: 600px) {
       .brand-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       .denom-tiles-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      /* target sentuh minimal 40px */
+      .denom-sub-tab { min-height: 38px; padding: 8px 12px; }
+      .btn-back-nav { min-height: 40px; }
+      .btn-checkout-qris { min-height: 44px; }
+      .theme-btn { width: 38px; height: 38px; }
+      .nav-icon, .btn-channel { min-height: 38px; }
       .input-grid-2 { grid-template-columns: 1fr; }
       .sticky-checkout-bar { padding: 12px 16px; }
       .btn-checkout-qris { padding: 12px 18px; font-size: 13.5px; }
@@ -1876,7 +1914,13 @@
 
     /* Bar bayar di HP: ringkas nominal, tombol tidak melipat dua baris. */
     @media (max-width: 600px) {
-      .sticky-checkout-bar { padding: 12px 16px; gap: 12px; margin-bottom: -100px; }
+      /* HP: bar bayar benar-benar menempel di bawah layar (bukan ikut alur & nyangkut di atas) */
+      .sticky-checkout-bar {
+        position: fixed; bottom: 0; left: 0; right: 0; top: auto;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+        gap: 12px; margin: 0; border-radius: 18px 18px 0 0; z-index: 96;
+      }
+      #orderView { padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)); }
       .sticky-summary { min-width: 0; flex: 1 1 auto; }
       .sticky-price { font-size: 20px; }
       .sticky-item-name {
@@ -2014,6 +2058,13 @@
     .magnetic.is-pulling { transition: transform .1s linear; }
     @media (prefers-reduced-motion: reduce) {
       .magnetic { transition: none; }
+    }
+
+    @media (max-width: 600px) {
+      /* iOS Safari auto-zoom kalau font input < 16px */
+      .order-input, .modal-input, input[type="text"], input[type="tel"], input[type="email"],
+      input[type="number"], select, textarea { font-size: 16px; }
+      .order-input { border-color: var(--line); }
     }
   </style>
 
@@ -3683,6 +3734,9 @@
               <div class="bc-face bc-front" style="--brand-canvas:${b.bg};background-image:url('${ART[b.key] || ''}')">
                 <div class="bc-shade"></div>
                 ${b.out ? '<span class="brand-badge-out">HABIS</span>' : (b.popular ? '<span class="brand-badge-popular">POPULER</span>' : '')}
+                <div class="bc-meta">
+                  ${b.out ? '<span class="m-pk">Stok habis</span>' : `<span class="m-pk">${b.count} paket</span><span class="m-pr">Rp ${b.minPrice.toLocaleString('id-ID')}</span>`}
+                </div>
                 <div class="bc-wm">
                   ${WM[b.key] ? `<img class="brand-word${WM_INV[b.key] ? ' inv' : ''}" src="${WM[b.key]}" alt="${b.short}"${WM_H[b.key] ? ` style="height:${WM_H[b.key]}px"` : ''} loading="lazy">` : `<div class="brand-name ${TONE[b.key] || 'fmt-app'}">${b.short}</div>`}
                 </div>
@@ -3863,12 +3917,8 @@
       const card = e && e.currentTarget && e.currentTarget.closest
         ? e.currentTarget.closest('.brand-card')
         : null;
-      const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      if (!fine && card && !card.classList.contains('flipped')) {
-        document.querySelectorAll('.brand-card.flipped').forEach(c => { if (c !== card) c.classList.remove('flipped'); });
-        card.classList.add('flipped');
-        return;
-      }
+      // Layar sentuh: langsung buka daftar paket (flip tidak dipakai di HP).
+      if (card) card.classList.remove('flipped');
       if (count === 0) { alert('Stok untuk layanan ini sedang habis. Coba lagi nanti.'); return; }
       openBrandOrder(key);
     }

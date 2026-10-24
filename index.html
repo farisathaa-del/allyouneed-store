@@ -3169,6 +3169,11 @@
       return null;
     }
 
+    // Escape teks dari supplier sebelum masuk innerHTML (nama akun/pelanggan bukan milik kita)
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
     // Kode game untuk API cek nickname (brand key web != kode supplier)
     const GAME_CODE = { mlbb: 'mobile-legends', ff: 'free-fire', pubg: 'pubg-mobile', magic_chess: 'magic-chess-go-go' };
 
@@ -4019,6 +4024,7 @@
       const fbBox = document.getElementById('liveFeedbackBox');
       const guideEl = document.getElementById('accountGuideNote');
       fbBox.style.display = 'none';
+      if (typeof resetNickCheck === 'function') resetNickCheck();
       container.innerHTML = '';      // jangan tinggalkan form brand sebelumnya
 
       if (brand.isGame) {
@@ -4080,7 +4086,7 @@
         container.innerHTML = `
           <div class="form-group-single">
             <label class="input-label" for="plnIdInput">Nomor Meter / IDPEL PLN (11-12 Digit):</label>
-            <input type="text" id="plnIdInput" class="order-input" placeholder="contoh: 530000000001" oninput="onPlnInput()">
+            <input type="text" id="plnIdInput" class="order-input" placeholder="contoh: 530000000001" oninput="onPlnInput()" onblur="onPlnComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
           </div>
         `;
         guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Petunjuk:</b> Pastikan 11-12 digit nomor meter benar. 20 digit token stroom terbit otomatis setelah pembayaran lunas.';
@@ -4108,18 +4114,35 @@
     // Live Cek Nama Pelanggan PLN (Digiflazz /inquiry-pln)
     let plnTimeout = null;
     let plnSeq = 0;
+    let lastPlnKey = '';
+
+    // Mengetik: hanya rapikan digit + sembunyikan badge (jangan cek ke supplier)
     function onPlnInput() {
+      const el = document.getElementById('plnIdInput');
+      const fb = document.getElementById('liveFeedbackBox');
+      if (!el || !fb) return;
+      const digits = el.value.replace(/\D/g, '');
+      if (el.value !== digits) el.value = digits;
+      clearTimeout(plnTimeout);
+      plnSeq++;
+      lastPlnKey = '';
+      fb.style.display = 'none';
+    }
+
+    // Selesai isi (blur / Enter): baru cek nama pelanggan
+    function onPlnComplete() {
       const el = document.getElementById('plnIdInput');
       const fb = document.getElementById('liveFeedbackBox');
       if (!el || !fb) return;
 
       const digits = el.value.replace(/\D/g, '');
       if (el.value !== digits) el.value = digits;
+      if (digits.length < 10) { fb.style.display = 'none'; return; }
+      if (digits === lastPlnKey) return;
+      lastPlnKey = digits;
 
       clearTimeout(plnTimeout);
       const seq = ++plnSeq;
-
-      if (digits.length < 10) { fb.style.display = 'none'; return; }
 
       fb.className = 'live-account-badge loading';
       fb.innerHTML = '<span class="spinner"></span> Memeriksa nomor meter ke server PLN...';
@@ -4134,6 +4157,7 @@
           });
           const json = await res.json();
           if (seq !== plnSeq) return;
+          if (!json.ok) lastPlnKey = '';
           const d = (json && json.data) || {};
 
           if (json.ok && d.ok && d.name) {
@@ -4143,7 +4167,7 @@
                 <div style="width:36px; height:36px; border-radius:50%; background:#DCFCE7; color:#15803D; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;"><svg class="ico"><use href="#i-check"/></svg></div>
                 <div style="flex:1;">
                   <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:#15803D; font-weight:800;">Pelanggan PLN Terverifikasi</div>
-                  <div class="lab-name">${d.name}</div>
+                  <div class="lab-name">${esc(d.name)}</div>
                   <div class="lab-meta" style="font-size:11px; opacity:.82;">Meter ${digits}${d.power ? ' &middot; ' + d.power : ''}</div>
                 </div>
               </div>
@@ -4160,6 +4184,7 @@
           }
         } catch (e) {
           if (seq !== plnSeq) return;
+          lastPlnKey = '';
           fb.className = 'live-account-badge warning';
           fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Server cek PLN sibuk. Order tetap bisa dilanjutkan.`;
         }
@@ -4171,11 +4196,23 @@
     // dan user selesai mengisi (blur / tekan Enter). Mengetik hanya mereset badge.
     let nickTimeout = null;
     let lastCheckedKey = '';
+    let nickSeq = 0;
 
-    function onGameIdTyping() {
-      const fb = document.getElementById('liveFeedbackBox');
-      clearTimeout(nickTimeout);
+    // Dipanggil juga saat pindah brand / form ditutup: bikin hasil yang masih di jalan jadi basi.
+    function resetNickCheck() {
+      nickSeq++;
       lastCheckedKey = '';
+      clearTimeout(nickTimeout);
+    }
+
+    function onGameIdTyping(e) {
+      const fb = document.getElementById('liveFeedbackBox');
+      const el = e && e.target ? e.target : document.getElementById('gameUserId');
+      if (el && el.value) {
+        const digits = el.value.replace(/\D/g, '');
+        if (el.value !== digits) el.value = digits;
+      }
+      resetNickCheck();
       if (fb) fb.style.display = 'none';
     }
 
@@ -4195,6 +4232,8 @@
       const key = uId + '|' + zId;
       if (key === lastCheckedKey) return;   // sudah dicek untuk pasangan ID ini
       lastCheckedKey = key;
+      const seq = ++nickSeq;
+      const brandKey = activeBrandKey;
 
       clearTimeout(nickTimeout);
       fb.className = 'live-account-badge loading';
@@ -4210,6 +4249,9 @@
             body: JSON.stringify({ gameCode: brand.gameCode || GAME_CODE[brand.key] || brand.key, userId: uId, zoneId: zId })
           });
           const json = await res.json();
+          // Buang hasil basi: user sudah mengetik lagi / pindah brand selama request jalan
+          if (seq !== nickSeq || brandKey !== activeBrandKey) return;
+          if (!json.ok) lastCheckedKey = '';
           if (json.ok && json.data && json.data.success && json.data.nickname) {
             fb.className = 'live-account-badge success';
             fb.innerHTML = `
@@ -4217,20 +4259,24 @@
                 <div style="width:36px; height:36px; border-radius:50%; background:#DCFCE7; color:#15803D; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;"><svg class="ico"><use href="#i-check"/></svg></div>
                 <div style="flex:1;">
                   <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:#15803D; font-weight:800;">Akun Terverifikasi Resmi</div>
-                  <div class="lab-name">${json.data.nickname}</div>
+                  <div class="lab-name">${esc(json.data.nickname)}</div>
                   <div class="lab-meta" style="font-size:11px; opacity:.82;">ID ${uId} ${zId ? '(Server ' + zId + ')' : ''} Valid</div>
                 </div>
               </div>
             `;
           } else {
-            const msg = String((json.data && json.data.message) || '');
+            const msg = String((json.data && json.data.message) || (!json.ok ? (json.error || '') : ''));
             const notFound = /tidak ditemukan|not recognized|not found|invalid user/i.test(msg);
+            const serverErr = !json.ok && !!msg;
             fb.className = 'live-account-badge warning';
-            fb.innerHTML = notFound
+            fb.innerHTML = serverErr
+              ? `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> ${esc(msg)} Order tetap bisa dilanjutkan.`
+              : notFound
               ? `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Akun <b>${uId}${zId ? ' (' + zId + ')' : ''}</b> tidak ditemukan. Periksa User ID &amp; Zone ID.`
               : `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> ID ${uId} ${zId ? '(' + zId + ')' : ''} siap diproses. Pastikan angka sudah benar.`;
           }
         } catch (e) {
+          if (seq !== nickSeq || brandKey !== activeBrandKey) return;
           lastCheckedKey = '';
           fb.className = 'live-account-badge warning';
           fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Server cek nickname sibuk. Order tetap bisa dilanjutkan.`;
@@ -4635,12 +4681,22 @@
           if (uEl) uEl.focus();
           return;
         }
+        if (zEl && !zId) {
+          alert('Zone ID / Server wajib diisi (contoh: 2164). Tanpa Zone ID, top up tidak bisa diproses.');
+          zEl.focus();
+          return;
+        }
         targetAcc = zId ? `${uId} (${zId})` : uId;
       } else if (brand.key === 'pln') {
         const inp = document.getElementById('plnIdInput');
         targetAcc = inp ? inp.value.trim() : '';
         if (!targetAcc) {
           alert('Silakan masukkan Nomor Meter / ID Pelanggan PLN!');
+          if (inp) inp.focus();
+          return;
+        }
+        if (!/^\d{10,16}$/.test(targetAcc)) {
+          alert('Nomor Meter / IDPEL PLN harus berupa angka 11-12 digit. Periksa kembali.');
           if (inp) inp.focus();
           return;
         }

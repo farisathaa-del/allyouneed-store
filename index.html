@@ -4028,11 +4028,11 @@
             <div class="input-grid-2">
               <div>
                 <label class="input-label" for="gameUserId">User ID (Angka):</label>
-                <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 84348407" oninput="onGameIdInput()">
+                <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 84348407" oninput="onGameIdTyping()" onblur="onGameIdComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
               </div>
               <div>
                 <label class="input-label" for="gameZoneId">Zone ID (Server):</label>
-                <input type="text" id="gameZoneId" class="order-input" placeholder="2164" oninput="onGameIdInput()">
+                <input type="text" id="gameZoneId" class="order-input" placeholder="2164" oninput="onGameIdTyping()" onblur="onGameIdComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
               </div>
             </div>
           `;
@@ -4042,7 +4042,7 @@
           container.innerHTML = `
             <div class="form-group-single">
               <label class="input-label" for="gameUserId">Player ID (UID) Free Fire:</label>
-              <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 1234567890" oninput="onGameIdInput()">
+              <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 1234567890" oninput="onGameIdTyping()" onblur="onGameIdComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
             </div>
           `;
           guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Cara Cek UID Free Fire:</b> Buka game Free Fire -> Klik foto profil di kiri atas -> Salin UID akun kamu.';
@@ -4051,7 +4051,7 @@
           container.innerHTML = `
             <div class="form-group-single">
               <label class="input-label" for="gameUserId">Character ID (UID) PUBG Mobile:</label>
-              <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 5123456789" oninput="onGameIdInput()">
+              <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 5123456789" oninput="onGameIdTyping()" onblur="onGameIdComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
             </div>
           `;
           guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Cara Cek Character ID:</b> Buka PUBG Mobile -> Masuk profil di pojok kiri atas -> Salin deretan angka Character ID.';
@@ -4061,7 +4061,7 @@
           container.innerHTML = `
             <div class="form-group-single">
               <label class="input-label" for="gameUserId">User ID (Angka):</label>
-              <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 1234567890" oninput="onGameIdInput()">
+              <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 1234567890" oninput="onGameIdTyping()" onblur="onGameIdComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
             </div>
           `;
           guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Cara Cek User ID:</b> Buka game -> masuk ke menu profil -> salin deretan angka User ID. Pastikan tidak ada spasi.';
@@ -4167,8 +4167,19 @@
     }
 
     // Live Game Nickname Verifier
+    // Aturan UX (permintaan user): JANGAN cek tiap ketikan — cek sekali setelah semua field terisi
+    // dan user selesai mengisi (blur / tekan Enter). Mengetik hanya mereset badge.
     let nickTimeout = null;
-    function onGameIdInput() {
+    let lastCheckedKey = '';
+
+    function onGameIdTyping() {
+      const fb = document.getElementById('liveFeedbackBox');
+      clearTimeout(nickTimeout);
+      lastCheckedKey = '';
+      if (fb) fb.style.display = 'none';
+    }
+
+    function onGameIdComplete() {
       const uEl = document.getElementById('gameUserId');
       const zEl = document.getElementById('gameZoneId');
       const fb = document.getElementById('liveFeedbackBox');
@@ -4180,6 +4191,10 @@
         fb.style.display = 'none';
         return;
       }
+
+      const key = uId + '|' + zId;
+      if (key === lastCheckedKey) return;   // sudah dicek untuk pasangan ID ini
+      lastCheckedKey = key;
 
       clearTimeout(nickTimeout);
       fb.className = 'live-account-badge loading';
@@ -4216,10 +4231,11 @@
               : `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> ID ${uId} ${zId ? '(' + zId + ')' : ''} siap diproses. Pastikan angka sudah benar.`;
           }
         } catch (e) {
+          lastCheckedKey = '';
           fb.className = 'live-account-badge warning';
           fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Server cek nickname sibuk. Order tetap bisa dilanjutkan.`;
         }
-      }, 700);
+      }, 250);
     }
 
     // Auto-Prefix Operator Detector

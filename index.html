@@ -963,7 +963,7 @@
 
     /* Langkah 5: Syarat & Ketentuan */
     .terms-intro { font-size: 12.5px; color: var(--ink-600); line-height: 1.55; margin-bottom: 12px; }
-    .terms-acc { border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; overflow: hidden; background: #FBFCFE; }
+    .terms-acc { border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; overflow: hidden; background: var(--surface-2); }
     .terms-acc > summary {
       list-style: none; cursor: pointer; padding: 12px 14px;
       font-size: 13px; font-weight: 800; color: var(--ink-900);
@@ -981,11 +981,18 @@
     .terms-agree {
       display: flex; align-items: flex-start; gap: 10px; margin-top: 14px;
       padding: 13px 14px; border-radius: 14px; cursor: pointer;
-      background: rgba(0, 224, 248, 0.07); border: 1px solid rgba(0, 224, 248, 0.34);
+      background: var(--brand-soft); border: 1px solid rgba(0, 224, 248, 0.34);
     }
     .terms-agree input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--brand-ink); flex: 0 0 auto; }
     .terms-agree span { font-size: 12.5px; line-height: 1.5; color: var(--ink-900); font-weight: 600; text-align: justify; }
     .terms-agree.warn { animation: termsShake .45s ease; border-color: #EF4444; background: #FEF2F2; }
+    html[data-theme="dark"] .terms-agree.warn { background: #2A1114; }
+    html[data-theme="dark"] .terms-acc { background: #151D26; }
+    html[data-theme="dark"] .terms-acc > summary { color: var(--ink-900); }
+    html[data-theme="dark"] .terms-acc li { color: var(--ink-600); }
+    html[data-theme="dark"] .terms-acc li b { color: #FFFFFF; }
+    html[data-theme="dark"] .terms-src { color: var(--ink-300); }
+    html[data-theme="dark"] .step-box-header { border-bottom-color: #1F2933; }
     @keyframes termsShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
     @media (prefers-reduced-motion: reduce) { .terms-agree.warn { animation: none; } }
 
@@ -3583,6 +3590,8 @@
     }
 
     function showHubView() {
+      const toastEl2 = document.getElementById('liveOrderToast');
+      if (toastEl2) toastEl2.style.display = '';
       currentView = 'HUB';
       scrollPageTo(0, true);
       document.getElementById('hubView').style.display = 'block';
@@ -3869,6 +3878,8 @@
       if (!brand) return;
 
       currentView = 'ORDER';
+      const toastEl = document.getElementById('liveOrderToast');
+      if (toastEl) toastEl.style.display = 'none';   // jangan menutupi S&K saat checkout
       scrollPageTo(0, true);
       document.getElementById('hubView').style.display = 'none';
       document.getElementById('orderView').style.display = 'block';

@@ -3169,6 +3169,9 @@
       return null;
     }
 
+    // Kode game untuk API cek nickname (brand key web != kode supplier)
+    const GAME_CODE = { mlbb: 'mobile-legends', ff: 'free-fire', pubg: 'pubg-mobile', magic_chess: 'magic-chess-go-go' };
+
     let BRANDS_DEF = {};
 
     function buildBrandDefs() {
@@ -4189,7 +4192,7 @@
           const res = await fetch(API_BASE + '/api/store/check-nickname', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ gameCode: brand.gameCode, userId: uId, zoneId: zId })
+            body: JSON.stringify({ gameCode: brand.gameCode || GAME_CODE[brand.key] || brand.key, userId: uId, zoneId: zId })
           });
           const json = await res.json();
           if (json.ok && json.data && json.data.success && json.data.nickname) {
@@ -4205,8 +4208,12 @@
               </div>
             `;
           } else {
+            const msg = String((json.data && json.data.message) || '');
+            const notFound = /tidak ditemukan|not recognized|not found|invalid user/i.test(msg);
             fb.className = 'live-account-badge warning';
-            fb.innerHTML = `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> ID ${uId} ${zId ? '(' + zId + ')' : ''} siap diproses. Pastikan angka sudah benar.`;
+            fb.innerHTML = notFound
+              ? `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Akun <b>${uId}${zId ? ' (' + zId + ')' : ''}</b> tidak ditemukan. Periksa User ID &amp; Zone ID.`
+              : `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> ID ${uId} ${zId ? '(' + zId + ')' : ''} siap diproses. Pastikan angka sudah benar.`;
           }
         } catch (e) {
           fb.className = 'live-account-badge warning';

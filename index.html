@@ -4043,6 +4043,21 @@
             </div>
           `;
           guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Cara Cek ID MLBB:</b> Buka game Mobile Legends -> Klik profil di kiri atas -> Salin angka ID & (Server).';
+        } else if (brand.key === 'magic_chess') {
+          titleEl.innerText = '1. Masukkan User ID & Server Magic Chess: Go Go';
+          container.innerHTML = `
+            <div class="input-grid-2">
+              <div>
+                <label class="input-label" for="gameUserId">User ID (Angka):</label>
+                <input type="text" id="gameUserId" class="order-input" placeholder="contoh: 123456789" oninput="onGameIdTyping()" onblur="onGameIdComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
+              </div>
+              <div>
+                <label class="input-label" for="gameZoneId">Server / Zone ID:</label>
+                <input type="text" id="gameZoneId" class="order-input" placeholder="contoh: 2001" oninput="onGameIdTyping()" onblur="onGameIdComplete()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">
+              </div>
+            </div>
+          `;
+          guideEl.innerHTML = '<b><svg class="ico"><use href="#i-bulb"/></svg> Petunjuk:</b> Buka Magic Chess: Go Go -> menu profil -> salin User ID dan Server (angka dalam tanda kurung). Supplier menolak order tanpa Server.';
         } else if (brand.key === 'ff') {
           titleEl.innerText = '1. Masukkan Player ID (UID) Free Fire';
           container.innerHTML = `
@@ -4272,7 +4287,7 @@
             fb.innerHTML = serverErr
               ? `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> ${esc(msg)} Order tetap bisa dilanjutkan.`
               : notFound
-              ? `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Akun <b>${uId}${zId ? ' (' + zId + ')' : ''}</b> tidak ditemukan. Periksa User ID &amp; Zone ID.`
+              ? `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> Akun <b>${uId}${zId ? ' (' + zId + ')' : ''}</b> tidak ditemukan. Periksa ${zEl ? 'User ID &amp; Zone ID' : 'User ID'}.`
               : `<svg class="ico ico-sm" style="color:#F59E0B"><use href="#i-alert"/></svg> ID ${uId} ${zId ? '(' + zId + ')' : ''} siap diproses. Pastikan angka sudah benar.`;
           }
         } catch (e) {

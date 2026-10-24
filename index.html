@@ -1677,6 +1677,23 @@
       .category-pills::-webkit-scrollbar { display: none; }
     }
 
+    /* ─── HASIL CEK STATUS PESANAN ─── */
+    .track-order-card {
+      background: var(--surface-2); color: var(--ink-800);
+      border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+      text-align: left; font-size: 13px; line-height: 1.7;
+    }
+    .track-order-card b { color: var(--ink-900); }
+    .track-code {
+      margin-top: 8px; padding: 10px; border-radius: 8px;
+      background: var(--surface); border: 1px dashed var(--line);
+      font-family: ui-monospace, monospace; font-size: 12px; color: var(--ink-900);
+      word-break: break-all;
+    }
+    .track-refund-note { margin-top: 8px; font-size: 12px; color: #B45309; }
+    html[data-theme="dark"] .track-refund-note { color: #FBBF24; }
+    .track-hint { color: var(--ink-a11y); font-size: 13px; }
+
     /* ─── HALAMAN LEGAL (satu view, isi dari JS) ─── */
     .legal-view { display: none; }
     .legal-doc {
@@ -2428,14 +2445,16 @@
         </div>
       </div>
 
-      <!-- ─── LANGKAH 4 (OPSIONAL): NOMOR KONTAK / WHATSAPP ─── -->
+      <!-- ─── LANGKAH 4: KONTAK PENGIRIMAN (WAJIB) ─── -->
       <div class="step-box">
         <div class="step-box-header">
           <div class="step-number">4</div>
-          <div class="step-box-title">WhatsApp / Kontak Notifikasi (Opsional)</div>
+          <div class="step-box-title">Kontak Pengiriman Pesanan</div>
         </div>
-        <input type="text" id="orderBuyerWa" class="order-input" aria-label="Nomor WhatsApp untuk bukti invoice (opsional)" inputmode="tel" placeholder="contoh: 081234567890 (Untuk kirim bukti invoice otomatis)">
-        <div style="font-size: 11px; color: #5B6470; margin-top: 5px;">*Bukti transaksi dan kode invoice akan tercatat otomatis di sistem.</div>
+        <input type="text" id="orderBuyerName" class="order-input" aria-label="Nama pembeli" placeholder="Nama Anda (opsional)" style="margin-bottom: 8px;">
+        <input type="tel" id="orderBuyerWa" class="order-input" aria-label="Nomor WhatsApp pembeli" inputmode="tel" placeholder="No. WhatsApp aktif — contoh 081234567890" style="margin-bottom: 8px;">
+        <input type="email" id="orderBuyerEmail" class="order-input" aria-label="Alamat email pembeli" placeholder="Email aktif — contoh nama@gmail.com">
+        <div style="font-size: 11px; color: #5B6470; margin-top: 5px;">*Detail pesanan, kredensial akun, dan PIN dikirim ke WhatsApp/email ini. Isi minimal salah satu.</div>
       </div>
 
       <!-- ─── LANGKAH 5: SYARAT & KETENTUAN (umum + per katalog + keterangan produk) ─── -->
@@ -2539,7 +2558,8 @@
       <!-- Step 2 QRIS Display -->
       <div id="checkoutStep2" style="text-align: center;">
         <div style="font-size: 17px; font-weight: 800; color:var(--ink-900); margin-bottom: 4px;">Selesaikan Pembayaran</div>
-        <div style="font-size: 13px; color: var(--ink-500); margin-bottom: 12px;">Invoice: <code id="qrisInvoiceCode" style="font-weight: 800; color: #111;"></code></div>
+        <div style="font-size: 13px; color: var(--ink-500); margin-bottom: 6px;">Invoice: <code id="qrisInvoiceCode" style="font-weight: 800; color: #111;"></code></div>
+        <div id="qrisPinNote" style="font-size: 12px; color: var(--ink-600); margin-bottom: 12px;"></div>
         
         <div style="font-size: 28px; font-weight: 900; color: var(--brand-ink); margin-bottom: 14px;" id="qrisTotalAmount">Rp 0</div>
 
@@ -2633,7 +2653,8 @@
       <div id="trackModalTitle" style="font-size: 18px; font-weight: 800; color: var(--ink-900); margin-bottom: 4px;">Cek Status Pesanan</div>
       <div style="font-size: 13px; color: var(--ink-500); margin-bottom: 16px;">Masukkan kode invoice pesanan Anda untuk melihat status realtime.</div>
 
-      <input type="text" id="trackInput" class="order-input" aria-label="Kode invoice pesanan" placeholder="contoh: INVDDMM-XXXX" style="margin-bottom: 12px;">
+      <input type="text" id="trackInput" class="order-input" aria-label="Kode invoice pesanan" placeholder="contoh: INVDDMM-XXXX" style="margin-bottom: 8px;">
+      <input type="text" id="trackPinInput" class="order-input" aria-label="PIN pesanan" inputmode="numeric" placeholder="PIN 6 digit (dari invoice/email)" style="margin-bottom: 12px;">
       <button class="btn-checkout-qris" style="width: 100%; justify-content: center;" onclick="doTrackOrder()">Cari Pesanan</button>
 
       <div id="trackResult" style="margin-top: 18px; display: none;"></div>
@@ -2948,6 +2969,7 @@
 
     let allProducts = [];
     let activeOrderCode = null;
+    let activeOrderPin = '';
     let pendingSelectId = null;
     let botUsername = 'allyouneeed_bot';
 
@@ -4565,7 +4587,10 @@
           body: JSON.stringify({
             productId: selectedProduct.id,
             contact: buyerWa || targetAcc,
-            targetAccount: targetAcc
+            targetAccount: targetAcc,
+            buyerName: (document.getElementById('orderBuyerName') || {}).value || '',
+            buyerWa: buyerWa,
+            buyerEmail: (document.getElementById('orderBuyerEmail') || {}).value || ''
           })
         });
 
@@ -4578,8 +4603,11 @@
         }
 
         activeOrderCode = json.order.code;
+        activeOrderPin = json.order.pin || '';
 
         document.getElementById('qrisInvoiceCode').innerText = json.order.code;
+        var pinNote = document.getElementById('qrisPinNote');
+        if (pinNote) pinNote.innerHTML = 'PIN pesanan: <b>' + (json.order.pin || '-') + '</b> — simpan untuk membuka detail pesanan nanti.';
         document.getElementById('qrisTotalAmount').innerText = 'Rp ' + (json.order.total_payment || json.order.price).toLocaleString('id-ID');
         document.getElementById('qrisImage').src = json.order.qr_image;
         document.getElementById('qrisNote').innerText = json.order.catatan_bayar || 'Scan menggunakan m-Banking atau e-Wallet apa saja.';
@@ -4607,7 +4635,7 @@
           return;
         }
         try {
-          const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(code));
+          const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(code) + '&pin=' + encodeURIComponent(activeOrderPin || ''));
           const json = await res.json();
           if (json.ok && json.order && json.order.status === 'LUNAS') {
             clearInterval(pollInterval);
@@ -4622,7 +4650,7 @@
     async function checkInvoiceStatus() {
       if (!activeOrderCode) return;
       try {
-        const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(activeOrderCode));
+        const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(activeOrderCode) + '&pin=' + encodeURIComponent(activeOrderPin || ''));
         const json = await res.json();
         if (json.ok && json.order) {
           if (json.order.status === 'LUNAS') {
@@ -4666,16 +4694,18 @@
 
     async function doTrackOrder() {
       const code = document.getElementById('trackInput').value.trim();
+      const pinEl = document.getElementById('trackPinInput');
+      const pin = pinEl ? pinEl.value.replace(/[^0-9]/g, '') : '';
       if (!code) {
         alert('Masukkan kode invoice!');
         return;
       }
       const resBox = document.getElementById('trackResult');
       resBox.style.display = 'block';
-      resBox.innerHTML = '<div style="color: #5A6774; font-size: 13px;">Mencari pesanan...</div>';
+      resBox.innerHTML = '<div class="track-hint">Mencari pesanan...</div>';
 
       try {
-        const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(code));
+        const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(code) + '&pin=' + encodeURIComponent(pin));
         const json = await res.json();
         if (json.ok && json.order) {
           const o = json.order;
@@ -4684,14 +4714,18 @@
           if (o.status === 'BATAL') badge = '<span style="color:#EF4444; font-weight:800;">DIBATALKAN</span>';
 
           resBox.innerHTML = `
-            <div style="background: #F4F6F8; border: 1px solid #E2E7EC; border-radius: 14px; padding: 14px; text-align: left; font-size: 13px;">
+            <div class="track-order-card">
               <div style="margin-bottom: 5px;">Invoice: <b>${o.code}</b></div>
               <div style="margin-bottom: 5px;">Produk: <b>${o.product_name}</b></div>
               <div style="margin-bottom: 5px;">Total: <b>Rp ${o.price.toLocaleString('id-ID')}</b></div>
               <div style="margin-bottom: 5px;">Status: ${badge}</div>
-              ${o.delivered_content ? '<div style="margin-top:8px; background:#FFF; border:1px dashed #CCC; padding:10px; border-radius:8px; font-family:monospace; font-size:12px;">' + o.delivered_content + '</div>' : ''}
+              ${o.delivered_content ? '<div class="track-code">' + o.delivered_content + '</div>' : ''}
+              ${(o.status === 'BATAL' && o.refund_state !== 'DONE') ? '<button class="btn-checkout-qris" style="width:100%; justify-content:center; margin-top:12px;" onclick="ajukanRefund()">Ajukan Ganti Produk / Refund</button>' : ''}
+              ${(o.refund_state === 'REQUESTED' || o.refund_state === 'PENDING') ? '<div class="track-refund-note">Pengajuan Anda sudah masuk dan sedang ditangani admin (maksimal 1×24 jam).</div>' : ''}
             </div>
           `;
+        } else if (json && json.need_pin) {
+          resBox.innerHTML = '<div style="color: #EF4444; font-size: 13px;">' + (json.error || 'PIN pesanan wajib diisi.') + '</div>';
         } else {
           resBox.innerHTML = '<div style="color: #EF4444; font-size: 13px;">Pesanan tidak ditemukan. Pastikan kode invoice benar.</div>';
         }
@@ -4699,6 +4733,43 @@
         resBox.innerHTML = '<div style="color: #EF4444; font-size: 13px;">Gagal memuat status: ' + e.message + '</div>';
       }
     }
+
+    async function ajukanRefund() {
+      const code = (document.getElementById('trackInput') || {}).value || '';
+      const pin = ((document.getElementById('trackPinInput') || {}).value || '').replace(/[^0-9]/g, '');
+      if (!code) return;
+      const reason = prompt('Jelaskan singkat kendalanya (mis. stok habis, akun tidak bisa dipakai):') || '';
+      try {
+        const res = await fetch(API_BASE + '/api/store/refund-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code.trim(), pin: pin, reason: reason })
+        });
+        const json = await res.json();
+        alert(json.ok ? (json.message || 'Pengajuan diterima.') : (json.error || 'Gagal mengajukan pengajuan.'));
+        if (json.ok) doTrackOrder();
+      } catch (e) {
+        alert('Kendala jaringan: ' + e.message);
+      }
+    }
+
+    // Buka pesanan langsung dari tautan email: /?pesanan=INV..&pin=123456
+    (function openOrderFromLink() {
+      try {
+        var q = new URLSearchParams(location.search);
+        var c = q.get('pesanan') || q.get('code');
+        if (!c) return;
+        var p = (q.get('pin') || '').replace(/[^0-9]/g, '');
+        setTimeout(function () {
+          if (typeof openTrackModal === 'function') openTrackModal();
+          var ti = document.getElementById('trackInput');
+          var pi = document.getElementById('trackPinInput');
+          if (ti) ti.value = c;
+          if (pi) pi.value = p;
+          if (typeof doTrackOrder === 'function') doTrackOrder();
+        }, 500);
+      } catch (e) {}
+    })();
 
     // ─── SOCIAL PROOF LIVE TOAST SIMULATOR ───
     const SAMPLE_TOASTS = [

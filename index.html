@@ -1091,10 +1091,13 @@
     }
     .live-account-badge.loading {
       display: flex;
-      background: #F1F5F9;
-      color: var(--ink-600);
+      background: var(--surface-2);
+      color: var(--ink-800);
       border: 1px solid var(--line);
     }
+    .lab-name { font-size: 15px; font-weight: 900; color: var(--ink-900); }
+    html[data-theme="dark"] .live-account-badge.success { background: #0C2A1A; color: #6EE7A8; border-color: #14532D; }
+    html[data-theme="dark"] .live-account-badge.warning { background: #2A2110; color: #FBBF24; border-color: #713F12; }
 
     .account-guide-note {
       font-size: 11.5px;
@@ -4135,8 +4138,8 @@
                 <div style="width:36px; height:36px; border-radius:50%; background:#DCFCE7; color:#15803D; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;"><svg class="ico"><use href="#i-check"/></svg></div>
                 <div style="flex:1;">
                   <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; color:#15803D; font-weight:800;">Akun Terverifikasi Resmi</div>
-                  <div style="font-size:15px; font-weight:900; color:#080810;">${json.data.nickname}</div>
-                  <div style="font-size:11px; color:#5A6774;">ID ${uId} ${zId ? '(Server ' + zId + ')' : ''} Valid</div>
+                  <div class="lab-name">${json.data.nickname}</div>
+                  <div class="lab-meta" style="font-size:11px; opacity:.82;">ID ${uId} ${zId ? '(Server ' + zId + ')' : ''} Valid</div>
                 </div>
               </div>
             `;

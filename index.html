@@ -1561,16 +1561,17 @@
     @media (prefers-reduced-motion: reduce) { .faq-a { transition: none; } }
 
     .referral-banner {
+      /* Sama persis dengan hero banner: hitam #080810 -> abu baja #405068 -> cyan gelap. */
       margin: 34px 0 10px; border-radius: 22px; padding: 26px 30px;
-      background: radial-gradient(circle at 88% 15%, rgba(0,224,248,0.35) 0%, transparent 45%),
-                  linear-gradient(135deg, var(--hero-a) 0%, var(--ink-900) 60%, var(--ink-800) 100%);
+      background: radial-gradient(circle at 100% 0%, rgba(0,224,248,0.30) 0%, transparent 55%),
+                  linear-gradient(100deg, #080810 0%, #405068 62%, #0C7C8C 100%);
       color: var(--on-dark); display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
       border: 1px solid rgba(255,255,255,0.08);
     }
     .referral-h { font-size: 19px; font-weight: 900; letter-spacing: -0.4px; margin-bottom: 5px; }
     .referral-p { font-size: 12.8px; color: var(--ink-a11y); line-height: 1.55; max-width: 560px; }
     .referral-btn {
-      background: var(--surface); color: var(--ink-900); border: none; border-radius: 13px; padding: 13px 24px;
+      background: #F8F8F8; color: #080810; border: none; border-radius: 13px; padding: 13px 24px;
       font-size: 13.5px; font-weight: 800; cursor: pointer; text-decoration: none; display: inline-block;
       white-space: nowrap; transition: all 0.2s;
     }

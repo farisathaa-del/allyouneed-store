@@ -1393,37 +1393,38 @@
     /* ─── Social Proof Floating Live Toast ─── */
     .live-social-toast {
       position: fixed;
-      bottom: 80px;
-      left: 24px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 99px;
-      padding: 8px 16px;
+      left: 20px;
+      bottom: 92px;
+      z-index: 80;
       display: flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-800);
-      max-width: calc(100vw - 40px);
-      z-index: 80;
-      transition: all 0.3s ease;
+      padding: 9px 14px 9px 10px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 34px -18px rgba(8, 8, 16, 0.55);
+      max-width: min(320px, calc(100vw - 32px));
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(12px) scale(0.985);
+      transition: opacity .3s ease, transform .34s cubic-bezier(.22,.68,.32,1);
       pointer-events: none;
     }
-    .live-social-toast.show {
-      opacity: 1;
-      transform: translateY(0);
+    .live-social-toast.show { opacity: 1; transform: none; }
+    .lst-ico {
+      flex: 0 0 auto; width: 28px; height: 28px; border-radius: 9px;
+      display: grid; place-items: center;
+      background: var(--brand-soft); color: var(--brand-ink);
     }
-    .toast-dot {
-      width: 7px;
-      height: 7px;
-      background: #10B981;
-      border-radius: 50%;
-      flex-shrink: 0;
+    .lst-ico .ico { width: 15px; height: 15px; stroke-width: 2.4; }
+    .lst-body { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+    .lst-title {
+      font-size: 12px; font-weight: 800; line-height: 1.32; color: var(--ink-900);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    .lst-sub { font-size: 10.5px; font-weight: 700; color: var(--ink-a11y); letter-spacing: .1px; }
+    @media (max-width: 599px) { .live-social-toast { bottom: 86px; left: 12px; right: auto; max-width: min(310px, calc(100vw - 24px)); } }
+    @media (prefers-reduced-motion: reduce) { .live-social-toast { transition: opacity .2s linear; transform: none; } }
 
     /* ─── Modal QRIS & Cek Pesanan ─── */
     .modal-overlay {
@@ -2551,9 +2552,12 @@
   </nav>
 
   <!-- ─── Social Proof Live Toast ─── -->
-  <div id="liveOrderToast" class="live-social-toast">
-    <div class="toast-dot"></div>
-    <span id="liveToastText">Pesanan #INV1021 86 Diamond MLBB berhasil diproses 1 menit yang lalu</span>
+  <div id="liveOrderToast" class="live-social-toast" role="status" aria-live="polite">
+    <span class="lst-ico"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span>
+    <div class="lst-body">
+      <div class="lst-title" id="liveToastTitle">86 Diamond MLBB</div>
+      <div class="lst-sub" id="liveToastSub">Banda Aceh · 1 menit lalu</div>
+    </div>
   </div>
 
   <!-- ─── Modal QRIS Checkout ─── -->
@@ -4786,28 +4790,53 @@
 
     // ─── SOCIAL PROOF LIVE TOAST SIMULATOR ───
     const SAMPLE_TOASTS = [
-      'Pembeli dari Banda Aceh baru saja membeli 86 Diamond MLBB (1 mnt lalu)',
-      'Pembeli baru saja mengaktifkan 1x Weekly Diamond Pass (2 mnt lalu)',
-      'Pembeli dari Subulussalam memperpanjang Masa Aktif Telkomsel 360 Hari',
-      'Pembeli baru saja membeli Canva Pro Lifetime Edu (3 mnt lalu)',
-      'Pembeli dari Singkil baru saja mengisi Token Listrik PLN 100.000',
-      'Pembeli baru saja membeli Free Fire 140 Diamond (4 mnt lalu)',
-      'Pembeli baru saja membeli Netflix Premium 1 Bulan Anti-Limit'
+      { t: '86 Diamond MLBB', s: 'Banda Aceh · 1 menit lalu' },
+      { t: 'Weekly Diamond Pass', s: 'Aceh Singkil · 2 menit lalu' },
+      { t: 'Masa Aktif Telkomsel 360 Hari', s: 'Subulussalam · 3 menit lalu' },
+      { t: 'Canva Pro Lifetime Edu', s: 'Medan · 4 menit lalu' },
+      { t: 'Token Listrik PLN 100.000', s: 'Singkil · 5 menit lalu' },
+      { t: 'Free Fire 140 Diamond', s: 'Tapaktuan · 6 menit lalu' },
+      { t: 'Netflix Premium 1 Bulan', s: 'Banda Aceh · 7 menit lalu' }
     ];
     let toastIndex = 0;
+    let toastTimer = null;
+
+    // Jangan tampil saat tab tidak aktif, sedang di halaman pesanan/legal,
+    // atau saat modal (QRIS / cek pesanan) terbuka — dulu bisa menutupi konten.
+    function toastMayShow() {
+      if (document.hidden) return false;
+      if (currentView === 'ORDER' || currentView === 'LEGAL') return false;
+      const modalOpen = document.querySelector('#checkoutModal.open, #trackModal.open');
+      return !modalOpen;
+    }
+
     function startSocialProofToast() {
       const toastEl = document.getElementById('liveOrderToast');
-      const textEl = document.getElementById('liveToastText');
-      if (!toastEl || !textEl) return;
+      const titleEl = document.getElementById('liveToastTitle');
+      const subEl = document.getElementById('liveToastSub');
+      if (!toastEl || !titleEl || !subEl) return;
 
-      setInterval(() => {
-        textEl.innerText = SAMPLE_TOASTS[toastIndex % SAMPLE_TOASTS.length];
+      function show() {
+        if (!toastMayShow()) return;
+        const item = SAMPLE_TOASTS[toastIndex % SAMPLE_TOASTS.length];
         toastIndex++;
+        titleEl.textContent = item.t;
+        subEl.textContent = item.s;
         toastEl.classList.add('show');
-        setTimeout(() => {
-          toastEl.classList.remove('show');
-        }, 5000);
-      }, 14000);
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove('show'), 6000);
+      }
+
+      // Tampil pertama setelah 8 detik, lalu jeda acak 18–26 detik.
+      setTimeout(function loop() {
+        show();
+        setTimeout(loop, 18000 + Math.random() * 8000);
+      }, 8000);
+
+      // Tab kembali aktif -> sembunyikan supaya tidak "nyangkut" saat kembali.
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) toastEl.classList.remove('show');
+      });
     }
 
     // Run Startup

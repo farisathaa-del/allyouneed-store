@@ -1976,11 +1976,16 @@
     /* ═══ ANIMASI MASUK (IntersectionObserver + WAAPI, tanpa dependensi) ═══ */
     /* Kondisi awal hanya berlaku selama kelas .anim aktif di <html>. */
     .anim [data-reveal], .anim [data-stagger-item] { opacity: 0; }
+    /* Kartu yang baru dibuat: sudah tidak terlihat sejak paint pertama,
+       jadi tidak ada kedip "kartu muncul dulu baru beranimasi". */
+    .brand-card.is-pre { opacity: 0; pointer-events: none; }
     .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
     .word > span { display: inline-block; }
     .anim .hero-title .word > span { transform: translateY(115%); }
     @media (prefers-reduced-motion: reduce) {
-      .anim [data-reveal], .anim [data-stagger-item] { opacity: 1 !important; }
+      /* Kartu brand tetap dianimasikan dari kosong walau mode hemat animasi aktif;
+         hanya elemen lain (teks, pill) yang langsung ditampilkan. */
+      .anim [data-reveal], .anim [data-stagger-item]:not(.brand-card) { opacity: 1 !important; }
       .anim .hero-title .word > span { transform: none !important; }
     }
 
@@ -2880,6 +2885,7 @@
         } catch (e) {
           if (flat3d) { el.style.transformStyle = ''; el.style.backfaceVisibility = ''; }
           el.style.willChange = '';
+          el.classList.remove('is-pre');
           done(el);
           return;
         }
@@ -2887,6 +2893,7 @@
           // Urutan penting: buang penanda penyembunyi (.anim [data-*] { opacity:0 })
           // SEBELUM animasi dibatalkan, supaya tidak ada satu frame opacity 0 (= kedip).
           done(el);
+          el.classList.remove('is-pre');
           el.style.opacity = '';
           el.style.transform = '';
           el.style.willChange = '';
@@ -3986,11 +3993,12 @@
         return;
       }
 
-      // Render Grid
+      // Render Grid. Render pertama: kartu lahir dalam keadaan tak terlihat.
+      const firstRender = !window.__hubGridRevealed;
       html += '<div class="brand-grid">';
       filtered.forEach(b => {
         html += `
-          <div class="brand-card${b.out ? ' is-out' : ''}" data-brand="${b.key}" data-count="${b.count}" data-price="${b.minPrice}" onclick="brandTap(event,'${b.key}',${b.count})" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.out ? 'stok habis' : b.count + ' pilihan paket'}">
+          <div class="brand-card${b.out ? ' is-out' : ''}${firstRender ? ' is-pre' : ''}" data-brand="${b.key}" data-count="${b.count}" data-price="${b.minPrice}" onclick="brandTap(event,'${b.key}',${b.count})" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.out ? 'stok habis' : b.count + ' pilihan paket'}">
             <div class="bc-flip">
               <div class="bc-face bc-front" style="--brand-canvas:${b.bg}" data-art="${ART[b.key] || ''}">
                 <div class="bc-shade"></div>
@@ -4020,10 +4028,18 @@
 
       // Animasi masuk hanya untuk render pertama (bukan tiap ketik di pencarian).
 
-      if (!window.__hubGridRevealed && window.revealNew) {
+      if (firstRender && window.revealNew) {
         window.__hubGridRevealed = true;
         window.revealNew(wrap.querySelectorAll('.brand-card'), true);
+      } else {
+        // Render ulang (pencarian/kategori): jangan pernah tinggalkan kartu tersembunyi.
+        wrap.querySelectorAll('.brand-card.is-pre').forEach(c => c.classList.remove('is-pre'));
       }
+      // Jaring aman: apa pun yang gagal beranimasi tidak boleh tertinggal kosong.
+      clearTimeout(window.__preFailsafe);
+      window.__preFailsafe = setTimeout(() => {
+        document.querySelectorAll('.brand-card.is-pre').forEach(c => c.classList.remove('is-pre'));
+      }, 3500);
     }
 
 

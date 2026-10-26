@@ -3246,10 +3246,10 @@
     // halaman tidak boleh menggantung beberapa detik hanya untuk mencobanya.
     function fetchApiCatalog(timeoutMs) {
       return new Promise((resolve) => {
-        if (!API_BASE) { resolve(null); return; }
+        const url = (API_BASE || '') + '/api/store/data';   // kosong = same-origin (localhost)
         let done = false;
         const timer = setTimeout(() => { if (!done) { done = true; resolve(null); } }, timeoutMs || 2500);
-        fetch(API_BASE + '/api/store/data', { cache: 'no-store' })
+        fetch(url, { cache: 'no-store' })
           .then(r => (r.ok ? r.json() : null))
           .then(j => { if (!done) { done = true; clearTimeout(timer); resolve(j && j.ok ? j : null); } })
           .catch(() => { if (!done) { done = true; clearTimeout(timer); resolve(null); } });

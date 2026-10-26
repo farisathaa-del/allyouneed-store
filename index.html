@@ -3734,7 +3734,12 @@
       if (legalEl) legalEl.style.display = 'none';
       setMobileNav('HUB');
       animateView(document.getElementById('hubView'));
-      if (!fromPop) pushRoute({ v: 'HUB' }, routeHref({ v: 'HUB' }));
+      if (!fromPop) {
+        pushRoute({ v: 'HUB' }, routeHref({ v: 'HUB' }));
+      } else if (location.hash) {
+        // Kembali dari deep link (#/brand) tanpa entri riwayat: rapikan URL-nya juga.
+        try { history.replaceState({ v: 'HUB' }, '', ROUTE_BASE); } catch (e) {}
+      }
     }
 
     // ─── RIWAYAT NAVIGASI (biar tombol back HP/browser kembali ke halaman sebelumnya) ───

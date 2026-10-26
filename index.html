@@ -2862,18 +2862,36 @@
         if (!el.animate) { done(el); return; }
         delay = delay || 0;
         var start = from || ('translate3d(0,' + DIST + 'px,0) scale(1)');
+        // Kartu brand pakai konteks 3D (preserve-3d + backface-visibility:hidden).
+        // Menganimasikan transform di elemen seperti itu bikin kartu sempat "hilang"
+        // satu frame di Chrome Android (= kedip). Ratakan 3D-nya selama animasi masuk.
+        var flat3d = el.classList.contains('brand-card');
+        if (flat3d) {
+          el.style.transformStyle = 'flat';
+          el.style.backfaceVisibility = 'visible';
+        }
+        el.style.willChange = 'opacity, transform';
         var anim;
         try {
           anim = el.animate(
             [{ opacity: 0, transform: start }, { opacity: 1, transform: REST }],
             { duration: DUR, delay: delay, easing: EASE, fill: 'both' }
           );
-        } catch (e) { done(el); return; }
+        } catch (e) {
+          if (flat3d) { el.style.transformStyle = ''; el.style.backfaceVisibility = ''; }
+          el.style.willChange = '';
+          done(el);
+          return;
+        }
         anim.onfinish = function () {
-          try { anim.cancel(); } catch (e) {}
+          // Urutan penting: buang penanda penyembunyi (.anim [data-*] { opacity:0 })
+          // SEBELUM animasi dibatalkan, supaya tidak ada satu frame opacity 0 (= kedip).
+          done(el);
           el.style.opacity = '';
           el.style.transform = '';
-          done(el);
+          el.style.willChange = '';
+          if (flat3d) { el.style.transformStyle = ''; el.style.backfaceVisibility = ''; }
+          try { anim.cancel(); } catch (e) {}
         };
       }
 
@@ -3339,7 +3357,9 @@
               if (sig(live.products) === sig(json.products)) return;
               allProducts = live.products.filter(p => p.aktif);
               buildBrandDefs();
-              renderBrandHub();
+              // Sunting angka di tempat. Mengganti innerHTML di tengah animasi masuk
+              // membuat fade-up terpotong dan kartu "berkedip" muncul mendadak.
+              if (!patchBrandHub()) renderBrandHub();
               if (currentView === 'ORDER' && activeBrandKey) openBrandOrder(activeBrandKey, true);
             }).catch(() => {});
           }
@@ -3879,6 +3899,43 @@
       rest.forEach(n => artObserver.observe(n));
     }
 
+    // Perbarui angka kartu tanpa membongkar DOM — supaya animasi masuk tidak terpotong
+    // (dulu: grid dibangun dua kali, sekali dari snapshot sekali dari API → kartu berkedip).
+    function patchBrandHub() {
+      const wrap = document.getElementById('brandGridWrap');
+      if (!wrap || !window.__hubGridRevealed) return false;
+      const cards = Array.prototype.slice.call(wrap.querySelectorAll('.brand-card[data-brand]'));
+      if (!cards.length) return false;
+      const stat = {};
+      Object.values(BRANDS_DEF).forEach(b => {
+        const items = allProducts.filter(p => b.filterFn(p));
+        stat[b.key] = { count: items.length, price: items.length ? Math.min.apply(null, items.map(p => p.harga)) : 0 };
+      });
+      // Kalau status habis/tersedia berubah, struktur kartu ikut beda → biar render ulang saja.
+      for (let i = 0; i < cards.length; i++) {
+        const s = stat[cards[i].getAttribute('data-brand')];
+        if (!s) return false;
+        if ((s.count === 0) !== cards[i].classList.contains('is-out')) return false;
+      }
+      const rp = n => 'Rp ' + Number(n).toLocaleString('id-ID');
+      cards.forEach(card => {
+        const s = stat[card.getAttribute('data-brand')];
+        if (String(s.count) === card.dataset.count && String(s.price) === card.dataset.price) return;
+        card.dataset.count = s.count;
+        card.dataset.price = s.price;
+        card.setAttribute('aria-label', card.getAttribute('aria-label').replace(/\d+ (pilihan paket|paket)/, s.count + ' paket'));
+        const mpk = card.querySelector('.bc-front .m-pk');
+        const mpr = card.querySelector('.bc-front .m-pr');
+        if (mpk) mpk.textContent = s.count + ' paket';
+        if (mpr) mpr.textContent = rp(s.price);
+        const bpk = card.querySelector('.bc-back .bc-pk b');
+        const bpr = card.querySelector('.bc-back .bc-pr');
+        if (bpk) bpk.textContent = s.count;
+        if (bpr) bpr.innerHTML = '<span>dari</span> ' + rp(s.price);
+      });
+      return true;
+    }
+
     function renderBrandHub() {
       const wrap = document.getElementById('brandGridWrap');
       let html = '';
@@ -3933,7 +3990,7 @@
       html += '<div class="brand-grid">';
       filtered.forEach(b => {
         html += `
-          <div class="brand-card${b.out ? ' is-out' : ''}" onclick="brandTap(event,'${b.key}',${b.count})" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.out ? 'stok habis' : b.count + ' pilihan paket'}">
+          <div class="brand-card${b.out ? ' is-out' : ''}" data-brand="${b.key}" data-count="${b.count}" data-price="${b.minPrice}" onclick="brandTap(event,'${b.key}',${b.count})" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.out ? 'stok habis' : b.count + ' pilihan paket'}">
             <div class="bc-flip">
               <div class="bc-face bc-front" style="--brand-canvas:${b.bg}" data-art="${ART[b.key] || ''}">
                 <div class="bc-shade"></div>

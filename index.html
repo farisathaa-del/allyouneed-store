@@ -3816,6 +3816,44 @@
       onHubSearch('');
     }
 
+    // Poster kartu dimuat saat kartu mendekati layar: layar pertama tidak lagi
+    // mengunduh 25 artwork sekaligus (paling berat di koneksi HP).
+    let artObserver = null;
+    function hydrateCardArt() {
+      const nodes = Array.prototype.slice
+        .call(document.querySelectorAll('.bc-front[data-art]'))
+        .filter(n => n.dataset.art && !n.style.backgroundImage);
+      if (!nodes.length) return;
+      if (!('IntersectionObserver' in window)) {
+        nodes.forEach(n => { n.style.backgroundImage = "url('" + n.dataset.art + "')"; });
+        return;
+      }
+      // Muat langsung yang sudah (atau hampir) terlihat — jangan bergantung pada
+      // callback observer saja: tab latar tidak menjalankan IntersectionObserver.
+      const vh = window.innerHeight || 800;
+      const rest = [];
+      nodes.forEach(n => {
+        const r = n.getBoundingClientRect();
+        if (r.top < vh + 400 && r.bottom > -400) {
+          n.style.backgroundImage = "url('" + n.dataset.art + "')";
+        } else { rest.push(n); }
+      });
+      if (!rest.length) return;
+      if (!artObserver) {
+        artObserver = new IntersectionObserver((entries) => {
+          entries.forEach(en => {
+            if (!en.isIntersecting) return;
+            const n = en.target;
+            if (n.dataset.art && !n.style.backgroundImage) {
+              n.style.backgroundImage = "url('" + n.dataset.art + "')";
+            }
+            artObserver.unobserve(n);
+          });
+        }, { rootMargin: '400px 0px' });
+      }
+      rest.forEach(n => artObserver.observe(n));
+    }
+
     function renderBrandHub() {
       const wrap = document.getElementById('brandGridWrap');
       let html = '';
@@ -3872,7 +3910,7 @@
         html += `
           <div class="brand-card${b.out ? ' is-out' : ''}" onclick="brandTap(event,'${b.key}',${b.count})" onkeydown="if(event.key==='Enter'){openBrandOrder('${b.key}')}" tabindex="0" role="button" aria-label="${b.short}, ${b.out ? 'stok habis' : b.count + ' pilihan paket'}">
             <div class="bc-flip">
-              <div class="bc-face bc-front" style="--brand-canvas:${b.bg};background-image:url('${ART[b.key] || ''}')">
+              <div class="bc-face bc-front" style="--brand-canvas:${b.bg}" data-art="${ART[b.key] || ''}">
                 <div class="bc-shade"></div>
                 ${b.out ? '<span class="brand-badge-out">HABIS</span>' : (b.popular ? '<span class="brand-badge-popular">POPULER</span>' : '')}
                 <div class="bc-meta">
@@ -3896,6 +3934,7 @@
       html += '</div>';
 
       wrap.innerHTML = html;
+      hydrateCardArt();
 
       // Animasi masuk hanya untuk render pertama (bukan tiap ketik di pencarian).
 

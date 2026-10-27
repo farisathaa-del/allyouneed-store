@@ -144,6 +144,64 @@
       .view-anim { animation: none; }
     }
 
+    
+    /* === UPGRADE UI/UX V2 (Fitur #2 - #7) === */
+    /* Fitur #6: Strip Terakhir Dilihat */
+    .recent-bar { margin: 18px 0 6px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); display: none; }
+    .recent-bar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11.5px; font-weight: 800; color: var(--ink-500); text-transform: uppercase; letter-spacing: 0.5px; }
+    .recent-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .recent-chips::-webkit-scrollbar { display: none; }
+    .recent-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 99px; text-decoration: none; cursor: pointer; flex-shrink: 0; font-size: 12px; font-weight: 700; color: var(--ink-900); transition: all 0.15s ease; }
+    .recent-chip:hover { border-color: var(--brand); transform: translateY(-1px); }
+    .recent-chip-img { width: 20px; height: 20px; border-radius: 50%; object-fit: contain; background: rgba(0,0,0,0.06); }
+    .recent-chip-price { font-size: 10.5px; font-weight: 800; color: var(--brand-ink); }
+    .recent-clear-btn { background: none; border: none; font-size: 11px; font-weight: 600; color: var(--ink-500); cursor: pointer; padding: 0 4px; }
+    .recent-clear-btn:hover { color: #EF4444; }
+
+    /* Fitur #7: Pencarian Instan Lintas Nominal */
+    .instant-results { margin: 18px 0; padding: 16px; background: var(--surface); border: 1px solid var(--brand); border-radius: var(--r-lg); display: none; box-shadow: 0 8px 24px -8px rgba(0,224,248,0.15); }
+    .instant-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px; font-weight: 800; color: var(--brand-ink); text-transform: uppercase; letter-spacing: 0.5px; }
+    .instant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+    .instant-card { display: flex; flex-direction: column; justify-content: space-between; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: all 0.15s ease; text-align: left; }
+    .instant-card:hover { border-color: var(--brand); transform: translateY(-2px); box-shadow: 0 6px 16px -6px rgba(0,0,0,0.1); }
+    .instant-card-brand { font-size: 10.5px; font-weight: 800; color: var(--ink-500); text-transform: uppercase; }
+    .instant-card-name { font-size: 13px; font-weight: 800; color: var(--ink-900); margin: 3px 0 6px; line-height: 1.25; }
+    .instant-card-foot { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 900; color: var(--brand-ink); }
+
+    /* Fitur #3: Tombol Bantuan Cek ID & Modal Panduan */
+    .btn-id-guide { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--brand-ink); background: var(--surface-2); border: 1px solid var(--line); padding: 4px 10px; border-radius: 99px; cursor: pointer; transition: all 0.15s; margin-left: auto; }
+    .btn-id-guide:hover { border-color: var(--brand); transform: scale(1.02); }
+    .id-guide-diagram { width: 100%; border-radius: 12px; background: #0F172A; color: #FFF; padding: 16px; margin: 12px 0; border: 1px solid rgba(255,255,255,0.1); text-align: left; }
+
+    /* Fitur #2: Denom Sub-Tabs Counter Badge */
+    .denom-sub-tab .tab-badge { display: inline-block; padding: 1px 6px; border-radius: 99px; font-size: 10px; font-weight: 800; background: rgba(0,0,0,0.06); color: inherit; margin-left: 5px; }
+    .denom-sub-tab.active .tab-badge { background: rgba(255,255,255,0.25); color: #FFF; }
+
+    /* Fitur #4: Sticky Bottom Summary Bar Progress Indicator */
+    .sticky-steps-hint { font-size: 10.5px; font-weight: 800; color: #B45309; letter-spacing: 0.2px; text-transform: uppercase; margin-top: 2px; }
+    .sticky-steps-hint.ready { color: #15803D; }
+
+    /* Fitur #5: Stepper Progres & Fitur Baru Modal QRIS */
+    .qris-stepper { display: flex; justify-content: space-between; align-items: center; position: relative; margin: 16px 0 20px; }
+    .qris-stepper::before { content: ''; position: absolute; top: 14px; left: 24px; right: 24px; height: 3px; background: var(--line); z-index: 1; }
+    .qris-step-node { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--ink-500); width: 33.33%; }
+    .qris-step-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--surface-2); border: 2px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: var(--ink-600); }
+    .qris-step-node.active .qris-step-circle { background: var(--brand); border-color: var(--brand); color: var(--on-brand); box-shadow: 0 0 0 4px rgba(0,224,248,0.25); }
+    .qris-step-node.active { color: var(--ink-900); }
+    .qris-step-node.done .qris-step-circle { background: #10B981; border-color: #10B981; color: #FFF; }
+    .qris-step-node.done { color: #10B981; }
+
+    .qris-timer-box { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 99px; background: #FEF3C7; color: #B45309; font-size: 12px; font-weight: 800; margin-bottom: 12px; border: 1px solid #FDE68A; }
+    .qris-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+    .btn-qris-action { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; font-size: 12px; font-weight: 800; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface-2); color: var(--ink-900); cursor: pointer; transition: all 0.15s ease; }
+    .btn-qris-action:hover { border-color: var(--brand); transform: translateY(-1px); }
+
+    /* Riwayat Transaksi di Track Modal */
+    .recent-orders-box { margin-top: 16px; border-top: 1px dashed var(--line); padding-top: 14px; text-align: left; }
+    .recent-orders-h { font-size: 11.5px; font-weight: 800; color: var(--ink-500); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+    .recent-order-item { padding: 9px 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.12s; font-size: 12px; }
+    .recent-order-item:hover { border-color: var(--brand); background: var(--surface); }
+
     /* ─── Header & Sticky Navbar ─── */
     .navbar {
       display: flex;
@@ -2264,6 +2322,25 @@
       </div>
 
       <!-- Grid of Brand Cards (Hanya Brand Resmi, Bebas dari Tumpukan Eceran) -->
+      
+      <!-- Fitur #6: Baris Terakhir Dilihat -->
+      <div id="recentBrandsWrap" class="recent-bar">
+        <div class="recent-bar-header">
+          <span><svg class="ico ico-sm" style="color:var(--brand);"><use href="#i-bolt"/></svg> Terakhir Dilihat</span>
+          <button class="recent-clear-btn" onclick="clearRecentBrands()">Hapus</button>
+        </div>
+        <div id="recentBrandsChips" class="recent-chips"></div>
+      </div>
+
+      <!-- Fitur #7: Hasil Pencarian Instan Lintas Nominal -->
+      <div id="instantDenomWrap" class="instant-results">
+        <div class="instant-head">
+          <span><svg class="ico ico-sm" style="color:var(--brand);"><use href="#i-bolt"/></svg> Langsung Pilih Paket (<span id="instantCount">0</span> hasil)</span>
+          <span style="font-size:11px; font-weight:600; text-transform:none; color:var(--ink-500);">Klik untuk langsung pesan</span>
+        </div>
+        <div id="instantDenomGrid" class="instant-grid"></div>
+      </div>
+
       <div id="brandGridWrap">
         <!-- Rendered by JS -->
       </div>
@@ -2401,6 +2478,7 @@
         <div class="step-box-header">
           <div class="step-number">1</div>
           <div class="step-box-title" id="step1Title">Masukkan Data Akun / Nomor Tujuan</div>
+          <button type="button" class="btn-id-guide" id="btnIdGuide" onclick="openIdGuideModal()"><svg class="ico ico-sm"><use href="#i-bulb"/></svg> Cara Cek ID</button>
         </div>
 
         <!-- Dynamic Form Fields depending on Brand -->
@@ -2519,7 +2597,7 @@
           <span class="sticky-price" id="stickyTotal">Rp 0</span>
           <span class="sticky-item-name" id="stickyItemName">Pilih nominal terlebih dahulu</span>
         </div>
-        <button class="btn-checkout-qris" id="btnStickyCheckout" onclick="proceedOrderCheckout()" disabled>
+        <button class="btn-checkout-qris" id="btnStickyCheckout" onclick="onStickyBtnClick()" disabled>
           <svg class="ico" style="vertical-align:-0.15em"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »
         </button>
       </div>
@@ -2569,28 +2647,68 @@
   </div>
 
   <!-- ─── Modal QRIS Checkout ─── -->
+  
+  <!-- ─── Modal Panduan Cek ID (#3) ─── -->
+  <div class="modal-overlay" id="idGuideModal" role="dialog" aria-modal="true" aria-labelledby="idGuideTitle">
+    <div class="modal-card" style="max-width: 440px;">
+      <button class="modal-close" onclick="closeIdGuideModal()" aria-label="Tutup"><svg class="ico"><use href="#i-x"/></svg></button>
+      <div id="idGuideTitle" style="font-size: 17px; font-weight: 800; color: var(--ink-900); margin-bottom: 6px;">Panduan Cek ID &amp; Server</div>
+      <div id="idGuideSubtitle" style="font-size: 12.5px; color: var(--ink-500); margin-bottom: 14px;">Buka aplikasi/game dan temukan ID sesuai petunjuk visual di bawah ini.</div>
+      <div id="idGuideBody"></div>
+      <button class="btn-checkout-qris" style="width: 100%; justify-content: center; margin-top: 14px;" onclick="closeIdGuideModal()">Saya Mengerti</button>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-card">
       <button class="modal-close" onclick="closeModal()" aria-label="Tutup"><svg class="ico"><use href="#i-x"/></svg></button>
 
+      <!-- Fitur #5: Stepper 3 Tahap -->
+      <div class="qris-stepper" id="qrisStepper">
+        <div class="qris-step-node active" id="stepNode1">
+          <div class="qris-step-circle">1</div>
+          <span>Menunggu Bayar</span>
+        </div>
+        <div class="qris-step-node" id="stepNode2">
+          <div class="qris-step-circle">2</div>
+          <span>Diproses Server</span>
+        </div>
+        <div class="qris-step-node" id="stepNode3">
+          <div class="qris-step-circle">3</div>
+          <span>Selesai</span>
+        </div>
+      </div>
+
       <!-- Step 2 QRIS Display -->
       <div id="checkoutStep2" style="text-align: center;">
-        <div style="font-size: 17px; font-weight: 800; color:var(--ink-900); margin-bottom: 4px;">Selesaikan Pembayaran</div>
-        <div style="font-size: 13px; color: var(--ink-500); margin-bottom: 6px;">Invoice: <code id="qrisInvoiceCode" style="font-weight: 800; color: #111;"></code></div>
-        <div id="qrisPinNote" style="font-size: 12px; color: var(--ink-600); margin-bottom: 12px;"></div>
-        
-        <div style="font-size: 28px; font-weight: 900; color: var(--brand-ink); margin-bottom: 14px;" id="qrisTotalAmount">Rp 0</div>
+        <div class="qris-timer-box" id="qrisTimerWrap">
+          <svg class="ico ico-sm"><use href="#i-bolt"/></svg> Batas Bayar: <span id="qrisCountdown">14:59</span>
+        </div>
 
-        <div style="background: var(--surface-2); border: 1.5px solid var(--line); border-radius: 16px; padding: 16px; display: inline-block; margin-bottom: 14px;">
+        <div style="font-size: 13px; color: var(--ink-500); margin-bottom: 6px;">Invoice: <code id="qrisInvoiceCode" style="font-weight: 800; color: var(--ink-900);"></code></div>
+        <div id="qrisPinNote" style="font-size: 12px; color: var(--ink-600); margin-bottom: 10px;"></div>
+        
+        <div style="font-size: 28px; font-weight: 900; color: var(--brand-ink); margin-bottom: 12px;" id="qrisTotalAmount">Rp 0</div>
+
+        <div style="background: var(--surface-2); border: 1.5px solid var(--line); border-radius: 16px; padding: 14px; display: inline-block; margin-bottom: 12px;">
           <img id="qrisImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="QRIS Code" style="width: 210px; height: 210px; display: block; margin: 0 auto; border-radius: 8px;">
           <div style="font-size: 11px; font-weight: 700; color: var(--ink-500); margin-top: 8px; letter-spacing: 0.3px;">
-            Scan via BCA, Mandiri, BRI, BNI, DANA, GoPay, OVO, ShopeePay
+            BCA, BRI, Mandiri, BNI, DANA, GoPay, OVO, ShopeePay
           </div>
         </div>
 
-        <div style="font-size: 12px; color: var(--ink-600); margin-bottom: 12px;" id="qrisNote"></div>
+        <div class="qris-actions-row">
+          <button type="button" class="btn-qris-action" onclick="downloadQrisImage()">
+            <svg class="ico ico-sm"><use href="#i-download"/></svg> Unduh QRIS
+          </button>
+          <button type="button" class="btn-qris-action" onclick="copyInvoiceInfo()">
+            <svg class="ico ico-sm"><use href="#i-check"/></svg> Salin Invoice &amp; PIN
+          </button>
+        </div>
 
-        <div id="qrisFeeNote" style="text-align:left; font-size:12px; line-height:1.6; color:var(--ink-700,#334155); background:#FFF7ED; border:1.5px solid #FED7AA; border-radius:12px; padding:10px 12px; margin-bottom:16px;">
+        <div style="font-size: 12px; color: var(--ink-600); margin-bottom: 10px;" id="qrisNote"></div>
+
+        <div id="qrisFeeNote" style="text-align:left; font-size:12px; line-height:1.6; color:var(--ink-700,#334155); background:#FFF7ED; border:1.5px solid #FED7AA; border-radius:12px; padding:10px 12px; margin-bottom:14px;">
           <b>⚠️ Ada biaya layanan QRIS Rp1–999</b> (kode unik) — biaya dari penyedia QRIS, bukan dari toko.<br>
           💡 <b>Hemat:</b> isi saldo dulu di <a id="qrisBotLink" href="https://t.me/allyouneeed_bot" target="_blank" style="font-weight:800; color:var(--brand-ink,#0F172A);">bot toko</a>, lalu bayar pakai saldo — <b>tanpa biaya layanan</b>.
         </div>
@@ -2607,7 +2725,10 @@
         </div>
         <div style="font-size: 20px; font-weight: 800; color: #15803D; margin-bottom: 6px;">Pembayaran Lunas!</div>
         <p style="font-size: 13px; color: var(--ink-500); margin-bottom: 16px;">Item pesanan Anda telah berhasil diproses secara otomatis:</p>
-        <div id="deliveredBox" style="background: var(--surface-2); border: 1px dashed #CBD5E1; padding: 14px; border-radius: 12px; font-family: monospace; font-size: 13px; word-break: break-all; margin-bottom: 20px; text-align: left;"></div>
+        <div id="deliveredBox" style="background: var(--surface-2); border: 1px dashed #CBD5E1; padding: 14px; border-radius: 12px; font-family: monospace; font-size: 13px; word-break: break-all; margin-bottom: 12px; text-align: left;"></div>
+        <button type="button" class="btn-qris-action" style="width:100%; margin-bottom:14px;" onclick="copyDeliveredContent()">
+          <svg class="ico ico-sm"><use href="#i-check"/></svg> Salin Hasil / Token / SN
+        </button>
         <button class="btn-checkout-qris" style="width: 100%; justify-content: center;" onclick="closeModal()">Selesai</button>
       </div>
     </div>
@@ -2681,6 +2802,10 @@
       <button class="btn-checkout-qris" style="width: 100%; justify-content: center;" onclick="doTrackOrder()">Cari Pesanan</button>
 
       <div id="trackResult" style="margin-top: 18px; display: none;"></div>
+      <div id="recentOrdersSection" class="recent-orders-box">
+        <div class="recent-orders-h">Pesanan Terakhir di Perangkat Ini</div>
+        <div id="recentOrdersList"></div>
+      </div>
     </div>
   </div>
 
@@ -3554,6 +3679,7 @@
 
     // ─── STATISTIK LIVE + STRIP PAKET TERLARIS (pola G2G & Lapakgaming) ───
     function renderHubExtras() {
+      if (typeof renderRecentBrandsBar === 'function') renderRecentBrandsBar();
       try {
         const statB = document.getElementById('statBrands');
         const statP = document.getElementById('statProducts');
@@ -3782,6 +3908,7 @@
       scrollPageTo(0, true);
       document.getElementById('hubView').style.display = 'block';
       document.getElementById('orderView').style.display = 'none';
+      if (typeof renderRecentBrandsBar === 'function') renderRecentBrandsBar();
       const legalEl = document.getElementById('legalView');
       if (legalEl) legalEl.style.display = 'none';
       setMobileNav('HUB');
@@ -3859,12 +3986,15 @@
       hubSearchQuery = (val || '').trim().toUpperCase();
       const clearBtn = document.getElementById('hubSearchClear');
       if (clearBtn) clearBtn.style.display = hubSearchQuery ? 'flex' : 'none';
+      if (typeof renderInstantSearchResults === 'function') renderInstantSearchResults(val);
       renderBrandHub();
     }
 
     function clearHubSearch() {
       const inp = document.getElementById('hubSearchInput');
       if (inp) inp.value = '';
+      const inst = document.getElementById('instantDenomWrap');
+      if (inst) inst.style.display = 'none';
       onHubSearch('');
     }
 
@@ -4189,6 +4319,373 @@
       if (!fromPop) pushRoute({ v: 'LEGAL', doc: key }, routeHref({ v: 'LEGAL', doc: key }));
     }
 
+    
+    // ─── FITUR #3: MODAL PANDUAN CEK ID & SERVER ───
+    function openIdGuideModal() {
+      const brand = BRANDS_DEF[activeBrandKey] || {};
+      const titleEl = document.getElementById('idGuideTitle');
+      const bodyEl = document.getElementById('idGuideBody');
+      const modal = document.getElementById('idGuideModal');
+      if (!modal) return;
+
+      let diagramSvg = '';
+      let stepsHtml = '';
+
+      if (brand.key === 'mlbb') {
+        titleEl.innerText = 'Cara Cek User ID & Zone ID MLBB';
+        diagramSvg = `
+          <div class="id-guide-diagram">
+            <svg viewBox="0 0 340 130" width="100%" height="auto" style="display:block;">
+              <rect x="5" y="5" width="330" height="120" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+              <circle cx="45" cy="45" r="24" fill="#3B82F6"/>
+              <text x="45" y="52" fill="#FFF" font-size="20" font-weight="bold" text-anchor="middle">👑</text>
+              <text x="82" y="38" fill="#F8FAFC" font-size="14" font-weight="bold">Nick Kamu</text>
+              <text x="82" y="56" fill="#94A3B8" font-size="11">Level 75 · Mythical Glory</text>
+              <rect x="78" y="70" width="245" height="38" rx="8" fill="#0F172A" stroke="#00E0F8" stroke-width="1.5" stroke-dasharray="4 2"/>
+              <text x="90" y="86" fill="#94A3B8" font-size="10">ID Akun:</text>
+              <text x="90" y="101" fill="#00E0F8" font-size="13" font-weight="900" font-family="monospace">12345678 (2164)</text>
+              <path d="M200 95 L225 108 L225 82 Z" fill="#F59E0B"/>
+              <text x="232" y="98" fill="#F59E0B" font-size="10" font-weight="bold">Zone (Server)</text>
+            </svg>
+          </div>
+        `;
+        stepsHtml = `
+          <ol style="padding-left:18px; font-size:12.5px; line-height:1.7; color:var(--ink-700);">
+            <li>Buka game <b>Mobile Legends</b> lalu klik avatar foto profil di kiri atas.</li>
+            <li>Di bawah nickname Anda, terdapat deretan angka: <code>User ID (Zone ID)</code>.</li>
+            <li>Masukkan angka sebelum kurung sebagai <b>User ID</b>, dan angka di dalam kurung sebagai <b>Zone ID (Server)</b>.</li>
+          </ol>
+        `;
+      } else if (brand.key === 'magic_chess') {
+        titleEl.innerText = 'Cara Cek ID & Server Magic Chess: Go Go';
+        diagramSvg = `
+          <div class="id-guide-diagram">
+            <svg viewBox="0 0 340 110" width="100%" height="auto">
+              <rect x="5" y="5" width="330" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+              <text x="20" y="32" fill="#F8FAFC" font-size="13" font-weight="bold">Profil Magic Chess: Go Go</text>
+              <rect x="20" y="45" width="290" height="42" rx="8" fill="#0F172A" stroke="#00E0F8" stroke-width="1.5"/>
+              <text x="32" y="63" fill="#94A3B8" font-size="10">User ID & Server:</text>
+              <text x="32" y="78" fill="#00E0F8" font-size="13" font-weight="bold" font-family="monospace">876543210 (2001)</text>
+            </svg>
+          </div>
+        `;
+        stepsHtml = `
+          <ol style="padding-left:18px; font-size:12.5px; line-height:1.7; color:var(--ink-700);">
+            <li>Masuk ke game <b>Magic Chess: Go Go</b> -> Menu Profil.</li>
+            <li>Salin angka <b>User ID</b> dan angka server di dalam kurung. Server wajib diisi agar top up berhasil diproses.</li>
+          </ol>
+        `;
+      } else if (brand.key === 'ff') {
+        titleEl.innerText = 'Cara Cek Player ID (UID) Free Fire';
+        diagramSvg = `
+          <div class="id-guide-diagram">
+            <svg viewBox="0 0 340 110" width="100%" height="auto">
+              <rect x="5" y="5" width="330" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+              <text x="20" y="32" fill="#F8FAFC" font-size="13" font-weight="bold">Profil Free Fire (Gallery / Overview)</text>
+              <rect x="20" y="45" width="290" height="42" rx="8" fill="#0F172A" stroke="#00E0F8" stroke-width="1.5"/>
+              <text x="32" y="63" fill="#94A3B8" font-size="10">UID Akun:</text>
+              <text x="32" y="78" fill="#00E0F8" font-size="14" font-weight="bold" font-family="monospace">1982736450</text>
+            </svg>
+          </div>
+        `;
+        stepsHtml = `
+          <ol style="padding-left:18px; font-size:12.5px; line-height:1.7; color:var(--ink-700);">
+            <li>Buka game <b>Free Fire</b> lalu klik profil di pojok kiri atas.</li>
+            <li>Pada tab Overview/Gallery, cari deretan 8–10 digit angka <b>UID</b>.</li>
+            <li>Klik tombol salin di samping UID dan tempel di formulir pemesanan.</li>
+          </ol>
+        `;
+      } else if (brand.key === 'pubg') {
+        titleEl.innerText = 'Cara Cek Character ID PUBG Mobile';
+        diagramSvg = `
+          <div class="id-guide-diagram">
+            <svg viewBox="0 0 340 110" width="100%" height="auto">
+              <rect x="5" y="5" width="330" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+              <text x="20" y="32" fill="#F8FAFC" font-size="13" font-weight="bold">Profil PUBG Mobile</text>
+              <rect x="20" y="45" width="290" height="42" rx="8" fill="#0F172A" stroke="#00E0F8" stroke-width="1.5"/>
+              <text x="32" y="63" fill="#94A3B8" font-size="10">Character ID:</text>
+              <text x="32" y="78" fill="#00E0F8" font-size="14" font-weight="bold" font-family="monospace">51234567890</text>
+            </svg>
+          </div>
+        `;
+        stepsHtml = `
+          <ol style="padding-left:18px; font-size:12.5px; line-height:1.7; color:var(--ink-700);">
+            <li>Buka game <b>PUBG Mobile</b> lalu buka profil di pojok kanan/kiri atas.</li>
+            <li>Salin deretan angka <b>Character ID</b> (tanpa huruf atau tanda pagar).</li>
+          </ol>
+        `;
+      } else if (brand.key === 'pln') {
+        titleEl.innerText = 'Cara Cek Nomor Meter / IDPEL PLN';
+        diagramSvg = `
+          <div class="id-guide-diagram">
+            <svg viewBox="0 0 340 110" width="100%" height="auto">
+              <rect x="5" y="5" width="330" height="100" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+              <text x="20" y="32" fill="#F8FAFC" font-size="13" font-weight="bold">Meteran Listrik Prabayar (PLN)</text>
+              <rect x="20" y="45" width="290" height="42" rx="8" fill="#0F172A" stroke="#00E0F8" stroke-width="1.5"/>
+              <text x="32" y="63" fill="#94A3B8" font-size="10">No. Meter / Barcode PLN (11-12 Digit):</text>
+              <text x="32" y="78" fill="#00E0F8" font-size="14" font-weight="bold" font-family="monospace">1425 9630 151</text>
+            </svg>
+          </div>
+        `;
+        stepsHtml = `
+          <ol style="padding-left:18px; font-size:12.5px; line-height:1.7; color:var(--ink-700);">
+            <li>Lihat stiker barcode di bagian depan box meteran listrik rumah Anda.</li>
+            <li>Terdapat 11 atau 12 digit deretan angka <b>Nomor Meter</b> atau IDPEL.</li>
+            <li>Masukkan angka tersebut di formulir untuk verifikasi nama pelanggan secara otomatis.</li>
+          </ol>
+        `;
+      } else {
+        titleEl.innerText = 'Panduan Tujuan Pemesanan';
+        diagramSvg = '';
+        stepsHtml = `
+          <p style="font-size:12.5px; line-height:1.7; color:var(--ink-700);">
+            Pastikan nomor handphone atau alamat email aktif sudah terisi dengan benar. Kredensial akun, kuota, atau token listrik akan dikirim otomatis ke kontak tujuan tersebut.
+          </p>
+        `;
+      }
+
+      bodyEl.innerHTML = diagramSvg + stepsHtml;
+      modal.classList.add('open');
+    }
+
+    function closeIdGuideModal() {
+      const modal = document.getElementById('idGuideModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    // ─── FITUR #6: BARIS TERAKHIR DILIHAT (LOCALSTORAGE) ───
+    const RECENT_BRANDS_KEY = 'ayn_recent_brands';
+    function recordRecentBrand(brandKey) {
+      if (!brandKey) return;
+      try {
+        let list = JSON.parse(localStorage.getItem(RECENT_BRANDS_KEY) || '[]');
+        list = list.filter(k => k !== brandKey);
+        list.unshift(brandKey);
+        if (list.length > 4) list = list.slice(0, 4);
+        localStorage.setItem(RECENT_BRANDS_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function renderRecentBrandsBar() {
+      const wrap = document.getElementById('recentBrandsWrap');
+      const chips = document.getElementById('recentBrandsChips');
+      if (!wrap || !chips) return;
+
+      try {
+        const list = JSON.parse(localStorage.getItem(RECENT_BRANDS_KEY) || '[]');
+        const validBrands = list.map(k => BRANDS_DEF[k]).filter(Boolean);
+        if (!validBrands.length) {
+          wrap.style.display = 'none';
+          return;
+        }
+
+        chips.innerHTML = validBrands.map(b => {
+          const matched = allProducts.filter(p => b.filterFn(p));
+          const minPrice = matched.length ? Math.min.apply(null, matched.map(p => p.harga)) : 0;
+          return `
+            <div class="recent-chip" onclick="openBrandOrder('${b.key}')">
+              <img class="recent-chip-img" src="${b.logo}" alt="">
+              <span>${esc(b.short)}</span>
+              ${minPrice ? `<span class="recent-chip-price">Rp ${minPrice.toLocaleString('id-ID')}</span>` : ''}
+            </div>
+          `;
+        }).join('');
+        wrap.style.display = 'block';
+      } catch (e) {
+        wrap.style.display = 'none';
+      }
+    }
+
+    function clearRecentBrands() {
+      try {
+        localStorage.removeItem(RECENT_BRANDS_KEY);
+      } catch (e) {}
+      const wrap = document.getElementById('recentBrandsWrap');
+      if (wrap) wrap.style.display = 'none';
+    }
+
+    // ─── FITUR #7: PENCARIAN INSTAN LINTAS NOMINAL ───
+    function renderInstantSearchResults(query) {
+      const wrap = document.getElementById('instantDenomWrap');
+      const grid = document.getElementById('instantDenomGrid');
+      const countEl = document.getElementById('instantCount');
+      if (!wrap || !grid) return;
+
+      const q = (query || '').trim().toUpperCase();
+      if (!q || q.length < 2) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      const qClean = q.replace(/[^0-9A-Z]/g, '');
+      const matches = allProducts.filter(p => {
+        const nm = (p.nama || '').toUpperCase();
+        const brand = (p.brand || '').toUpperCase();
+        const desc = (p.deskripsi || '').toUpperCase();
+        const pr = String(p.harga || '');
+        return nm.includes(q) || brand.includes(q) || desc.includes(q) || pr.includes(qClean);
+      }).slice(0, 8);
+
+      if (!matches.length) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      if (countEl) countEl.innerText = matches.length;
+      grid.innerHTML = matches.map(p => {
+        const brandTitle = brandNameForProduct(p);
+        const cleanName = String(p.nama || '')
+          .replace(/^MLBB\s+/i, '').replace(/^Free Fire\s+/i, '')
+          .replace(/^PUBG Mobile\s+/i, '').replace(/^Magic Chess Go Go\s+/i, '');
+        return `
+          <div class="instant-card" onclick="openProductById('${p.id}')">
+            <div>
+              <div class="instant-card-brand">${esc(brandTitle)}</div>
+              <div class="instant-card-name">${esc(cleanName)}</div>
+            </div>
+            <div class="instant-card-foot">
+              <span>Rp ${Number(p.harga).toLocaleString('id-ID')}</span>
+              <span style="font-size:11px; font-weight:700; color:var(--brand);">&#8250; Pesan</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      wrap.style.display = 'block';
+    }
+
+    // ─── FITUR #5: HITUNG MUNDUR & UNDUH QRIS & RIWAYAT PESANAN PERANGKAT ───
+    const RECENT_ORDERS_KEY = 'ayn_recent_orders';
+    let qrisTimer = null;
+
+    function startQrisCountdown(durationSeconds) {
+      clearInterval(qrisTimer);
+      let sec = durationSeconds || (15 * 60);
+      const el = document.getElementById('qrisCountdown');
+      function tick() {
+        if (!el) return;
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        el.innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        if (sec <= 0) {
+          clearInterval(qrisTimer);
+          el.innerText = 'Kedaluwarsa';
+        }
+        sec--;
+      }
+      tick();
+      qrisTimer = setInterval(tick, 1000);
+    }
+
+    function setQrisStepper(stepIndex) {
+      // 1: Menunggu Bayar, 2: Diproses Server, 3: Selesai
+      const s1 = document.getElementById('stepNode1');
+      const s2 = document.getElementById('stepNode2');
+      const s3 = document.getElementById('stepNode3');
+      if (!s1 || !s2 || !s3) return;
+
+      [s1, s2, s3].forEach((el, i) => {
+        el.classList.remove('active', 'done');
+        if (i + 1 < stepIndex) el.classList.add('done');
+        else if (i + 1 === stepIndex) el.classList.add('active');
+      });
+    }
+
+    function saveRecentOrderToDevice(orderObj) {
+      if (!orderObj || !orderObj.code) return;
+      try {
+        let list = JSON.parse(localStorage.getItem(RECENT_ORDERS_KEY) || '[]');
+        list = list.filter(o => o.code !== orderObj.code);
+        list.unshift({
+          code: orderObj.code,
+          pin: orderObj.pin || '',
+          productName: orderObj.product_name || (selectedProduct ? selectedProduct.nama : 'Produk Digital'),
+          price: orderObj.total_payment || orderObj.price,
+          target: orderObj.target_account || '',
+          createdAt: Date.now()
+        });
+        if (list.length > 8) list = list.slice(0, 8);
+        localStorage.setItem(RECENT_ORDERS_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function renderRecentOrdersInTrackModal() {
+      const box = document.getElementById('recentOrdersList');
+      const sec = document.getElementById('recentOrdersSection');
+      if (!box || !sec) return;
+      try {
+        const list = JSON.parse(localStorage.getItem(RECENT_ORDERS_KEY) || '[]');
+        if (!list.length) {
+          sec.style.display = 'none';
+          return;
+        }
+        sec.style.display = 'block';
+        box.innerHTML = list.map(o => `
+          <div class="recent-order-item" onclick="quickFillTrack('${esc(o.code)}','${esc(o.pin)}')">
+            <div>
+              <div style="font-weight:800; color:var(--ink-900); font-family:monospace;">${esc(o.code)}</div>
+              <div style="font-size:11px; color:var(--ink-500);">${esc(o.productName)}</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-weight:800; color:var(--brand-ink);">Rp ${Number(o.price || 0).toLocaleString('id-ID')}</div>
+              <div style="font-size:10.5px; color:var(--ink-500); font-family:monospace;">PIN: ${esc(o.pin || '-')}</div>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        sec.style.display = 'none';
+      }
+    }
+
+    function quickFillTrack(code, pin) {
+      const cInp = document.getElementById('trackInput');
+      const pInp = document.getElementById('trackPinInput');
+      if (cInp) cInp.value = code;
+      if (pInp && pin) pInp.value = pin;
+      doTrackOrder();
+    }
+
+    async function downloadQrisImage() {
+      const img = document.getElementById('qrisImage');
+      if (!img || !img.src) { alert('Gambar QRIS belum siap'); return; }
+      try {
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.download = 'QRIS-' + (activeOrderCode || 'toko') + '.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (e) {
+        window.open(img.src, '_blank');
+      }
+    }
+
+    function copyInvoiceInfo() {
+      const code = activeOrderCode || '';
+      const pin = activeOrderPin || '';
+      const total = (document.getElementById('qrisTotalAmount') || {}).innerText || '';
+      const text = `Invoice: ${code}
+PIN: ${pin}
+Total: ${total}
+Cek Pesanan: ${location.origin}${location.pathname}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => alert('Kode Invoice & PIN berhasil disalin ke clipboard!'));
+      } else {
+        alert(text);
+      }
+    }
+
+    function copyDeliveredContent() {
+      const el = document.getElementById('deliveredBox');
+      const text = el ? el.innerText.trim() : '';
+      if (!text) return;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => alert('Item / Token / SN berhasil disalin!'));
+      } else {
+        alert('Item: ' + text);
+      }
+    }
+
     // ─── VIEW 2: ORDER STATION LOGIC ───
     // Kartu brand: di layar sentuh sentuhan pertama membalik kartu, kedua membuka paket.
     function brandTap(e, key, count) {
@@ -4205,6 +4702,7 @@
       activeBrandKey = brandKey;
       const brand = BRANDS_DEF[brandKey];
       if (!brand) return;
+      if (typeof recordRecentBrand === 'function') recordRecentBrand(brandKey);
       if (!fromPop) pushRoute({ v: 'ORDER', b: brandKey }, routeHref({ v: 'ORDER', b: brandKey }));
 
       currentView = 'ORDER';
@@ -4563,43 +5061,64 @@
     }
 
     // ─── STEP 2: DENOMINATION TILES (data-driven: pakai kolom `tipe` / `brand`) ───
+    function classifyProductTab(p, brand) {
+      if (!p) return 'Lainnya';
+      const nm = (p.nama || '').toLowerCase();
+      const tp = (p.tipe || '').toLowerCase();
+      const pr = Number(p.harga || 0);
+
+      if (brand && brand.groupBy === 'brand') {
+        const raw = String(p.brand || '').toUpperCase();
+        return OP_LABEL[raw] || raw || 'Lainnya';
+      }
+
+      if (brand && brand.isGame) {
+        if (/pass|member|starlight|weekly|twilight|card/i.test(nm) || tp === 'membership' || tp === 'indonesia') {
+          return 'Membership & Pass';
+        }
+        if (pr >= 75000) return 'Paket Sultan';
+        return 'Top Up Reguler';
+      }
+
+      if (brand && brand.category === 'PREMIUM') {
+        if (/no garansi|tanpa garansi/i.test(nm) || /no garansi/i.test(p.deskripsi || '')) {
+          return 'Hemat / No Garansi';
+        }
+        return 'Bergaransi Resmi';
+      }
+
+      return p.tipe || 'Reguler';
+    }
+
     function renderStep2Denoms(brand) {
       const tabsWrap = document.getElementById('orderSubTabs');
       const stepperWrap = document.getElementById('orderStepperWrap');
       if (stepperWrap) stepperWrap.style.display = 'none';
 
       const items = allProducts.filter(p => brand.filterFn(p));
-      let subTabs = [];
+      const tabCounts = { 'ALL': items.length };
 
-      if (brand.groupBy === 'brand') {
-        // Pulsa & masa aktif / e-wallet / data: tab per operator
-        const labels = [];
-        items.forEach(p => {
-          const raw = String(p.brand || '').toUpperCase();
-          if (!raw) return;
-          const lab = OP_LABEL[raw] || raw;
-          if (!labels.includes(lab)) labels.push(lab);
-        });
-        if (labels.length > 1) subTabs = labels;
-      } else {
-        // Game & premium: tab per jenis paket (Umum / Membership / Indonesia / ...)
-        const tipes = [];
-        items.forEach(p => {
-          const t = String(p.tipe || '').trim();
-          if (t && !tipes.includes(t)) tipes.push(t);
-        });
-        if (tipes.length > 1) subTabs = tipes;
-      }
+      items.forEach(p => {
+        const cat = classifyProductTab(p, brand);
+        tabCounts[cat] = (tabCounts[cat] || 0) + 1;
+      });
 
-      if (subTabs.length > 1) {
+      const catKeys = Object.keys(tabCounts).filter(k => k !== 'ALL' && tabCounts[k] > 0);
+
+      if (catKeys.length > 1) {
         tabsWrap.style.display = 'flex';
-        selectedSubTab = subTabs[0];
-        tabsWrap.innerHTML = subTabs.map(t =>
-          `<button class="denom-sub-tab ${selectedSubTab === t ? 'active' : ''}" onclick="selectOrderSubTab('${String(t).replace(/'/g, "\\'")}')">${t}</button>`
-        ).join('');
+        selectedSubTab = 'ALL';
+        const allTabs = ['ALL', ...catKeys];
+        tabsWrap.innerHTML = allTabs.map(t => {
+          const label = t === 'ALL' ? 'Semua' : t;
+          const count = tabCounts[t] || 0;
+          return `<button class="denom-sub-tab ${selectedSubTab === t ? 'active' : ''}" onclick="selectOrderSubTab('${String(t).replace(/'/g, "\'")}')">
+            ${label} <span class="tab-badge">${count}</span>
+          </button>`;
+        }).join('');
       } else {
         tabsWrap.style.display = 'none';
-        tabsWrap.innerHTML = '';      // jangan tinggalkan tab brand sebelumnya
+        tabsWrap.innerHTML = '';
         selectedSubTab = 'ALL';
       }
 
@@ -4609,7 +5128,9 @@
     function selectOrderSubTab(tabName) {
       selectedSubTab = tabName;
       document.querySelectorAll('#orderSubTabs .denom-sub-tab').forEach(b => {
-        b.classList.toggle('active', b.innerText.trim() === tabName);
+        const txt = b.childNodes[0] ? b.childNodes[0].textContent.trim() : '';
+        const isMatch = (tabName === 'ALL' && txt === 'Semua') || (txt === tabName);
+        b.classList.toggle('active', isMatch);
       });
       const brand = BRANDS_DEF[activeBrandKey];
       if (!brand) return;
@@ -4622,14 +5143,7 @@
       const brand = BRANDS_DEF[activeBrandKey] || {};
 
       if (selectedSubTab !== 'ALL' && selectedSubTab) {
-        if (brand.groupBy === 'brand') {
-          displayItems = items.filter(p => {
-            const raw = String(p.brand || '').toUpperCase();
-            return (OP_LABEL[raw] || raw) === selectedSubTab;
-          });
-        } else {
-          displayItems = items.filter(p => String(p.tipe || '') === selectedSubTab);
-        }
+        displayItems = items.filter(p => classifyProductTab(p, brand) === selectedSubTab);
       }
 
       displayItems = displayItems.slice().sort((a, b) => a.harga - b.harga);
@@ -4730,6 +5244,56 @@
       }
     }
 
+    function checkOrderStepCompleteness() {
+      if (!selectedProduct) return { ready: false, step: 2, label: 'Pilih Nominal Dulu', target: 'orderSubTabs' };
+
+      const brand = BRANDS_DEF[activeBrandKey] || {};
+      if (brand.isGame) {
+        const uId = ((document.getElementById('gameUserId') || {}).value || '').trim();
+        const zEl = document.getElementById('gameZoneId');
+        const zId = zEl ? zEl.value.trim() : '';
+        if (!uId) return { ready: false, step: 1, label: 'Isi User ID', target: 'gameUserId' };
+        if (zEl && !zId) return { ready: false, step: 1, label: 'Isi Server / Zone ID', target: 'gameZoneId' };
+      } else if (brand.key === 'pln') {
+        const pln = ((document.getElementById('plnIdInput') || {}).value || '').trim();
+        if (!pln) return { ready: false, step: 1, label: 'Isi No. Meter PLN', target: 'plnIdInput' };
+      } else if (brand.category === 'PULSA') {
+        const p = ((document.getElementById('pulsaPhoneInput') || {}).value || '').trim();
+        if (!p) return { ready: false, step: 1, label: 'Isi Nomor HP', target: 'pulsaPhoneInput' };
+      } else if (brand.category === 'GAS' || brand.key === 'mypertamina') {
+        const p = ((document.getElementById('pertaminaPhoneInput') || {}).value || '').trim();
+        if (!p) return { ready: false, step: 1, label: 'Isi No. MyPertamina', target: 'pertaminaPhoneInput' };
+      }
+
+      const email = ((document.getElementById('orderBuyerEmail') || {}).value || '').trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        return { ready: false, step: 4, label: 'Isi Email Aktif', target: 'orderBuyerEmail' };
+      }
+
+      if (!termsAgreed) {
+        return { ready: false, step: 5, label: 'Centang S&K Dulu', target: 'termsAgreeRow' };
+      }
+
+      return { ready: true, step: 5, label: 'Bayar via QRIS »', target: null };
+    }
+
+    function onStickyBtnClick() {
+      const state = checkOrderStepCompleteness();
+      if (!state.ready && state.target) {
+        const el = document.getElementById(state.target);
+        if (el) {
+          if (state.target === 'termsAgreeRow') {
+            warnTermsAgree();
+          } else {
+            scrollElemTo(el, 'center');
+            try { el.focus(); } catch(e) {}
+          }
+        }
+        return;
+      }
+      proceedOrderCheckout();
+    }
+
     function updateStickyCheckoutBar() {
       const totalEl = document.getElementById('stickyTotal');
       const itemEl = document.getElementById('stickyItemName');
@@ -4739,6 +5303,8 @@
       const sideTotal = document.getElementById('sideTotal');
       const sideQty = document.getElementById('sideQty');
       const sideBtn = document.getElementById('btnSideCheckout');
+
+      const state = checkOrderStepCompleteness();
 
       if (!selectedProduct) {
         totalEl.innerText = 'Rp 0';
@@ -4752,14 +5318,17 @@
       } else {
         totalEl.innerText = 'Rp ' + selectedProduct.harga.toLocaleString('id-ID');
         itemEl.innerText = selectedProduct.nama;
-        btnEl.disabled = !termsAgreed;
-        btnEl.innerHTML = termsAgreed
-          ? '<svg class="ico" style="vertical-align:-0.15em" aria-hidden="true"><use href="#i-bolt"/></svg> Bayar Sekarang via QRIS »'
-          : 'Centang S&amp;K Dulu';
+        btnEl.disabled = false;
+        btnEl.innerHTML = state.ready
+          ? '<svg class="ico" style="vertical-align:-0.15em" aria-hidden="true"><use href="#i-bolt"/></svg> ' + state.label
+          : state.label;
         if (sideName) sideName.innerText = selectedProduct.nama;
         if (sideTotal) sideTotal.innerText = 'Rp ' + selectedProduct.harga.toLocaleString('id-ID');
         if (sideQty) sideQty.innerText = String(currentStepperQty || 1) + ' akun';
-        if (sideBtn) { sideBtn.disabled = !termsAgreed; sideBtn.innerText = termsAgreed ? 'Bayar via QRIS' : 'Centang S&K Dulu'; }
+        if (sideBtn) {
+          sideBtn.disabled = !state.ready;
+          sideBtn.innerText = state.ready ? 'Bayar via QRIS' : state.label;
+        }
       }
     }
 
@@ -5016,9 +5585,9 @@
 
         document.getElementById('qrisInvoiceCode').innerText = json.order.code;
         var pinNote = document.getElementById('qrisPinNote');
-        if (pinNote) pinNote.innerHTML = 'PIN pesanan: <b>' + (json.order.pin || '-') + '</b> — simpan untuk membuka detail pesanan nanti.';
+        if (pinNote) pinNote.innerHTML = 'PIN: <b style="letter-spacing:1px; color:var(--brand-ink);">' + (json.order.pin || '-') + '</b> — simpan untuk cek pesanan nanti.';
         document.getElementById('qrisTotalAmount').innerText = 'Rp ' + (json.order.total_payment || json.order.price).toLocaleString('id-ID');
-        // Tampilkan biaya layanan QRIS bila ada (total - harga produk)
+        
         var feeNom = Number(json.order.total_payment || json.order.price) - Number(json.order.price || 0);
         var feeNote = document.getElementById('qrisFeeNote');
         if (feeNote && feeNom > 0) {
@@ -5028,6 +5597,11 @@
         document.getElementById('qrisNote').innerText = json.order.catatan_bayar || 'Scan menggunakan m-Banking atau e-Wallet apa saja.';
         var botLink = document.getElementById('qrisBotLink');
         if (botLink) botLink.href = 'https://t.me/' + botUsername;
+
+        // Fitur #5: Stepper Tahap 1 & Timer Countdown 15 Menit & Simpan ke Riwayat Perangkat
+        if (typeof setQrisStepper === 'function') setQrisStepper(1);
+        if (typeof startQrisCountdown === 'function') startQrisCountdown(15 * 60);
+        if (typeof saveRecentOrderToDevice === 'function') saveRecentOrderToDevice(json.order);
 
         document.getElementById('checkoutStep2').style.display = 'block';
         document.getElementById('checkoutStep3').style.display = 'none';
@@ -5055,11 +5629,14 @@
           const res = await fetch(API_BASE + '/api/orders/check?code=' + encodeURIComponent(code) + '&pin=' + encodeURIComponent(activeOrderPin || ''));
           const json = await res.json();
           if (json.ok && json.order && json.order.status === 'PROSES') {
+            if (typeof setQrisStepper === 'function') setQrisStepper(2);
             const el = document.getElementById('invoiceStatusHint');
             if (el) el.innerText = 'Pembayaran diterima — pesanan sedang diproses supplier…';
           }
           if (json.ok && json.order && json.order.status === 'LUNAS') {
             clearInterval(pollInterval);
+            if (typeof qrisTimer !== 'undefined') clearInterval(qrisTimer);
+            if (typeof setQrisStepper === 'function') setQrisStepper(3);
             document.getElementById('checkoutStep2').style.display = 'none';
             document.getElementById('checkoutStep3').style.display = 'block';
             document.getElementById('deliveredBox').innerText = json.order.delivered_content || 'Item pesanan Anda telah berhasil diproses secara otomatis.';
@@ -5080,10 +5657,13 @@
         if (json.ok && json.order) {
           if (json.order.status === 'LUNAS') {
             clearInterval(pollInterval);
+            if (typeof qrisTimer !== 'undefined') clearInterval(qrisTimer);
+            if (typeof setQrisStepper === 'function') setQrisStepper(3);
             document.getElementById('checkoutStep2').style.display = 'none';
             document.getElementById('checkoutStep3').style.display = 'block';
             document.getElementById('deliveredBox').innerText = json.order.delivered_content || 'Item pesanan Anda telah berhasil diproses secara otomatis.';
           } else if (json.order.status === 'PROSES') {
+            if (typeof setQrisStepper === 'function') setQrisStepper(2);
             alert('Pembayaran diterima. Pesanan sudah dikirim ke supplier dan sedang diproses (biasanya 1–5 menit). Halaman ini akan diperbarui otomatis.');
           } else if (json.order.status === 'BATAL') {
             alert('Pesanan telah dibatalkan atau kedaluwarsa.');
@@ -5099,6 +5679,7 @@
 
     function closeModal() {
       clearInterval(pollInterval);
+      if (typeof qrisTimer !== 'undefined') clearInterval(qrisTimer);
       document.getElementById('checkoutModal').classList.remove('open');
     }
 
@@ -5111,6 +5692,7 @@
 
     function openTrackModal() {
       document.getElementById('trackModal').classList.add('open');
+      if (typeof renderRecentOrdersInTrackModal === 'function') renderRecentOrdersInTrackModal();
       markNav('pesanan');
     }
     function closeTrackModal() {

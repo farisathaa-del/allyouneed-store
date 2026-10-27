@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <script>window.API_BASE = 'https://encyclopedia-ira-newfoundland-students.trycloudflare.com';</script>
+  <script>window.API_BASE = '';</script>
+  <script>window.API_BASE = '';</script>
 
 <script>
   /* Tema: system (default) -> gelap -> terang. Dijalankan sebelum CSS agar tidak berkedip. */
@@ -5063,6 +5064,10 @@
             document.getElementById('checkoutStep2').style.display = 'none';
             document.getElementById('checkoutStep3').style.display = 'block';
             document.getElementById('deliveredBox').innerText = json.order.delivered_content || 'Item pesanan Anda telah berhasil diproses secara otomatis.';
+          } else if (json.ok && json.order && json.order.status === 'BATAL') {
+            clearInterval(pollInterval);
+            const el = document.getElementById('invoiceStatusHint');
+            if (el) el.innerText = 'Tagihan telah kedaluwarsa atau dibatalkan.';
           }
         } catch (e) {}
       }, 3500);
@@ -5133,16 +5138,20 @@
         if (json.ok && json.order) {
           const o = json.order;
           let badge = '<span style="color:#F59E0B; font-weight:800;">Menunggu Pembayaran</span>';
+          if (o.status === 'PROSES') badge = '<span style="color:#3B82F6; font-weight:800;">DIPROSES SUPPLIER (1–5 Menit)</span>';
           if (o.status === 'LUNAS') badge = '<span style="color:#10B981; font-weight:800;">LUNAS (Berhasil)</span>';
           if (o.status === 'BATAL') badge = '<span style="color:#EF4444; font-weight:800;">DIBATALKAN</span>';
+          const cleanDelivered = o.delivered_content
+            ? esc(String(o.delivered_content).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '')).replace(/\n/g, '<br>')
+            : '';
 
           resBox.innerHTML = `
             <div class="track-order-card">
-              <div style="margin-bottom: 5px;">Invoice: <b>${o.code}</b></div>
-              <div style="margin-bottom: 5px;">Produk: <b>${o.product_name}</b></div>
-              <div style="margin-bottom: 5px;">Total: <b>Rp ${o.price.toLocaleString('id-ID')}</b></div>
+              <div style="margin-bottom: 5px;">Invoice: <b>${esc(o.code)}</b></div>
+              <div style="margin-bottom: 5px;">Produk: <b>${esc(o.product_name)}</b></div>
+              <div style="margin-bottom: 5px;">Total: <b>Rp ${Number(o.price || 0).toLocaleString('id-ID')}</b></div>
               <div style="margin-bottom: 5px;">Status: ${badge}</div>
-              ${o.delivered_content ? '<div class="track-code">' + o.delivered_content + '</div>' : ''}
+              ${cleanDelivered ? '<div class="track-code">' + cleanDelivered + '</div>' : ''}
               ${(o.status === 'BATAL' && o.refund_state !== 'DONE') ? '<button class="btn-checkout-qris" style="width:100%; justify-content:center; margin-top:12px;" onclick="ajukanRefund()">Ajukan Ganti Produk / Refund</button>' : ''}
               ${(o.refund_state === 'REQUESTED' || o.refund_state === 'PENDING') ? '<div class="track-refund-note">Pengajuan Anda sudah masuk dan sedang ditangani admin (maksimal 1×24 jam).</div>' : ''}
             </div>
